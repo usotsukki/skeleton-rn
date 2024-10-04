@@ -33,3 +33,10 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+
+.eslintcache
+.env
+expo-env.d.ts
+ios
+android

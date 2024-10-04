@@ -1,0 +1,8 @@
+.github
+.vscode
+.husky
+.yarn
+android
+ios
+patches
+node_modules
