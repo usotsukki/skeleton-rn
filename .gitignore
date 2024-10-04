@@ -40,3 +40,5 @@ yarn-error.*
 expo-env.d.ts
 ios
 android
+
+build-*.tar.gz

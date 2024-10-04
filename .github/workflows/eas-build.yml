@@ -1,0 +1,34 @@
+name: eas ios build
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    name: Install and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: yarn
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Run linters
+        run: yarn lint
+
+      - name: Run prettier
+        run: yarn format:check
+
+      - name: Run tests
+        run: yarn test
+
+      - name: Build on EAS
+        run: yarn eas-ios --non-interactive

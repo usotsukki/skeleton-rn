@@ -1,0 +1,32 @@
+{
+	"cli": {
+		"version": ">= 12.5.1",
+		"appVersionSource": "remote"
+	},
+	"build": {
+		"base": {
+			"node": "20.12.2",
+			"yarn": "1.22.1",
+			"ios": {
+				"image": "latest"
+			},
+			"android": {
+				"image": "latest"
+			}
+		},
+		"development": {
+			"extends": "base",
+			"developmentClient": true,
+			"distribution": "internal",
+			"ios": {
+				"simulator": true
+			}
+		},
+		"production": {
+			"extends": "base"
+		}
+	},
+	"submit": {
+		"production": {}
+	}
+}
