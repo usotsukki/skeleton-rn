@@ -1,4 +1,6 @@
 import { useFonts } from 'expo-font'
+import { useEffect } from 'react'
+import { logger } from '@app/utils'
 
 const useLoadFonts = () => {
 	const [fontsReady, error] = useFonts({
@@ -12,7 +14,13 @@ const useLoadFonts = () => {
 		'SF-Mono-Semibold': require('../../assets/fonts/SF-Mono-Semibold.otf'),
 	})
 
-	return { fontsReady, error }
+	useEffect(() => {
+		if (error) {
+			logger.error(error)
+		}
+	}, [error])
+
+	return { fontsReady, error, fontsFinishedLoading: fontsReady || !!error }
 }
 
 export default useLoadFonts

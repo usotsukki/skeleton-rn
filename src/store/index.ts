@@ -1,28 +1,26 @@
 import { create } from 'zustand'
-import { devtools } from 'zustand/middleware'
+import { persist } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
-
-interface State {
-	language: string
-}
-
-interface Actions {
-	changeLanguage: () => void
-}
-
-interface Store extends State, Actions {}
+import persistConfig from './persistConfig'
+import { Store } from './types'
 
 export const useStore = create<Store>()(
-	devtools(
+	persist(
 		immer(set => ({
-			language: 'en-US',
-			changeLanguage: () =>
+			count: 0,
+			increment: () =>
 				set(state => {
-					state.language = state.language === 'en-US' ? 'en-GB' : 'en-US'
+					state.count += 1
+				}),
+			decrement: () =>
+				set(state => {
+					state.count -= 1
 				}),
 		})),
+		persistConfig,
 	),
 )
 
-export const selectLanguage = (state: Store) => state.language
-export const selectLanguageSelector = (state: Store) => state.changeLanguage
+export const selectCount = (state: Store) => state.count
+export const selectIncrement = (state: Store) => state.increment
+export const selectDecrement = (state: Store) => state.decrement

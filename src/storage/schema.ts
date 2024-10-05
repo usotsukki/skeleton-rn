@@ -3,6 +3,7 @@ import { Language } from '@app/translations/languages'
 
 export interface Device {
 	language: Language
+	onboardingCompleted: boolean
 }
 
 /**
@@ -81,5 +82,9 @@ export class MMKVStorage<Scopes extends unknown[], Schema> {
 	 */
 	removeEncryption(): void {
 		this.store.recrypt(undefined)
+	}
+
+	getStore(): MMKV {
+		return this.store
 	}
 }

@@ -3,22 +3,20 @@ import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { useLoadFonts } from '@app/hooks'
+import { useStorageDevTools } from '@app/storage'
 import '@app/theme'
 import '@app/translations'
-import { logger } from '@app/utils'
 
 const RootLayout = () => {
-	const { fontsReady, error: errorLoadingFonts } = useLoadFonts()
+	const { fontsFinishedLoading } = useLoadFonts()
+
+	useStorageDevTools()
 
 	useEffect(() => {
-		if (fontsReady) {
+		if (fontsFinishedLoading) {
 			SplashScreen.hideAsync()
 		}
-		if (errorLoadingFonts) {
-			logger.error(errorLoadingFonts)
-			SplashScreen.hideAsync()
-		}
-	}, [fontsReady, errorLoadingFonts])
+	}, [fontsFinishedLoading])
 
 	return (
 		<SafeAreaProvider>
