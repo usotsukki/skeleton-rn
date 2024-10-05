@@ -17,6 +17,3 @@ export const IS_PROD = !IS_DEV && !IS_TEST
 
 export const LOG_DEBUG = process.env.EXPO_PUBLIC_LOG_DEBUG
 export const LOG_LEVEL = process.env.EXPO_PUBLIC_LOG_LEVEL
-
-console.log('IS_DEV', IS_DEV, 'IS_TEST', IS_TEST, 'IS_PROD', IS_PROD, 'LOG_DEBUG', LOG_DEBUG, 'LOG_LEVEL', LOG_LEVEL)
-console.log(!!IS_TEST, !!IS_DEV, !!IS_PROD)

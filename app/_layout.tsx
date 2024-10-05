@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { useLoadFonts } from '@app/hooks'
 import '@app/theme'
+import '@app/translations'
 import { logger } from '@app/utils'
 
 const RootLayout = () => {

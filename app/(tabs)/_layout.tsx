@@ -1,10 +1,12 @@
 import { FontAwesome5, FontAwesome6 } from '@expo/vector-icons'
 import { Tabs } from 'expo-router'
+import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Colors } from 'react-native-ui-lib'
 import { ios } from '@app/env'
 
 const TabLayout = () => {
+	const { t } = useTranslation()
 	const safeAreaInsets = useSafeAreaInsets()
 	const tabBarBottomPadding = ios ? safeAreaInsets.bottom : 30
 
@@ -30,14 +32,14 @@ const TabLayout = () => {
 			<Tabs.Screen
 				name="Home"
 				options={{
-					title: 'Home',
+					title: t('home'),
 					tabBarIcon: ({ color }) => <FontAwesome5 size={28} name="react" color={color} />,
 				}}
 			/>
 			<Tabs.Screen
 				name="Demo"
 				options={{
-					title: 'Demo',
+					title: t('demo'),
 					tabBarIcon: ({ color }) => <FontAwesome6 size={28} name="circle-notch" color={color} />,
 				}}
 			/>

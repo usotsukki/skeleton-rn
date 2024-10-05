@@ -20,7 +20,22 @@
 		"android": {
 			"package": "com.skeleton"
 		},
-		"plugins": ["expo-router", "expo-font"],
+		"plugins": [
+			"expo-router",
+			"expo-font",
+			"expo-localization",
+			[
+				"expo-build-properties",
+				{
+					"ios": {
+						"newArchEnabled": true
+					},
+					"android": {
+						"newArchEnabled": true
+					}
+				}
+			]
+		],
 		"extra": {
 			"eas": {
 				"projectId": "6afd57d1-5bac-48fc-b3f3-40a510289ae2"
