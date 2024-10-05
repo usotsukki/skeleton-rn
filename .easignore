@@ -1,0 +1,30 @@
+node_modules
+.expo
+
+# Env
+.env
+.env.*
+expo-env.d.ts
+
+# Archives
+build-*.tar.gz
+
+# Native folders
+android/
+ios/
+
+# Tests
+__tests__/
+*.test.*
+*.spec.*
+coverage/
+jest.config.js
+jest.setup.ts
+
+# Documentation
+README.md
+docs/
+*.md
+
+# Logs
+yarn-error.log*

@@ -15,5 +15,9 @@ export const IS_DEV = (typeof __DEV__ === 'boolean' && __DEV__) || !!Number(ENAB
 export const IS_TEST = process.env.EXPO_PUBLIC_IS_TESTING === 'true'
 export const IS_PROD = !IS_DEV && !IS_TEST
 
-export const LOG_DEBUG = process.env.EXPO_PUBLIC_LOG_DEBUG
+export const LOG_DEBUG = process.env.EXPO_PUBLIC_LOG_DEBUG !== 'false' ? process.env.EXPO_PUBLIC_LOG_DEBUG : ''
 export const LOG_LEVEL = process.env.EXPO_PUBLIC_LOG_LEVEL
+export const SENTRY_DEBUG = !IS_PROD && false
+export const TRANSLATIONS_DEBUG = !IS_PROD && false
+
+export const SENTRY_DSN = process.env.EXPO_PUBLIC_SENTRY_DSN

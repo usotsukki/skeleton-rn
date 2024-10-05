@@ -34,6 +34,15 @@
 						"newArchEnabled": true
 					}
 				}
+			],
+			[
+				"@sentry/react-native/expo",
+				{
+					"url": "https://sentry.io/",
+					"authToken": false,
+					"organization": "",
+					"project": ""
+				}
 			]
 		],
 		"extra": {

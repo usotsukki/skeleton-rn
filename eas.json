@@ -7,6 +7,9 @@
 		"base": {
 			"node": "20.12.2",
 			"yarn": "1.22.1",
+			"cache": {
+				"key": "v1"
+			},
 			"ios": {
 				"image": "latest"
 			},
@@ -20,6 +23,14 @@
 			"distribution": "internal",
 			"ios": {
 				"simulator": true
+			},
+			"env": {
+				"NODE_ENV": "development",
+				"EXPO_PUBLIC_ENABLE_DEV_MODE": "true",
+				"EXPO_PUBLIC_IS_TESTING": "false",
+				"EXPO_PUBLIC_LOG_DEBUG": "false",
+				"EXPO_PUBLIC_LOG_LEVEL": "debug",
+				"EXPO_PUBLIC_SENTRY_DSN": "https://6bf30b84d315b016b9529662b5f11182@o4505033974284288.ingest.us.sentry.io/4508070604374016"
 			}
 		},
 		"production": {

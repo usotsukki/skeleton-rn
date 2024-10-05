@@ -2,7 +2,7 @@ import { getLocales } from 'expo-localization'
 import i18next from 'i18next'
 import 'intl-pluralrules'
 import { initReactI18next } from 'react-i18next'
-import { IS_PROD } from '@app/env'
+import { TRANSLATIONS_DEBUG } from '@app/env'
 import { deviceStorage } from '@app/storage'
 import { Language, resources, supportedLanguages } from './languages'
 
@@ -19,7 +19,7 @@ const getInitLanguage = (): Language => {
 i18next.use(initReactI18next).init({
 	lng: getInitLanguage(),
 	fallbackLng: Language.EN,
-	debug: !IS_PROD,
+	debug: TRANSLATIONS_DEBUG,
 	resources: Object.keys(resources).reduce((a, b) => ({ ...a, [b]: { translation: resources[b as Language] } }), {}),
 })
 
