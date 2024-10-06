@@ -1,3 +1,4 @@
+import { withProfiler } from '@sentry/react-native'
 import LottieView from 'lottie-react-native'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -20,7 +21,7 @@ const Home = () => {
 	)
 }
 
-export default Home
+export default withProfiler(Home)
 
 const ChangeLanguageButton = magicMemo(() => {
 	const { t, i18n } = useTranslation()

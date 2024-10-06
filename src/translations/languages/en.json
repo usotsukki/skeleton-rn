@@ -1,5 +1,9 @@
 {
 	"home": "Home",
 	"demo": "Demo",
-	"changeLanguage": "Change Language"
+	"map": "Map",
+	"changeLanguage": "Change Language",
+	"demoScreen": {
+		"navigateToMap": "Map"
+	}
 }

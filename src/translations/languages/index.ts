@@ -12,7 +12,7 @@ export const supportedLanguages: Record<Language, string> = {
 	[Language.ES]: 'Español',
 }
 
-export const resources: Record<Language, Record<keyof typeof en, string>> = {
+export const resources = {
 	es,
 	en,
 }

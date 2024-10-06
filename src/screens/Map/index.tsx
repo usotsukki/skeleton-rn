@@ -1,3 +1,4 @@
+import { withProfiler } from '@sentry/react-native'
 import * as Location from 'expo-location'
 import { throttle } from 'lodash'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -57,7 +58,7 @@ const Map = () => {
 	)
 }
 
-export default Map
+export default withProfiler(Map)
 
 const styles = StyleSheet.create({
 	map: {
