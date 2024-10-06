@@ -4,31 +4,30 @@
 		"strict": true,
 		"skipLibCheck": true,
 		"noEmit": true,
-		"allowJs": true,
+		"allowJs": false,
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
 		"jsx": "react-native",
 		"lib": ["DOM", "ESNext"],
-		"moduleResolution": "node",
+		"moduleResolution": "Node10",
 		"resolveJsonModule": true,
+		"module": "CommonJS",
 		"target": "ESNext",
 		"baseUrl": "./",
 		"paths": {
 			"@app/*": ["src/*"],
-			"@assets/*": ["./assets/*"]
+			"@assets/*": ["assets/*"]
 		}
 	},
-	"exclude": [
-		"node_modules",
-		"ios",
-		"android",
-		"patches",
+	"exclude": ["node_modules", "ios", "android"],
+	"include": [
+		"**/*.ts",
+		"**/*.tsx",
+		"commitlint.config.js",
+		"metro.config.js",
+		"jest.config.js",
 		"babel.config.js",
-		"metro.config.js",
-		"jest.config.js",
-		"metro.config.js",
-		"jest.config.js",
-		"commitlint.config.js"
-	],
-	"include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
+		".lintstagedrc.mjs",
+		".eslintrc.js"
+	]
 }
