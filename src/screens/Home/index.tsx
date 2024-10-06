@@ -1,5 +1,7 @@
+import LottieView from 'lottie-react-native'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { StyleSheet } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { Button, Colors, Text, View } from 'react-native-ui-lib'
 import { magicMemo } from '@app/utils'
@@ -9,6 +11,11 @@ const Home = () => {
 		<View flex center backgroundColor={Colors.grayBlack}>
 			<LanguageText />
 			<ChangeLanguageButton />
+			<LottieView
+				style={styles.mainAnimation}
+				source={require(`@assets/lottie/animation-mail-letters.json`)}
+				autoPlay
+			/>
 		</View>
 	)
 }
@@ -45,3 +52,10 @@ const LanguageText = magicMemo(() => {
 		</View>
 	)
 }, [])
+
+const styles = StyleSheet.create({
+	mainAnimation: {
+		height: 500,
+		aspectRatio: 1,
+	},
+})
