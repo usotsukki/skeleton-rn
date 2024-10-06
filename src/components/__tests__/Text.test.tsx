@@ -6,5 +6,6 @@ import Text from '../Text'
 it(`renders correctly`, () => {
 	const renderTree = render(<Text testID="text">{'Snapshot test?'}</Text>)
 	const textNode = TextDriver({ renderTree, testID: 'text' })
-	expect(textNode).toMatchSnapshot()
+	expect(textNode.getText()).toStrictEqual('Snapshot test?')
+	expect(renderTree.toJSON()).toMatchSnapshot()
 })

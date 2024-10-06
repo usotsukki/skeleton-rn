@@ -1,18 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders correctly 1`] = `
-{
-  "exists": [Function],
-  "getElement": [Function],
-  "getStyle": [Function],
-  "getText": [Function],
-  "hasOnLongPress": [Function],
-  "hasOnPress": [Function],
-  "hasOnPressIn": [Function],
-  "hasOnPressOut": [Function],
-  "onLongPress": [Function],
-  "onPressIn": [Function],
-  "onPressOut": [Function],
-  "press": [Function],
-}
+<Text
+  style={
+    [
+      {
+        "backgroundColor": "transparent",
+        "color": "#20303C",
+        "writingDirection": "ltr",
+      },
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+    ]
+  }
+  testID="text"
+>
+  Snapshot test?
+</Text>
 `;

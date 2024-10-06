@@ -2,7 +2,7 @@ const { pathsToModuleNameMapper } = require('ts-jest')
 const { compilerOptions } = require('./tsconfig')
 
 module.exports = {
-	preset: 'react-native',
+	preset: 'jest-expo',
 	setupFiles: ['./node_modules/react-native-gesture-handler/jestSetup.js', '<rootDir>/jest-setup.ts'],
 	setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect'],
 	testRegex: '(/__tests__/.*|(\\.|/)(test|spec))(?<!\\.disabled)\\.[jt]sx?$',
@@ -16,7 +16,29 @@ module.exports = {
 		],
 	},
 	transformIgnorePatterns: [
-		'node_modules/(?!((jest-)?react-native|react-native-keyboard-area|imgix-core-js|react-native-payments|@react-native-firebase|@react-native(-community)?|react-native-reanimated|react-native-linear-gradient|react-native-ui-lib|react-native-ui-lib/*)/)',
+		`node_modules/
+			(?!((jest-)?
+			@expo(nent)?/.*|
+			@expo-google-fonts/.*|
+			@react-native(-community)?|
+			@react-native-firebase|
+			@react-navigation/.*|
+			@sentry/react-native|
+			expo(nent)?|
+			expo-modules-core|
+			expo-router|
+			imgix-core-js|
+			native-base|
+			react-native|
+			react-native-keyboard-area|
+			react-native-linear-gradient|
+			react-native-payments|
+			react-native-reanimated|
+			react-native-svg
+			react-native-ui-lib|
+			react-native-ui-lib|
+			react-navigation|
+		/*)/)`,
 	],
 	testEnvironment: 'node',
 	moduleNameMapper: {
