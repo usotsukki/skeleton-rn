@@ -43,12 +43,13 @@
 					"organization": "",
 					"project": ""
 				}
+			],
+			[
+				"expo-location",
+				{
+					"locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+				}
 			]
-		],
-		"extra": {
-			"eas": {
-				"projectId": "6afd57d1-5bac-48fc-b3f3-40a510289ae2"
-			}
-		}
+		]
 	}
 }
