@@ -4,7 +4,6 @@
 		"slug": "skeleton",
 		"version": "1.0.0",
 		"icon": "./assets/png/app-icon.png",
-		"userInterfaceStyle": "dark",
 		"scheme": "skeleton",
 		"experiments": {
 			"typedRoutes": true
@@ -13,12 +12,6 @@
 			"image": "./assets/png/image-splash.png",
 			"resizeMode": "cover",
 			"backgroundColor": "#151B26"
-		},
-		"ios": {
-			"bundleIdentifier": "com.skeleton"
-		},
-		"android": {
-			"package": "com.skeleton"
 		},
 		"plugins": [
 			"expo-router",
@@ -38,8 +31,6 @@
 			[
 				"@sentry/react-native/expo",
 				{
-					"url": "https://sentry.io/",
-					"authToken": false,
 					"organization": "",
 					"project": ""
 				}

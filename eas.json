@@ -15,26 +15,31 @@
 			},
 			"android": {
 				"image": "latest"
-			}
-		},
-		"development": {
-			"extends": "base",
-			"developmentClient": true,
-			"distribution": "internal",
-			"ios": {
-				"simulator": true
 			},
 			"env": {
-				"NODE_ENV": "development",
 				"EXPO_PUBLIC_ENABLE_DEV_MODE": "true",
-				"EXPO_PUBLIC_IS_TESTING": "false",
 				"EXPO_PUBLIC_LOG_DEBUG": "false",
 				"EXPO_PUBLIC_LOG_LEVEL": "debug",
 				"EXPO_PUBLIC_SENTRY_DSN": "https://6bf30b84d315b016b9529662b5f11182@o4505033974284288.ingest.us.sentry.io/4508070604374016"
 			}
 		},
+		"development": {
+			"extends": "base",
+			"developmentClient": true,
+			"ios": {
+				"simulator": true
+			},
+			"env": {
+				"NODE_ENV": "development",
+				"EXPO_PUBLIC_NODE_ENV": "development"
+			}
+		},
 		"production": {
-			"extends": "base"
+			"extends": "base",
+			"env": {
+				"NODE_ENV": "production",
+				"EXPO_PUBLIC_NODE_ENV": "production"
+			}
 		}
 	},
 	"submit": {
