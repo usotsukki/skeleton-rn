@@ -8,6 +8,7 @@ const DemoStackLayout = () => {
 		<Stack screenOptions={stackHeaderScreenOptions} initialRouteName="Demo">
 			<Stack.Screen name="Demo" options={{ title: t('demo') }} />
 			<Stack.Screen name="Map" options={{ title: t('map') }} />
+			<Stack.Screen name="GraphicsList" options={{ title: t('demo') }} />
 		</Stack>
 	)
 }

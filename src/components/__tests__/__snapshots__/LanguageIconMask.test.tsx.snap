@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LanguageIconMask renders correctly 1`] = `
+<RNCMaskedView
+  style={
+    {
+      "alignItems": "center",
+      "flex": 1,
+      "flexDirection": "row",
+      "height": "100%",
+      "justifyContent": "center",
+    }
+  }
+  testID="language-icon.container"
+>
+  <View
+    pointerEvents="none"
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  >
+    <View
+      style={
+        [
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "flex": 1,
+            "justifyContent": "center",
+          },
+        ]
+      }
+      testID="language-icon.mask"
+    >
+      <Text />
+    </View>
+  </View>
+  <Image
+    accessibilityRole="image"
+    accessible={false}
+    assetGroup="illustrations"
+    assetName="graphicBackground"
+    onError={[Function]}
+    style={
+      [
+        undefined,
+        undefined,
+        {
+          "width": 700,
+        },
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        false,
+        undefined,
+        false,
+      ]
+    }
+    testID="language-icon.image"
+  />
+</RNCMaskedView>
+`;

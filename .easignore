@@ -1,17 +1,52 @@
-node_modules
-.expo
+# dependencies
+node_modules/
 
-# Env
-.env
-.env.*
+# Expo
+.expo/
+dist/
+web-build/
 expo-env.d.ts
 
+# Native
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env
+.env.*
+
+# typescript
+*.tsbuildinfo
+
+# Native folders generated with prebuild
+ios
+android
+
+.eslintcache
 # Archives
 build-*.tar.gz
 
-# Native folders
-android/
-ios/
+# Firebase 
+GoogleService-Info.plist
+
+# Archives
+build-*.tar.gz
 
 # Tests
 __tests__/
@@ -25,6 +60,3 @@ jest.setup.ts
 README.md
 docs/
 *.md
-
-# Logs
-yarn-error.log*

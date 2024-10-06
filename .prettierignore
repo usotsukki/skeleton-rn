@@ -2,6 +2,7 @@
 .vscode
 .husky
 .yarn
+.easignore
 android
 ios
 patches

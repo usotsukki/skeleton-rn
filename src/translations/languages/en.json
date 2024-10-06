@@ -4,6 +4,7 @@
 	"map": "Map",
 	"changeLanguage": "Change Language",
 	"demoScreen": {
-		"navigateToMap": "Map"
+		"navigateToMap": "Map",
+		"navigateToGraphicsList": "Assets"
 	}
 }

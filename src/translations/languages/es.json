@@ -4,6 +4,7 @@
 	"map": "Mapa",
 	"changeLanguage": "Cambiar Idioma",
 	"demoScreen": {
-		"navigateToMap": "Mapa"
+		"navigateToMap": "Mapa",
+		"navigateToGraphicsList": "Activos"
 	}
 }

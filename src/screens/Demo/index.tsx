@@ -13,6 +13,11 @@ const Demo = () => {
 					{t('navigateToMap')}
 				</Text>
 			</Link>
+			<Link href="/(demo)/GraphicsList">
+				<Text h1 white>
+					{t('navigateToGraphicsList')}
+				</Text>
+			</Link>
 		</View>
 	)
 }

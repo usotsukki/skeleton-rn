@@ -28,6 +28,8 @@
 		"jest.config.js",
 		"babel.config.js",
 		".lintstagedrc.mjs",
-		".eslintrc.js"
+		".eslintrc.js",
+		".expo/types/**/*.ts",
+		"expo-env.d.ts"
 	]
 }

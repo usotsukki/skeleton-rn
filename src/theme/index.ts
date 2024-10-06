@@ -1,4 +1,4 @@
-import { Colors, Spacings, ThemeManager, Typography } from 'react-native-ui-lib'
+import { Assets, Colors, Spacings, ThemeManager, Typography } from 'react-native-ui-lib'
 import { colors, fonts, headingSizes, headingWeights, textSizes, textWeights, typeHierarchy } from './designSystem'
 
 Colors.loadColors({
@@ -17,6 +17,10 @@ Spacings.loadSpacings({
 
 ThemeManager.setComponentTheme('Text', {
 	sfProRounded: true,
+})
+
+Assets.loadAssetsGroup('illustrations', {
+	graphicBackground: require('@assets/png/image-graphic-bg.png'),
 })
 
 export { colors, fonts, headingSizes, headingWeights, textSizes, textWeights, typeHierarchy }
