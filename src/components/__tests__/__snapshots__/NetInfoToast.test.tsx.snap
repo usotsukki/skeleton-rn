@@ -1,0 +1,239 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NetInfoToast should display the toast if the user is offline 1`] = `
+<View
+  collapsable={false}
+  pointerEvents="box-none"
+  style={
+    {
+      "elevation": undefined,
+      "left": 0,
+      "position": "absolute",
+      "right": 0,
+      "top": 0,
+      "transform": [
+        {
+          "translateY": 0,
+        },
+      ],
+      "zIndex": 5,
+    }
+  }
+  testID="toast-netinfo"
+>
+  <RCTSafeAreaView
+    collapsable={false}
+    onLayout={[Function]}
+    pointerEvents="box-none"
+    style={
+      {
+        "opacity": 1,
+      }
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "flex": 1,
+          },
+          undefined,
+        ]
+      }
+    >
+      <View
+        onLayout={[Function]}
+        style={
+          [
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+          ]
+        }
+      >
+        <View
+          collapsable={false}
+          jestAnimatedStyle={
+            {
+              "value": {
+                "transform": [
+                  {
+                    "translateX": 0,
+                  },
+                  {
+                    "translateY": 0,
+                  },
+                ],
+              },
+            }
+          }
+          style={
+            {
+              "transform": [
+                {
+                  "translateX": 0,
+                },
+                {
+                  "translateY": 0,
+                },
+              ],
+            }
+          }
+        >
+          <View
+            modifiers={
+              {
+                "alignments": {},
+                "backgroundColor": undefined,
+                "borderRadius": undefined,
+                "color": undefined,
+                "flexStyle": undefined,
+                "margins": {},
+                "paddings": {},
+                "positionStyle": undefined,
+                "typography": undefined,
+              }
+            }
+            style={
+              [
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+              ]
+            }
+          >
+            <View
+              style={
+                [
+                  undefined,
+                  undefined,
+                  undefined,
+                  undefined,
+                  undefined,
+                  undefined,
+                  undefined,
+                  undefined,
+                  [
+                    {
+                      "alignItems": "center",
+                      "alignSelf": "center",
+                      "backgroundColor": "#FFFFFF",
+                      "borderRadius": 12,
+                      "elevation": 3,
+                      "flexDirection": "row",
+                      "marginHorizontal": 20,
+                      "marginVertical": 12,
+                      "minHeight": 48,
+                      "paddingLeft": 12,
+                      "shadowColor": "#6E7881",
+                      "shadowOffset": {
+                        "height": 2,
+                        "width": 0,
+                      },
+                      "shadowOpacity": 0.2,
+                      "shadowRadius": 10,
+                    },
+                    undefined,
+                    {
+                      "backgroundColor": "rgba(0,0,0,0.9)",
+                    },
+                  ],
+                ]
+              }
+            >
+              <Image
+                accessibilityRole="image"
+                accessible={false}
+                resizeMode="contain"
+                source={1}
+                style={
+                  [
+                    undefined,
+                    undefined,
+                    undefined,
+                    false,
+                    {
+                      "height": 24,
+                      "marginRight": 4,
+                      "width": 24,
+                    },
+                  ]
+                }
+              />
+              <View
+                accessible={true}
+                style={
+                  [
+                    undefined,
+                    undefined,
+                    undefined,
+                    undefined,
+                    undefined,
+                    {},
+                    {},
+                    {},
+                    {
+                      "flex": 1,
+                      "justifyContent": "center",
+                      "paddingVertical": 12,
+                    },
+                  ]
+                }
+              >
+                <Text
+                  accessibilityLabel="undefined notification, You're currently offline"
+                  style={
+                    [
+                      {
+                        "backgroundColor": "transparent",
+                        "color": "#20303C",
+                        "writingDirection": "ltr",
+                      },
+                      undefined,
+                      undefined,
+                      undefined,
+                      undefined,
+                      undefined,
+                      undefined,
+                      undefined,
+                      undefined,
+                      [
+                        {
+                          "color": "#20303C",
+                          "marginLeft": 8,
+                          "marginRight": 20,
+                        },
+                        {
+                          "textAlign": "center",
+                        },
+                        {
+                          "color": "white",
+                        },
+                      ],
+                    ]
+                  }
+                  testID="toast-netinfo-message"
+                >
+                  You're currently offline
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+  </RCTSafeAreaView>
+</View>
+`;

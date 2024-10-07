@@ -6,5 +6,8 @@
 	"demoScreen": {
 		"navigateToMap": "Mapa",
 		"navigateToGraphicsList": "Activos"
+	},
+	"info": {
+		"offline": "Estás desconectado"
 	}
 }

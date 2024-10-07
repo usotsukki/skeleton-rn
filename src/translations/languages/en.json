@@ -6,5 +6,8 @@
 	"demoScreen": {
 		"navigateToMap": "Map",
 		"navigateToGraphicsList": "Assets"
+	},
+	"info": {
+		"offline": "You are offline"
 	}
 }
