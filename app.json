@@ -14,6 +14,12 @@
 			"backgroundColor": "#151B26"
 		},
 		"plugins": [
+			"@react-native-google-signin/google-signin",
+			"@react-native-firebase/app",
+			"@react-native-firebase/auth",
+			"@react-native-firebase/dynamic-links",
+			"@react-native-firebase/messaging",
+			"@react-native-firebase/perf",
 			"expo-router",
 			"expo-font",
 			"expo-localization",
@@ -21,7 +27,8 @@
 				"expo-build-properties",
 				{
 					"ios": {
-						"newArchEnabled": true
+						"newArchEnabled": true,
+						"useFrameworks": "static"
 					},
 					"android": {
 						"newArchEnabled": true
