@@ -19,6 +19,12 @@ ThemeManager.setComponentTheme('Text', {
 	sfProRounded: true,
 })
 
+ThemeManager.setComponentTheme('Incubator.Toast', {
+	backgroundColor: 'rgba(0, 0, 0, 0.9)',
+	messageStyle: { color: Colors.white },
+	centerMessage: true,
+})
+
 Assets.loadAssetsGroup('illustrations', {
 	graphicBackground: require('@assets/png/image-graphic-bg.png'),
 })

@@ -1,31 +1,30 @@
 import * as NetInfo from '@react-native-community/netinfo'
-import { isNil } from 'lodash'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { logger } from '@app/utils'
 
 const useConnectionStatus = () => {
-	const [isConnected, setIsConnected] = useState(true)
+	const [hasInternetConnection, setHasInternetConnection] = useState(true)
 
-	const onChange: NetInfo.NetInfoChangeHandler = useCallback(
-		({ isInternetReachable }) => {
-			if (!isNil(isInternetReachable)) {
-				setIsConnected(isInternetReachable)
-				if (!isConnected && isInternetReachable) {
-					logger.info('Internet connection restored')
-				} else if (!isInternetReachable) {
-					logger.info('Internet connection lost, entering offline mode')
+	const onChange: NetInfo.NetInfoChangeHandler = ({ isInternetReachable }) => {
+		if (isInternetReachable != null) {
+			const updateStateAction = (prevState: boolean) => {
+				if (prevState !== isInternetReachable) {
+					logger.info(
+						isInternetReachable ? 'Internet connection restored' : 'Internet connection lost, entering offline mode',
+					)
 				}
+				return isInternetReachable
 			}
-		},
-		[isConnected],
-	)
+			setHasInternetConnection(updateStateAction)
+		}
+	}
 
 	useEffect(() => {
 		const unsubscribe = NetInfo.addEventListener(onChange)
 		return unsubscribe
-	}, [onChange])
+	}, [])
 
-	return isConnected
+	return hasInternetConnection
 }
 
 export default useConnectionStatus

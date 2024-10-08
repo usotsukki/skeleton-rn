@@ -146,9 +146,7 @@ exports[`NetInfoToast should display the toast if the user is offline 1`] = `
                       "shadowRadius": 10,
                     },
                     undefined,
-                    {
-                      "backgroundColor": "rgba(0,0,0,0.9)",
-                    },
+                    undefined,
                   ],
                 ]
               }
@@ -216,11 +214,9 @@ exports[`NetInfoToast should display the toast if the user is offline 1`] = `
                           "marginRight": 20,
                         },
                         {
-                          "textAlign": "center",
+                          "textAlign": "left",
                         },
-                        {
-                          "color": "white",
-                        },
+                        undefined,
                       ],
                     ]
                   }

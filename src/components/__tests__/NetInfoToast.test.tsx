@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react-native'
+import { act, fireEvent, render, screen } from '@testing-library/react-native'
 import React from 'react'
 import NetInfoToast from '@app/components/NetInfoToast'
 import * as hooks from '@app/hooks'
@@ -60,6 +60,18 @@ describe('NetInfoToast', () => {
 		// offline mode end
 		mockConnectionStatus(true)
 		rerender(<NetInfoToast />)
+		act(() => jest.runAllTimers())
+		expect(screen.queryByTestId('toast-netinfo')).toBeNull()
+	})
+
+	it('should hide the toast after dismissing"', () => {
+		jest.useFakeTimers()
+		mockConnectionStatus(false)
+		render(<NetInfoToast />)
+		act(() => jest.runAllTimers())
+		const toast = screen.getByTestId('toast-netinfo')
+		expect(toast).toBeTruthy()
+		fireEvent(toast, 'onDismiss')
 		act(() => jest.runAllTimers())
 		expect(screen.queryByTestId('toast-netinfo')).toBeNull()
 	})
