@@ -2,10 +2,26 @@
 	"home": "Casa",
 	"demo": "Demo",
 	"map": "Mapa",
+	"signIn": "Iniciar Sesión",
+	"signUp": "Regístrate",
 	"changeLanguage": "Cambiar Idioma",
-	"demoScreen": {
-		"navigateToMap": "Mapa",
-		"navigateToGraphicsList": "Activos"
+	"or": "o",
+	"modules": {
+		"demoScreen": {
+			"navigateToMap": "Mapa",
+			"navigateToGraphicsList": "Activos"
+		},
+		"auth": {
+			"welcome": "Bienvenido a {{appName}}",
+			"email": "Correo Electrónico",
+			"password": "Contraseña",
+			"signInButton": "Iniciar Sesión",
+			"signUpButton": "Regístrate",
+			"signInWith": "Iniciar Sesión con {{provider}}",
+			"signOut": "Cerrar Sesión",
+			"noAccountButton": "¿No tienes una cuenta?",
+			"confirmPassword": "Confirmar Contraseña"
+		}
 	},
 	"info": {
 		"offline": "Estás desconectado"

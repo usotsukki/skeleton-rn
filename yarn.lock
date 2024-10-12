@@ -3260,11 +3260,6 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-11.3.1.tgz#4539371a2f4bd402d932031be82c2449ed63a1a5"
   integrity sha512-UBnJxyV0b7i9Moa97Av+HKho1ByzX0DtbJXzUQS5E3xhQs6P2D/Os0iw3ouy7joY1TVd6uIhplPbr7l1SJNaNQ==
 
-"@react-native-firebase/analytics@^21.0.0":
-  version "21.0.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-21.0.0.tgz#f11f38688de3169ae0220a2b60f4ad7ae37b7ce5"
-  integrity sha512-qWit9CdX+lXwouHS81NHtvwoCqznhJrBCFY5lu2kJ3vnMpNRUoVslB8EMKW/xnOisoPe5VWY6Bm1+/Ife//x+A==
-
 "@react-native-firebase/app@^21.0.0":
   version "21.0.0"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-21.0.0.tgz#95f306d41f39c433cc2f17c57393dcfa4f8093de"
@@ -7402,6 +7397,11 @@ expect@^29.0.0, expect@^29.7.0:
     jest-matcher-utils "^29.7.0"
     jest-message-util "^29.7.0"
     jest-util "^29.7.0"
+
+expo-application@~5.9.1:
+  version "5.9.1"
+  resolved "https://registry.yarnpkg.com/expo-application/-/expo-application-5.9.1.tgz#a12e0cf2741b6f084cc49cd0121ad0a70c770459"
+  integrity sha512-uAfLBNZNahnDZLRU41ZFmNSKtetHUT9Ua557/q189ua0AWV7pQjoVAx49E4953feuvqc9swtU3ScZ/hN1XO/FQ==
 
 expo-asset@~10.0.10:
   version "10.0.10"
@@ -11542,6 +11542,11 @@ react-is@^17.0.1:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
+
+react-native-avoid-softinput@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-avoid-softinput/-/react-native-avoid-softinput-6.0.0.tgz#b460579bc52e6cb222ab1f5a8f8c832317e6b7c1"
+  integrity sha512-UJyiTDQ70z6sfQ7UqQ+lrzGAmKV04ZfuW5tZ4XXiB3g9A30ElV8DshL+3JvUrddkaHJqmcyoLWUCIfvri+cujQ==
 
 react-native-gesture-handler@~2.16.1:
   version "2.16.2"

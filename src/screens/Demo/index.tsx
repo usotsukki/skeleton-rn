@@ -1,10 +1,12 @@
 import { withProfiler } from '@sentry/react-native'
 import { Link } from 'expo-router'
 import { useTranslation } from 'react-i18next'
-import { Colors, Text, View } from 'react-native-ui-lib'
+import { Button, Colors, Text, View } from 'react-native-ui-lib'
+import { useAuth } from '@app/hooks'
 
 const Demo = () => {
-	const { t } = useTranslation('translation', { keyPrefix: 'demoScreen' })
+	const { t, i18n } = useTranslation('translation', { keyPrefix: 'modules.demoScreen' })
+	const { signOut } = useAuth()
 
 	return (
 		<View flex center backgroundColor={Colors.grayBlack}>
@@ -18,6 +20,7 @@ const Demo = () => {
 					{t('navigateToGraphicsList')}
 				</Text>
 			</Link>
+			<Button label={i18n.t('modules.auth.signOut')} onPress={signOut} />
 		</View>
 	)
 }

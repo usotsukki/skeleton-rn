@@ -20,6 +20,7 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 		ios: {
 			...initConfig.ios,
 			bundleIdentifier,
+			usesAppleSignIn: true,
 			googleServicesFile: process.env.GOOGLE_SERVICE_FILE_IOS || './GoogleService-Info.plist',
 			config: {
 				googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY_IOS,

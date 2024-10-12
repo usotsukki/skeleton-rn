@@ -1,7 +1,7 @@
+import auth from '@react-native-firebase/auth'
 import * as Sentry from '@sentry/react-native'
 import { isRunningInExpoGo } from 'expo'
-import { useNavigationContainerRef } from 'expo-router'
-import { Stack } from 'expo-router/stack'
+import { Slot, useNavigationContainerRef, useRouter } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -31,25 +31,31 @@ Sentry.init({
 const RootLayout = () => {
 	const ref = useNavigationContainerRef()
 	const { fontsFinishedLoading } = useLoadFonts()
+	const router = useRouter()
 
 	useEffect(() => {
 		if (fontsFinishedLoading) {
+			const unsubscribe = auth().onAuthStateChanged(user =>
+				// setTimeout used to ensure that all synchronous state updates and rendering are executed first
+				setTimeout(() => {
+					router.replace(user ? '/(tabs)/Home' : '/(auth)/Welcome')
+				}),
+			)
+
 			SplashScreen.hideAsync()
 			routingInstrumentation.registerNavigationContainer(ref)
+
+			return unsubscribe
 		}
 	}, [fontsFinishedLoading])
 
 	useStorageDevTools()
 
 	return (
-		<>
+		<SafeAreaProvider>
 			<NetInfoToast />
-			<SafeAreaProvider>
-				<Stack screenOptions={{ headerShown: false }}>
-					<Stack.Screen name="(tabs)" />
-				</Stack>
-			</SafeAreaProvider>
-		</>
+			<Slot />
+		</SafeAreaProvider>
 	)
 }
 

@@ -2,10 +2,26 @@
 	"home": "Home",
 	"demo": "Demo",
 	"map": "Map",
+	"signIn": "Sign In",
+	"signUp": "Sign Up",
 	"changeLanguage": "Change Language",
-	"demoScreen": {
-		"navigateToMap": "Map",
-		"navigateToGraphicsList": "Assets"
+	"or": "or",
+	"modules": {
+		"demoScreen": {
+			"navigateToMap": "Map",
+			"navigateToGraphicsList": "Assets"
+		},
+		"auth": {
+			"welcome": "Welcome to {{appName}}",
+			"email": "Email",
+			"password": "Password",
+			"signInButton": "Sign In",
+			"signUpButton": "Sign Up",
+			"signInWith": "Sign In with {{provider}}",
+			"signOut": "Sign Out",
+			"noAccountButton": "Don't have an account?",
+			"confirmPassword": "Confirm Password"
+		}
 	},
 	"info": {
 		"offline": "You are offline"
