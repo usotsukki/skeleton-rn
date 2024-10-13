@@ -22,7 +22,7 @@ ThemeManager.setComponentTheme('Text', {
 })
 
 ThemeManager.setComponentTheme('Incubator.Toast', {
-	backgroundColor: Colors.blackTransparent8,
+	backgroundColor: Colors.blackTransparent9,
 	messageStyle: { color: Colors.white },
 	centerMessage: true,
 })

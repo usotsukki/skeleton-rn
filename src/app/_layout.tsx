@@ -6,7 +6,7 @@ import { Slot, useNavigationContainerRef, useRouter } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { NetInfoToast } from '@app/components'
+import { NetInfoToast, Toast } from '@app/components'
 import { IS_PROD, SENTRY_DEBUG, SENTRY_DSN } from '@app/env'
 import { useLoadFonts } from '@app/hooks'
 import { useStorageDevTools } from '@app/storage'
@@ -57,6 +57,7 @@ const RootLayout = () => {
 	return (
 		<SafeAreaProvider>
 			<NetInfoToast />
+			<Toast />
 			<Slot />
 		</SafeAreaProvider>
 	)

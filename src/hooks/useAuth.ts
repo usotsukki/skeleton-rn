@@ -26,6 +26,7 @@ const useAuth = () => {
 	const setLoading = useStore(state => state.setLoading)
 	const setUser = useStore(state => state.setUser)
 	const setError = useStore(state => state.setError)
+	const showToast = useStore(state => state.showToast)
 
 	const handleErrors = (e: unknown) => {
 		const { code, message } = getErrorData(e)
@@ -34,6 +35,7 @@ const useAuth = () => {
 		}
 		logger.error(e as AppError)
 		setError(message)
+		showToast(message, 'error')
 	}
 
 	const withLoading = async <T>(fn: () => Promise<T>): Promise<T | void> => {
