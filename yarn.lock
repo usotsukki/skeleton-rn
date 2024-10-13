@@ -14020,6 +14020,11 @@ zod@^3.22.4:
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.23.8.tgz#e37b957b5d52079769fb8097099b592f0ef4067d"
   integrity sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==
 
+zustand-slices@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/zustand-slices/-/zustand-slices-0.4.0.tgz#6ba04288b7c6a59523bca9d6551275ad158302cf"
+  integrity sha512-Hs+JJc6wIFWwzefe/RLeGuWQgE3ZHQubLRaWyeJ3fFIKrM4gl2VeRZEunbIA33R5ashZyRbZ36ZrPybEUL+yJA==
+
 zustand@^5.0.0-rc.2:
   version "5.0.0-rc.2"
   resolved "https://registry.yarnpkg.com/zustand/-/zustand-5.0.0-rc.2.tgz#d28d95ffb6f0b20cadbaea39210f18446a5bf989"

@@ -1,23 +1,51 @@
 import appleAuth from '@invertase/react-native-apple-authentication'
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth'
 import { GoogleSignin, isSuccessResponse } from '@react-native-google-signin/google-signin'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { useStore } from '@app/store'
+import { getErrorData, logger } from '@app/utils'
+import { AppError } from '@app/utils/logger'
 
-GoogleSignin.configure()
+const nonErrors: {
+	codes: string[]
+	messages: string[]
+} = { codes: ['1000'], messages: ['GoogleSignIn cancelled'] }
+
+const shouldIgnoreError = (e: { code?: string; message: string }) => {
+	if (e.code && nonErrors.codes.find(el => el === e.code)) {
+		return true
+	}
+	if (e.message && nonErrors.messages.find(el => el === e.message)) {
+		return true
+	}
+	return false
+}
 
 const useAuth = () => {
-	const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null)
-	const [loading, setLoading] = useState(false)
+	const loading = useStore(state => state.auth.loading)
+	const setLoading = useStore(state => state.setLoading)
+	const setUser = useStore(state => state.setUser)
+	const setError = useStore(state => state.setError)
 
-	const withLoading = async <T>(fn: () => Promise<T>) => {
+	const handleErrors = (e: unknown) => {
+		const { code, message } = getErrorData(e)
+		if (shouldIgnoreError({ code, message })) {
+			return
+		}
+		logger.error(e as AppError)
+		setError(message)
+	}
+
+	const withLoading = async <T>(fn: () => Promise<T>): Promise<T | void> => {
 		if (loading) {
 			return
 		}
 		try {
 			setLoading(true)
+			setError(null)
 			return await fn()
 		} catch (e) {
-			console.error(e)
+			handleErrors(e)
 		} finally {
 			setLoading(false)
 		}
@@ -28,10 +56,9 @@ const useAuth = () => {
 	}, [])
 
 	const getGoogleAuthCredential = async () => {
-		await GoogleSignin.hasPlayServices()
 		const res = await GoogleSignin.signIn()
 		if (!isSuccessResponse(res)) {
-			throw new Error('Google Signin failed')
+			throw new Error(`GoogleSignIn ${res.type}`)
 		}
 		return auth.GoogleAuthProvider.credential(res.data.idToken)
 	}
@@ -68,7 +95,7 @@ const useAuth = () => {
 		withLoading(() => auth().signOut())
 	}
 
-	return { user, signIn, signInWithGoogle, createUser, signInWithApple, signOut, loading }
+	return { signIn, signInWithGoogle, createUser, signInWithApple, signOut, loading }
 }
 
 export default useAuth

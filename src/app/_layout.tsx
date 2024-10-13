@@ -1,4 +1,5 @@
 import auth from '@react-native-firebase/auth'
+import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import * as Sentry from '@sentry/react-native'
 import { isRunningInExpoGo } from 'expo'
 import { Slot, useNavigationContainerRef, useRouter } from 'expo-router'
@@ -44,6 +45,8 @@ const RootLayout = () => {
 
 			SplashScreen.hideAsync()
 			routingInstrumentation.registerNavigationContainer(ref)
+			GoogleSignin.configure()
+			GoogleSignin.hasPlayServices()
 
 			return unsubscribe
 		}

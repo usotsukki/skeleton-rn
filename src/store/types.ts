@@ -1,10 +1,5 @@
-export interface State {
-	count: number
-}
+import { AuthSliceActions, AuthSliceState } from './authSlice'
 
-export interface Actions {
-	increment: () => void
-	decrement: () => void
+export interface Store extends AuthSliceActions {
+	auth: AuthSliceState
 }
-
-export interface Store extends State, Actions {}

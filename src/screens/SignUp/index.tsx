@@ -45,14 +45,11 @@ const SignUp = () => {
 						onChangeText={onChangePassword}
 						placeholder={capitalize(t('password'))}
 						secureTextEntry
-						textContentType="newPassword"
 					/>
 					<AuthTextField
 						value={confirmationPassword}
 						onChangeText={onChangeConfirmationPassword}
 						placeholder={capitalize(t('confirmPassword'))}
-						secureTextEntry
-						textContentType="newPassword"
 					/>
 					<SignInButton label={t('signUpButton')} onPress={handleSubmit} disabled={submitDisabled} />
 					<Button label={t('noAccountButton')} onPress={router.back} tm hyperlink white marginT-s4 />
