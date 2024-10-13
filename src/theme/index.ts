@@ -22,7 +22,7 @@ ThemeManager.setComponentTheme('Text', {
 })
 
 ThemeManager.setComponentTheme('Incubator.Toast', {
-	backgroundColor: 'rgba(0, 0, 0, 0.9)',
+	backgroundColor: Colors.blackTransparent8,
 	messageStyle: { color: Colors.white },
 	centerMessage: true,
 })
@@ -35,6 +35,10 @@ ThemeManager.setComponentTheme('TextField', {
 Assets.loadAssetsGroup('illustrations', {
 	graphicBackground: require('@assets/png/image-graphic-bg.png'),
 	logo: require('@assets/png/logo.png'),
+})
+
+Assets.loadAssetsGroup('lottie', {
+	robot404: require('@assets/lottie/animation-robot-404.json'),
 })
 
 export { colors, fonts, headingSizes, headingWeights, textSizes, textWeights, typeHierarchy }

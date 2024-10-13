@@ -25,5 +25,10 @@
 	},
 	"info": {
 		"offline": "You are offline"
+	},
+	"error": {
+		"title": "Oops! Something went wrong.",
+		"subtitle": "We encountered an error. Please try again.",
+		"button": "Go back"
 	}
 }

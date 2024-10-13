@@ -25,5 +25,10 @@
 	},
 	"info": {
 		"offline": "Estás desconectado"
+	},
+	"error": {
+		"title": "¡Ups! Algo salió mal.",
+		"subtitle": "Encontramos un error. Por favor, inténtelo de nuevo.",
+		"button": "Regresar"
 	}
 }
