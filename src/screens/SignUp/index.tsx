@@ -35,7 +35,7 @@ const SignUp = () => {
 		<ScrollView contentContainerStyle={styles.container}>
 			<View flex paddingH-s6 centerV>
 				<LoaderModal visible={loading} />
-				<View center gap-s4 style={styles.card}>
+				<View center gap-s4 bg-blackTransparent4 style={styles.card}>
 					<Text tl white marginB-s10>
 						{i18n.t('signUp')}
 					</Text>
@@ -67,7 +67,6 @@ const styles = StyleSheet.create({
 	card: {
 		borderRadius: 36,
 		height: 450,
-		backgroundColor: 'rgba(0,0,0,0.4)',
 	},
 })
 

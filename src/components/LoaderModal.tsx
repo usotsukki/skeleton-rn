@@ -1,9 +1,9 @@
 import React from 'react'
-import { LoaderScreen, Modal, ModalProps } from 'react-native-ui-lib'
+import { Colors, LoaderScreen, Modal, ModalProps } from 'react-native-ui-lib'
 
 const Placeholder = ({ ...props }: ModalProps) => {
 	return (
-		<Modal testID="loader-modal" transparent overlayBackgroundColor={'rgba(0,0,0,0.6)'} {...props}>
+		<Modal testID="loader-modal" transparent overlayBackgroundColor={Colors.blackTransparent6} {...props}>
 			<LoaderScreen />
 		</Modal>
 	)

@@ -9,7 +9,7 @@ const Background = ({ children, ...props }: PropsWithChildren & ViewProps) => {
 			resizeMode="cover"
 			source={require('@assets/png/image-auth-background.png')}
 			testID="background-view">
-			<View flex useSafeArea backgroundColor="rgba(0,0,0,0.6)" {...props}>
+			<View flex useSafeArea bg-blackTransparent6 {...props}>
 				{children}
 			</View>
 		</ImageBackground>
