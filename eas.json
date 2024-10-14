@@ -26,6 +26,7 @@
 		"development": {
 			"extends": "base",
 			"developmentClient": true,
+			"channel": "development",
 			"ios": {
 				"simulator": true
 			},
@@ -36,6 +37,7 @@
 		},
 		"production": {
 			"extends": "base",
+			"channel": "production",
 			"env": {
 				"NODE_ENV": "production",
 				"EXPO_PUBLIC_NODE_ENV": "production"

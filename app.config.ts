@@ -29,6 +29,12 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 		android: {
 			package: bundleIdentifier,
 		},
+		updates: {
+			url: 'https://u.expo.dev/6afd57d1-5bac-48fc-b3f3-40a510289ae2',
+		},
+		runtimeVersion: {
+			policy: 'appVersion',
+		},
 		extra: {
 			eas: {
 				projectId: '6afd57d1-5bac-48fc-b3f3-40a510289ae2',
