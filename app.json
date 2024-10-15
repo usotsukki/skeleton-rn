@@ -13,6 +13,12 @@
 			"resizeMode": "cover",
 			"backgroundColor": "#151B26"
 		},
+		"ios": {
+			"buildNumber": "1.0.0"
+		},
+		"android": {
+			"versionCode": 51010000
+		},
 		"plugins": [
 			"@react-native-google-signin/google-signin",
 			"@react-native-firebase/app",
