@@ -60,3 +60,4 @@ jest.setup.ts
 README.md
 docs/
 *.md
+cpd

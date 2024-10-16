@@ -1,0 +1,9 @@
+{
+	"output": "cpd",
+	"reporters": ["console", "html"],
+	"minLines": 10,
+	"blame": true,
+	"threshold": 5,
+	"ignore": ["import .*", "**/theme/**", "*test.tsx", "*test.ts"],
+	"path": ["src"]
+}
