@@ -6,11 +6,14 @@ import { ScrollView, StyleSheet } from 'react-native'
 import { Button, Text, View } from 'react-native-ui-lib'
 import { AuthTextField, LoaderModal, SignInButton } from '@app/components'
 import { useAuth, useAvoidKeyboard } from '@app/hooks'
+import { useStore } from '@app/store'
+import { validateEmail } from '@app/utils/validators'
 
 const SignUp = () => {
 	const { t, i18n } = useTranslation('translation', { keyPrefix: 'modules.auth' })
 	const router = useRouter()
 	const { createUser, loading } = useAuth()
+	const { showToast } = useStore()
 
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
@@ -25,7 +28,19 @@ const SignUp = () => {
 	const onChangeConfirmationPassword = (text: string) => setConfirmationPassword(text)
 
 	const handleSubmit = async () => {
-		if (!email || !password || password !== confirmationPassword) return
+		if (!validateEmail(email)) {
+			showToast(i18n.t('error.wrongEmailFormat'), 'error')
+			return
+		}
+		if (password.length < 6) {
+			showToast(i18n.t('error.shortPassword'), 'error')
+			return
+		}
+		if (password !== confirmationPassword) {
+			showToast(i18n.t('error.passwordsDoNotMatch'), 'error')
+			return
+		}
+
 		createUser(email, password)
 	}
 
@@ -39,11 +54,19 @@ const SignUp = () => {
 					<Text tl white marginB-s10>
 						{i18n.t('signUp')}
 					</Text>
-					<AuthTextField placeholder={capitalize(t('email'))} value={email} onChangeText={onChangeEmail} />
+					<AuthTextField
+						placeholder={capitalize(t('email'))}
+						value={email}
+						onChangeText={onChangeEmail}
+						validate={['required', validateEmail]}
+						validationMessage={[i18n.t('error.required'), i18n.t('error.wrongEmailFormat')]}
+					/>
 					<AuthTextField
 						value={password}
 						onChangeText={onChangePassword}
 						placeholder={capitalize(t('password'))}
+						validate={['required', v => !!v && v.length >= 6]}
+						validationMessage={[i18n.t('error.required'), i18n.t('error.shortPassword')]}
 						secureTextEntry
 					/>
 					<AuthTextField

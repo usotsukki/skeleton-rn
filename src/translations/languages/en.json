@@ -29,6 +29,12 @@
 	"error": {
 		"title": "Oops! Something went wrong.",
 		"subtitle": "We encountered an error. Please try again.",
-		"button": "Go back"
+		"button": "Go back",
+		"required": "Required",
+		"wrongEmailFormat": "Please enter a valid email address",
+		"shortPassword": "Password must be at least 6 characters long",
+		"passwordsDoNotMatch": "Passwords don't match",
+		"invalidEmailOrPassword": "Invalid email or password",
+		"emailAlreadyInUse": "The email address is already in use by another account"
 	}
 }

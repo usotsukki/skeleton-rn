@@ -17,6 +17,11 @@ const AuthTextField = ({ ...props }: Props & TextFieldProps) => {
 			placeholderTextColor-white
 			floatingPlaceholderColor-white
 			containerStyle={styles.inputContainer}
+			enableErrors
+			validateOnBlur
+			retainValidationSpace
+			validationMessageStyle={styles.validationMessageStyle}
+			validationMessagePosition="top"
 			{...props}
 		/>
 	)
@@ -30,6 +35,10 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 1,
 		borderColor: 'white',
 		paddingHorizontal: Spacings.s4,
+	},
+	validationMessageStyle: {
+		fontSize: 12,
+		lineHeight: 16,
 	},
 })
 

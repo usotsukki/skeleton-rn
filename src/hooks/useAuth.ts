@@ -1,24 +1,19 @@
 import appleAuth from '@invertase/react-native-apple-authentication'
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth'
 import { GoogleSignin, isSuccessResponse } from '@react-native-google-signin/google-signin'
+import i18next from 'i18next'
 import { useEffect } from 'react'
 import { useStore } from '@app/store'
 import { getErrorData, logger } from '@app/utils'
-import { AppError } from '@app/utils/logger'
 
-const nonErrors: {
-	codes: string[]
-	messages: string[]
-} = { codes: ['1000'], messages: ['GoogleSignIn cancelled'] }
-
-const shouldIgnoreError = (e: { code?: string; message: string }) => {
-	if (e.code && nonErrors.codes.find(el => el === e.code)) {
-		return true
-	}
-	if (e.message && nonErrors.messages.find(el => el === e.message)) {
-		return true
-	}
-	return false
+const authErrors = {
+	codes: {
+		'[auth/invalid-credential]': i18next.t('error.invalidEmailOrPassword'),
+		'1000': null,
+	},
+	messages: {
+		'GoogleSignIn cancelled': null,
+	},
 }
 
 const useAuth = () => {
@@ -30,10 +25,26 @@ const useAuth = () => {
 
 	const handleErrors = (e: unknown) => {
 		const { code, message } = getErrorData(e)
-		if (shouldIgnoreError({ code, message })) {
+
+		if (code && code in authErrors.codes) {
+			const errorMessage = authErrors.codes[code as keyof typeof authErrors.codes]
+			if (errorMessage) {
+				showToast(errorMessage, 'error')
+				setError(errorMessage)
+			}
 			return
 		}
-		logger.error(e as AppError)
+
+		if (message && message in authErrors.messages) {
+			const errorMessage = authErrors.messages[message as keyof typeof authErrors.messages]
+			if (errorMessage) {
+				setError(errorMessage)
+				showToast(errorMessage, 'error')
+			}
+			return
+		}
+
+		logger.error(new Error(`${message}`))
 		setError(message)
 		showToast(message, 'error')
 	}

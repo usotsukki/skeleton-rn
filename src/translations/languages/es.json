@@ -29,6 +29,12 @@
 	"error": {
 		"title": "¡Ups! Algo salió mal.",
 		"subtitle": "Encontramos un error. Por favor, inténtelo de nuevo.",
-		"button": "Regresar"
+		"button": "Regresar",
+		"required": "Requerido",
+		"wrongEmailFormat": "Por favor, introduzca una dirección de correo electrónico válida",
+		"shortPassword": "La contraseña debe tener al menos 6 caracteres",
+		"passwordsDoNotMatch": "Las contraseñas no coinciden",
+		"invalidEmailOrPassword": "Correo electrónico o contraseña inválidos",
+		"emailAlreadyInUse": "La dirección de correo electrónico ya está en uso por otra cuenta"
 	}
 }

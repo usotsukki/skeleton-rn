@@ -7,6 +7,8 @@ import { Button, Text, View } from 'react-native-ui-lib'
 import { AuthTextField, LoaderModal, SignInButton } from '@app/components'
 import { IS_DEV } from '@app/env'
 import { useAuth, useAvoidKeyboard } from '@app/hooks'
+import { useStore } from '@app/store'
+import { validateEmail } from '@app/utils/validators'
 
 const defaultEmail = IS_DEV ? 'user@example.com' : ''
 const defaultPassword = IS_DEV ? 'password' : ''
@@ -15,6 +17,7 @@ const SignIn = () => {
 	const { t, i18n } = useTranslation('translation', { keyPrefix: 'modules.auth' })
 	const router = useRouter()
 	const { signIn, loading } = useAuth()
+	const { showToast } = useStore()
 
 	const [email, setEmail] = useState(defaultEmail)
 	const [password, setPassword] = useState(defaultPassword)
@@ -24,6 +27,11 @@ const SignIn = () => {
 	const onChangePassword = (text: string) => setPassword(text)
 
 	const handleSubmit = async () => {
+		if (!validateEmail(email)) {
+			showToast(i18n.t('error.wrongEmailFormat'), 'error')
+			return
+		}
+
 		signIn(email, password)
 	}
 
@@ -42,6 +50,8 @@ const SignIn = () => {
 						textContentType="emailAddress"
 						value={email}
 						onChangeText={onChangeEmail}
+						validate={['required', validateEmail]}
+						validationMessage={[i18n.t('error.required'), i18n.t('error.wrongEmailFormat')]}
 					/>
 					<AuthTextField
 						value={password}

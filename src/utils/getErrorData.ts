@@ -1,3 +1,5 @@
+const firebaseErrorRegExp = /(\[[^\]]+\])\s*(.*)$/
+
 export const getErrorData = (e: unknown): { code: string; message: string } => {
 	let message = 'unknown error'
 	let code = ''
@@ -18,5 +20,12 @@ export const getErrorData = (e: unknown): { code: string; message: string } => {
 	if (typeof e === 'string') {
 		message = e
 	}
+
+	const match = message.match(firebaseErrorRegExp)
+	if (match) {
+		code = match[1]
+		message = match[2]
+	}
+
 	return { code, message }
 }
