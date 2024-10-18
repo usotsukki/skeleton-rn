@@ -24,6 +24,7 @@ const TabLayout = () => {
 		<ErrorBoundary fallbackRender={renderFallback} onReset={onReset}>
 			<Tabs
 				sceneContainerStyle={{ backgroundColor: Colors.grayBlack }}
+				detachInactiveScreens={false}
 				screenOptions={{
 					tabBarTestID: 'TabBar',
 					headerShown: false,

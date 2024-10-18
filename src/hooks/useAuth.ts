@@ -65,7 +65,8 @@ const useAuth = () => {
 	}
 
 	useEffect(() => {
-		auth().onAuthStateChanged(setUser)
+		const unsubscribe = auth().onAuthStateChanged(setUser)
+		return unsubscribe
 	}, [])
 
 	const getGoogleAuthCredential = async () => {

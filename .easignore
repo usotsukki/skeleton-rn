@@ -6,6 +6,8 @@ node_modules/
 dist/
 web-build/
 expo-env.d.ts
+credentials/
+credentials.json
 
 # Native
 *.orig.*
@@ -14,6 +16,7 @@ expo-env.d.ts
 *.p12
 *.key
 *.mobileprovision
+*.keystore
 
 # Metro
 .metro-health-check*
@@ -44,9 +47,11 @@ build-*.tar.gz
 
 # Firebase 
 GoogleService-Info.plist
+google-services.json
 
 # Archives
 build-*.tar.gz
+build-*.apk
 
 # Tests
 __tests__/

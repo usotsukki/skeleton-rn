@@ -7,7 +7,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { NetInfoToast, Toast } from '@app/components'
-import { IS_PROD, SENTRY_DEBUG, SENTRY_DSN } from '@app/env'
+import { GOOGLE_WEB_CLIENT_ID, IS_PROD, SENTRY_DEBUG, SENTRY_DSN } from '@app/env'
 import { useLoadFonts } from '@app/hooks'
 import { useStorageDevTools } from '@app/storage'
 import '@app/theme'
@@ -45,7 +45,9 @@ const RootLayout = () => {
 
 			SplashScreen.hideAsync()
 			routingInstrumentation.registerNavigationContainer(ref)
-			GoogleSignin.configure()
+			GoogleSignin.configure({
+				webClientId: GOOGLE_WEB_CLIENT_ID,
+			})
 			GoogleSignin.hasPlayServices()
 
 			return unsubscribe

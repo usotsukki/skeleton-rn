@@ -9,9 +9,14 @@ export const stackHeaderScreenOptions = {
 	headerTitleStyle: [
 		{
 			color: Colors.black,
-			...headingSizes['26px / 30px'],
+			...headingSizes['23px / 27px'],
 			...fonts.SFProRounded.bold,
 		},
 	],
 	headerLeft: () => <HeaderBackButton />,
+	headerTitleAlign: 'center' as 'center' | 'left' | undefined,
+	headerTitleContainerStyle: {
+		borderWidth: 1,
+		paddingHorizontal: 30,
+	},
 }

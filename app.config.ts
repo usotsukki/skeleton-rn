@@ -24,10 +24,16 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 			googleServicesFile: process.env.GOOGLE_SERVICE_FILE_IOS || './GoogleService-Info.plist',
 			config: {
 				googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY_IOS,
+				usesNonExemptEncryption: false,
 			},
 		},
 		android: {
+			...initConfig.android,
 			package: bundleIdentifier,
+			googleServicesFile: process.env.GOOGLE_SERVICE_FILE_ANDROID || './google-services.json',
+			config: {
+				googleMaps: { apiKey: process.env.GOOGLE_MAPS_API_KEY_ANDROID },
+			},
 		},
 		updates: {
 			url: 'https://u.expo.dev/6afd57d1-5bac-48fc-b3f3-40a510289ae2',

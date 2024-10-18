@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { Colors, Text, View } from 'react-native-ui-lib'
 import { LoaderModal, Logo, SignInButton, SwitchLanguageButton } from '@app/components'
+import { IS_IOS } from '@app/env'
 import { useAuth } from '@app/hooks'
 
 const Welcome = () => {
@@ -25,7 +26,7 @@ const Welcome = () => {
 			<View gap-s3>
 				<SignInButton onPress={navigateToSignIn} testID="Welcome.SignIn" />
 				<SignInButton onPress={signInWithGoogle} authProvider="google" testID="Welcome.GoogleSignIn" />
-				<SignInButton onPress={signInWithApple} authProvider="apple" testID="Welcome.AppleSignIn" />
+				{IS_IOS && <SignInButton onPress={signInWithApple} authProvider="apple" testID="Welcome.AppleSignIn" />}
 				<Text white center>
 					{i18n.t('or')}
 				</Text>

@@ -21,3 +21,5 @@ export const SENTRY_DEBUG = !IS_PROD && false
 export const TRANSLATIONS_DEBUG = !IS_PROD && false
 
 export const SENTRY_DSN = process.env.EXPO_PUBLIC_SENTRY_DSN
+
+export const GOOGLE_WEB_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID

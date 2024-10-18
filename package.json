@@ -5,7 +5,9 @@
 	"main": "expo-router/entry",
 	"scripts": {
 		"android": "yarn expo run:android -d",
+		"eas-android": "eas build -p android -e development",
 		"eas-ios": "eas build -p ios -e development",
+		"eas-run-android": "eas build:run --latest -p android -e development",
 		"eas-run-ios": "eas build:run --latest -p ios -e development",
 		"check-deps": "./scripts/check-unused-deps.sh",
 		"check-duplicates": "yarn jscpd --config jscpd.json",
@@ -56,6 +58,7 @@
 		"expo": "~51.0.38",
 		"expo-apple-authentication": "~6.4.2",
 		"expo-application": "~5.9.1",
+		"expo-blur": "~13.0.2",
 		"expo-build-properties": "~0.12.5",
 		"expo-constants": "~16.0.2",
 		"expo-dev-client": "~4.0.28",

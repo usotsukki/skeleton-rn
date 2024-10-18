@@ -30,9 +30,13 @@
 			"ios": {
 				"simulator": true
 			},
+			"android": {
+				"buildType": "apk"
+			},
 			"env": {
 				"NODE_ENV": "development",
-				"EXPO_PUBLIC_NODE_ENV": "development"
+				"EXPO_PUBLIC_NODE_ENV": "development",
+				"EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "762459437378-v3tsf9qvlfmvftirgt3sllj5p1rpi1lp.apps.googleusercontent.com"
 			}
 		},
 		"production": {
