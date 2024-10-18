@@ -9,7 +9,7 @@ import { magicMemo } from '@app/utils'
 
 const Home = () => {
 	return (
-		<View flex center backgroundColor={Colors.grayBlack}>
+		<View flex center backgroundColor={Colors.grayBlack} testID="Home">
 			<LanguageText />
 			<ChangeLanguageButton />
 			<LottieView

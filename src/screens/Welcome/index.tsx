@@ -16,28 +16,29 @@ const Welcome = () => {
 	const navigateToSignUp = () => router.push('/(auth)/SignUp')
 
 	return (
-		<View flex center gap-s10>
+		<View flex center gap-s10 testID="Welcome">
 			<LoaderModal visible={loading} />
 			<Logo />
 			<Text title white center>
 				{t('welcome', { appName: Application.applicationName })}
 			</Text>
 			<View gap-s3>
-				<SignInButton onPress={navigateToSignIn} />
-				<SignInButton onPress={signInWithGoogle} authProvider="google" />
-				<SignInButton onPress={signInWithApple} authProvider="apple" />
+				<SignInButton onPress={navigateToSignIn} testID="Welcome.SignIn" />
+				<SignInButton onPress={signInWithGoogle} authProvider="google" testID="Welcome.GoogleSignIn" />
+				<SignInButton onPress={signInWithApple} authProvider="apple" testID="Welcome.AppleSignIn" />
 				<Text white center>
 					{i18n.t('or')}
 				</Text>
 				<SignInButton
 					label={t('signUpButton')}
+					testID="Welcome.SignUpButton"
 					onPress={navigateToSignUp}
 					white
 					outline={true}
 					outlineColor={Colors.primary}
 				/>
 			</View>
-			<SwitchLanguageButton />
+			<SwitchLanguageButton testID="Welcome.SwitchLanguage" />
 		</View>
 	)
 }

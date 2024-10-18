@@ -2,7 +2,7 @@ import { ConfigContext, ExpoConfig } from 'expo/config'
 
 export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 	const appName = initConfig?.name || 'Skeleton'
-	const environment = process.env.NODE_ENV as 'production' | 'development' | 'testing'
+	const environment = process.env.EXPO_PUBLIC_NODE_ENV as 'production' | 'development' | 'testing'
 
 	const name = {
 		production: appName,

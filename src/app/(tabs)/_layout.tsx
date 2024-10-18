@@ -25,6 +25,7 @@ const TabLayout = () => {
 			<Tabs
 				sceneContainerStyle={{ backgroundColor: Colors.grayBlack }}
 				screenOptions={{
+					tabBarTestID: 'TabBar',
 					headerShown: false,
 					tabBarActiveTintColor: Colors.primary,
 					tabBarStyle: {
@@ -45,14 +46,18 @@ const TabLayout = () => {
 					name="(home)"
 					options={{
 						title: t('home'),
-						tabBarIcon: ({ color }) => <FontAwesome5 size={iconSizes.navigation} name="react" color={color} />,
+						tabBarIcon: ({ color }) => (
+							<FontAwesome5 testID="TabBar.Home" size={iconSizes.navigation} name="react" color={color} />
+						),
 					}}
 				/>
 				<Tabs.Screen
 					name="(demo)"
 					options={{
 						title: t('demo'),
-						tabBarIcon: ({ color }) => <FontAwesome6 size={iconSizes.navigation} name="circle-notch" color={color} />,
+						tabBarIcon: ({ color }) => (
+							<FontAwesome6 testID="TabBar.Demo" size={iconSizes.navigation} name="circle-notch" color={color} />
+						),
 					}}
 				/>
 			</Tabs>

@@ -1,3 +1,4 @@
+import { withProfiler } from '@sentry/react-native'
 import { useRouter } from 'expo-router'
 import { capitalize } from 'lodash'
 import { useMemo, useState } from 'react'
@@ -47,7 +48,7 @@ const SignUp = () => {
 	useAvoidKeyboard()
 
 	return (
-		<ScrollView contentContainerStyle={styles.container}>
+		<ScrollView contentContainerStyle={styles.container} testID="SignUp">
 			<View flex paddingH-s6 centerV>
 				<LoaderModal visible={loading} />
 				<View center gap-s4 bg-blackTransparent4 style={styles.card}>
@@ -60,6 +61,7 @@ const SignUp = () => {
 						onChangeText={onChangeEmail}
 						validate={['required', validateEmail]}
 						validationMessage={[i18n.t('error.required'), i18n.t('error.wrongEmailFormat')]}
+						testID="SignUp.Email"
 					/>
 					<AuthTextField
 						value={password}
@@ -68,14 +70,21 @@ const SignUp = () => {
 						validate={['required', v => !!v && v.length >= 6]}
 						validationMessage={[i18n.t('error.required'), i18n.t('error.shortPassword')]}
 						secureTextEntry
+						testID="SignUp.Password"
 					/>
 					<AuthTextField
 						value={confirmationPassword}
 						onChangeText={onChangeConfirmationPassword}
 						placeholder={capitalize(t('confirmPassword'))}
+						testID="SignUp.ConfirmationPassword"
 					/>
-					<SignInButton label={t('signUpButton')} onPress={handleSubmit} disabled={submitDisabled} />
-					<Button label={t('noAccountButton')} onPress={router.back} tm hyperlink white marginT-s4 />
+					<SignInButton
+						label={t('signUpButton')}
+						onPress={handleSubmit}
+						disabled={submitDisabled}
+						testID="SignUp.SubmitButton"
+					/>
+					<Button label={t('alreadyHaveAccountButton')} onPress={router.back} tm hyperlink white marginT-s4 />
 				</View>
 			</View>
 		</ScrollView>
@@ -90,4 +99,4 @@ const styles = StyleSheet.create({
 	},
 })
 
-export default SignUp
+export default withProfiler(SignUp)

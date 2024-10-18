@@ -20,6 +20,7 @@
 			"signInWith": "Sign In with {{provider}}",
 			"signOut": "Sign Out",
 			"noAccountButton": "Don't have an account?",
+			"alreadyHaveAccountButton": "Already have an account?",
 			"confirmPassword": "Confirm Password"
 		}
 	},

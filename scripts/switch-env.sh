@@ -4,8 +4,8 @@ ENV_FILE=".env"
 
 if [ "$1" == "testing" ]; then
   ENV_FILE=".env.testing"
-if [ "$1" == "staging" ]; then
-  ENV_FILE=".env.staging"
+elif [ "$1" == "dev" ]; then
+  ENV_FILE=".env.dev"
 elif [ "$1" == "production" ]; then
   ENV_FILE=".env.production"
 fi

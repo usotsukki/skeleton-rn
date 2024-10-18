@@ -9,7 +9,7 @@ const Demo = () => {
 	const { signOut } = useAuth()
 
 	return (
-		<View flex center backgroundColor={Colors.grayBlack}>
+		<View flex center backgroundColor={Colors.grayBlack} testID="Demo">
 			<Link href="/(demo)/Map">
 				<Text h1 white>
 					{t('navigateToMap')}
@@ -20,7 +20,7 @@ const Demo = () => {
 					{t('navigateToGraphicsList')}
 				</Text>
 			</Link>
-			<Button label={i18n.t('modules.auth.signOut')} onPress={signOut} />
+			<Button label={i18n.t('modules.auth.signOut')} onPress={signOut} testID="Demo.SignOutButton" />
 		</View>
 	)
 }

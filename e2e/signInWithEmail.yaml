@@ -1,0 +1,56 @@
+appId: 'com.skeleton'
+---
+- launchApp
+- assertVisible:
+    id: 'Welcome'
+
+- tapOn:
+    id: 'Welcome.SignIn'
+
+- assertVisible:
+    id: 'SignIn'
+
+- assertVisible:
+    id: 'SignIn.Email'
+- assertVisible:
+    id: 'SignIn.Password'
+- assertVisible:
+    id: 'SignIn.SubmitButton'
+
+- tapOn:
+    id: 'SignIn.Email'
+- eraseText
+- inputText: 'user@example.com'
+- tapOn:
+    id: 'SignIn.Password'
+- eraseText
+- inputText: 'password'
+- hideKeyboard
+- waitForAnimationToEnd:
+    timeout: 500
+
+- doubleTapOn:
+    id: 'SignIn.SubmitButton'
+
+- extendedWaitUntil:
+    visible:
+      id: 'TabBar'
+    timeout: 5000
+- assertVisible:
+    id: 'TabBar.Home'
+- assertVisible:
+    id: 'TabBar.Demo'
+
+- tapOn:
+    id: 'TabBar.Demo'
+
+- assertVisible:
+    id: 'Demo'
+
+- tapOn:
+    id: 'Demo.SignOutButton'
+
+- extendedWaitUntil:
+    visible:
+      id: 'Welcome'
+    timeout: 5000

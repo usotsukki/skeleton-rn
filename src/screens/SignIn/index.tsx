@@ -1,3 +1,4 @@
+import { withProfiler } from '@sentry/react-native'
 import { useRouter } from 'expo-router'
 import { capitalize } from 'lodash'
 import { useMemo, useState } from 'react'
@@ -38,7 +39,7 @@ const SignIn = () => {
 	useAvoidKeyboard()
 
 	return (
-		<ScrollView contentContainerStyle={styles.container}>
+		<ScrollView contentContainerStyle={styles.container} testID="SignIn">
 			<View flex paddingH-s6 centerV>
 				<LoaderModal visible={loading} />
 				<View center gap-s4 bg-blackTransparent4 style={styles.card}>
@@ -52,6 +53,7 @@ const SignIn = () => {
 						onChangeText={onChangeEmail}
 						validate={['required', validateEmail]}
 						validationMessage={[i18n.t('error.required'), i18n.t('error.wrongEmailFormat')]}
+						testID="SignIn.Email"
 					/>
 					<AuthTextField
 						value={password}
@@ -59,8 +61,9 @@ const SignIn = () => {
 						placeholder={capitalize(t('password'))}
 						secureTextEntry
 						textContentType="password"
+						testID="SignIn.Password"
 					/>
-					<SignInButton onPress={handleSubmit} disabled={submitDisabled} />
+					<SignInButton onPress={handleSubmit} disabled={submitDisabled} testID="SignIn.SubmitButton" />
 					<Button label={t('noAccountButton')} onPress={router.back} tm hyperlink white marginT-s4 />
 				</View>
 			</View>
@@ -76,4 +79,4 @@ const styles = StyleSheet.create({
 	},
 })
 
-export default SignIn
+export default withProfiler(SignIn)

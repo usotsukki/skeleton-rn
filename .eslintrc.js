@@ -71,5 +71,13 @@ module.exports = {
 				'testing-library/render-result-naming-convention': 'off',
 			},
 		},
+		{
+			files: ['e2e/**/?(*.)+(spec|test).[jt]s?(x)'],
+			extends: ['plugin:testing-library/react'],
+			rules: {
+				'testing-library/render-result-naming-convention': 'off',
+				'testing-library/await-async-utils': 'off',
+			},
+		},
 	],
 }

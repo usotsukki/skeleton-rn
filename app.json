@@ -43,6 +43,13 @@
 				}
 			],
 			[
+				"expo-dev-launcher",
+				{
+					"launchMode": "most-recent",
+					"addGeneratedScheme": false
+				}
+			],
+			[
 				"@sentry/react-native/expo",
 				{
 					"organization": "",
