@@ -1,4 +1,4 @@
-export { default as HeaderBackButton } from './HeaderBackButton'
+export { default as HeaderBackButton } from './Buttons/HeaderBackButton'
 export { default as LanguageIconMask } from './LanguageIconMask'
 export { default as NetInfoToast } from './NetInfoToast'
 export { default as Background } from './Background'

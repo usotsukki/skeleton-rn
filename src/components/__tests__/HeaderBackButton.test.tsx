@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react-native'
 import React from 'react'
 import { ButtonDriver } from 'react-native-ui-lib/testkit'
-import BackButton from '../HeaderBackButton'
+import BackButton from '../Buttons/HeaderBackButton'
 
 const mockedNavigation = jest.fn()
 const mockedGetState = jest.fn().mockReturnValue({ index: 0 })

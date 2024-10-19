@@ -8,8 +8,7 @@
 	"or": "o",
 	"modules": {
 		"demoScreen": {
-			"navigateToMap": "Mapa",
-			"navigateToGraphicsList": "Activos"
+			"navigateToMap": "Mapa"
 		},
 		"auth": {
 			"welcome": "Bienvenido a {{appName}}",

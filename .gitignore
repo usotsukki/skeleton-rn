@@ -17,6 +17,7 @@ credentials.json
 *.key
 *.mobileprovision
 *.keystore
+.idea/
 
 # Metro
 .metro-health-check*

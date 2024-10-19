@@ -8,8 +8,7 @@
 	"or": "or",
 	"modules": {
 		"demoScreen": {
-			"navigateToMap": "Map",
-			"navigateToGraphicsList": "Assets"
+			"navigateToMap": "Map"
 		},
 		"auth": {
 			"welcome": "Welcome to {{appName}}",

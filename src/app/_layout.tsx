@@ -6,6 +6,7 @@ import { Slot, useNavigationContainerRef, useRouter } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { enableScreens } from 'react-native-screens'
 import { NetInfoToast, Toast } from '@app/components'
 import { GOOGLE_WEB_CLIENT_ID, IS_PROD, SENTRY_DEBUG, SENTRY_DSN } from '@app/env'
 import { useLoadFonts } from '@app/hooks'
@@ -28,6 +29,8 @@ Sentry.init({
 		}),
 	],
 })
+
+enableScreens(false)
 
 const RootLayout = () => {
 	const ref = useNavigationContainerRef()
