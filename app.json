@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "Skeleton",
 		"slug": "skeleton",
-		"version": "1.0.0",
+		"version": "1.1.0",
 		"icon": "./assets/png/app-icon.png",
 		"scheme": "skeleton",
 		"experiments": {
@@ -14,10 +14,10 @@
 			"backgroundColor": "#151B26"
 		},
 		"ios": {
-			"buildNumber": "1.0.0"
+			"buildNumber": "1.1.0"
 		},
 		"android": {
-			"versionCode": 51010000
+			"versionCode": 51010100
 		},
 		"plugins": [
 			"@react-native-google-signin/google-signin",
