@@ -1,12 +1,12 @@
-name: lint&test
+name: Lint and test
 on:
   workflow_dispatch:
   push:
     branches:
       - main
 jobs:
-  build:
-    name: Install and build
+  lint-and-test:
+    name: Lint and test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

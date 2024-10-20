@@ -1,0 +1,29 @@
+name: commit filter
+on:
+  workflow_call:
+    outputs:
+      skip-eas-workflow:
+        value: ${{ jobs.commit-filter.outputs.skip-workflow }}
+jobs:
+  commit-filter:
+    name: Determine if Workflow Should Be Skipped
+    runs-on: ubuntu-latest
+    outputs:
+      skip-workflow: ${{ steps.check-commit-message.outputs.skip-workflow }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+            fetch-depth: 2
+
+      - id: check-commit-message
+        shell: bash
+        run: |
+          current_version=$(jq -r '.expo.version' app.json)
+
+          previous_version=$(git show HEAD~1:app.json | jq -r '.expo.version')
+
+          if [[ "$current_version" != "$previous_version" ]]; then
+            echo "skip-workflow=false" >> $GITHUB_OUTPUT
+          else
+            echo "skip-workflow=true" >> $GITHUB_OUTPUT
+          fi

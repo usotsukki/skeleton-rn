@@ -5,9 +5,13 @@ on:
     branches:
       - main
 jobs:
+  commit-filter:
+    uses: ./.github/workflows/commit-filter.yml
   update:
-    runs-on: ubuntu-latest
-    steps:
+      runs-on: ubuntu-latest
+      needs: commit-filter
+      if: ${{ needs.commit-filter.outputs.skip-eas-workflow == 'false' }}
+      steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
