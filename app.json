@@ -45,7 +45,7 @@
 			[
 				"expo-notifications",
 				{
-					"icon": "@assets/png/logo.png",
+					"icon": "./assets/png/logo.png",
 					"color": "#ffffff",
 					"defaultChannel": "default"
 				}
@@ -55,6 +55,12 @@
 				{
 					"launchMode": "most-recent",
 					"addGeneratedScheme": false
+				}
+			],
+			[
+				"expo-screen-orientation",
+				{
+					"initialOrientation": "DEFAULT"
 				}
 			],
 			[
