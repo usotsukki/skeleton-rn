@@ -3,6 +3,7 @@ import { ConfigContext, ExpoConfig } from 'expo/config'
 export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 	const appName = initConfig?.name || 'Skeleton'
 	const environment = process.env.EXPO_PUBLIC_NODE_ENV as 'production' | 'development' | 'testing'
+	const projectId = process.env.EXPO_PUBLIC_EAS_PROJECT_ID
 
 	const name = {
 		production: appName,
@@ -26,6 +27,9 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 				googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY_IOS,
 				usesNonExemptEncryption: false,
 			},
+			infoPlist: {
+				UIBackgroundModes: ['remote-notification', 'processing'],
+			},
 		},
 		android: {
 			...initConfig.android,
@@ -36,14 +40,14 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 			},
 		},
 		updates: {
-			url: 'https://u.expo.dev/6afd57d1-5bac-48fc-b3f3-40a510289ae2',
+			url: `https://u.expo.dev/${projectId}`,
 		},
 		runtimeVersion: {
 			policy: 'appVersion',
 		},
 		extra: {
 			eas: {
-				projectId: '6afd57d1-5bac-48fc-b3f3-40a510289ae2',
+				projectId,
 			},
 		},
 	}

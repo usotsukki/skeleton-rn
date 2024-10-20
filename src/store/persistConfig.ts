@@ -1,6 +1,6 @@
 import { createJSONStorage, PersistOptions, StateStorage } from 'zustand/middleware'
 import { zustandStorage } from '@app/storage'
-import { Store } from './types'
+import { RootStore } from './slices'
 
 const persistStorage: StateStorage = {
 	setItem: (name, value) => zustandStorage.set(name, value),
@@ -8,7 +8,7 @@ const persistStorage: StateStorage = {
 	removeItem: name => zustandStorage.delete(name),
 }
 
-const persistConfig: PersistOptions<Store> = {
+const persistConfig: PersistOptions<RootStore> = {
 	name: 'rootStore',
 	storage: createJSONStorage(() => persistStorage),
 	partialize: state =>
@@ -16,7 +16,7 @@ const persistConfig: PersistOptions<Store> = {
 			auth: {
 				user: state.auth.user,
 			},
-		}) as Store,
+		}) as RootStore,
 }
 
 export default persistConfig

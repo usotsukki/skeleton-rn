@@ -43,6 +43,14 @@
 				}
 			],
 			[
+				"expo-notifications",
+				{
+					"icon": "@assets/png/logo.png",
+					"color": "#ffffff",
+					"defaultChannel": "default"
+				}
+			],
+			[
 				"expo-dev-launcher",
 				{
 					"launchMode": "most-recent",

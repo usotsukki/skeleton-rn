@@ -1,9 +1,12 @@
 import * as NetInfo from '@react-native-community/netinfo'
-import { useEffect, useState } from 'react'
+import { onlineManager } from '@tanstack/react-query'
+import { useEffect } from 'react'
+import { useStore } from '@app/store'
 import { logger } from '@app/utils'
 
 const useConnectionStatus = () => {
-	const [hasInternetConnection, setHasInternetConnection] = useState(true)
+	const hasInternetConnection = useStore(state => state.connection.hasInternetConnection)
+	const setConnectionStatus = useStore(state => state.setConnectionStatus)
 
 	const onChange: NetInfo.NetInfoChangeHandler = ({ isInternetReachable }) => {
 		if (isInternetReachable != null) {
@@ -15,7 +18,9 @@ const useConnectionStatus = () => {
 				}
 				return isInternetReachable
 			}
-			setHasInternetConnection(updateStateAction)
+			setConnectionStatus(updateStateAction(hasInternetConnection))
+
+			onlineManager.setOnline(isInternetReachable)
 		}
 	}
 

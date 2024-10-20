@@ -1,6 +1,7 @@
 import auth from '@react-native-firebase/auth'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import * as Sentry from '@sentry/react-native'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { isRunningInExpoGo } from 'expo'
 import { Slot, useNavigationContainerRef, useRouter } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
@@ -36,6 +37,7 @@ const RootLayout = () => {
 	const ref = useNavigationContainerRef()
 	const { fontsFinishedLoading } = useLoadFonts()
 	const router = useRouter()
+	const queryClient = new QueryClient()
 
 	useEffect(() => {
 		if (fontsFinishedLoading) {
@@ -60,11 +62,13 @@ const RootLayout = () => {
 	useStorageDevTools()
 
 	return (
-		<SafeAreaProvider>
-			<NetInfoToast />
-			<Toast />
-			<Slot />
-		</SafeAreaProvider>
+		<QueryClientProvider client={queryClient}>
+			<SafeAreaProvider>
+				<NetInfoToast />
+				<Toast />
+				<Slot />
+			</SafeAreaProvider>
+		</QueryClientProvider>
 	)
 }
 

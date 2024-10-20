@@ -8,7 +8,9 @@
 	"or": "o",
 	"modules": {
 		"demoScreen": {
-			"navigateToMap": "Mapa"
+			"navigateToMap": "Mapa",
+			"getRandomJoke": "Obtener Chiste Aleatorio",
+			"jokeOfTheDay": "Chiste del Día"
 		},
 		"auth": {
 			"welcome": "Bienvenido a {{appName}}",

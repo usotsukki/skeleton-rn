@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Colors } from 'react-native-ui-lib'
 import { ErrorFallback } from '@app/components'
 import { ios } from '@app/env'
+import { useNotifications } from '@app/hooks'
 import { iconSizes } from '@app/theme/designSystem'
 
 const TabLayout = () => {
@@ -19,6 +20,8 @@ const TabLayout = () => {
 	const renderFallback = ({ error, resetErrorBoundary }: FallbackProps) => (
 		<ErrorFallback error={error} resetErrorBoundary={resetErrorBoundary} />
 	)
+
+	useNotifications()
 
 	return (
 		<ErrorBoundary fallbackRender={renderFallback} onReset={onReset}>

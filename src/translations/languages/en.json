@@ -8,7 +8,9 @@
 	"or": "or",
 	"modules": {
 		"demoScreen": {
-			"navigateToMap": "Map"
+			"navigateToMap": "Map",
+			"getRandomJoke": "Get Random Joke",
+			"jokeOfTheDay": "Joke of the Day"
 		},
 		"auth": {
 			"welcome": "Welcome to {{appName}}",
