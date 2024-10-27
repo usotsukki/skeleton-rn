@@ -31,6 +31,11 @@ const TabLayout = () => {
 				screenOptions={{
 					tabBarTestID: 'TabBar',
 					headerShown: false,
+					freezeOnBlur: true,
+					tabBarVisibilityAnimationConfig: {
+						show: { animation: 'timing', config: { duration: 500 } },
+						hide: { animation: 'timing', config: { duration: 500 } },
+					},
 					tabBarActiveTintColor: Colors.primary,
 					tabBarStyle: {
 						backgroundColor: Colors.grayBlack,
@@ -40,12 +45,6 @@ const TabLayout = () => {
 						paddingTop: 15,
 					},
 				}}>
-				<Tabs.Screen
-					name="index"
-					options={{
-						href: null,
-					}}
-				/>
 				<Tabs.Screen
 					name="(home)"
 					options={{

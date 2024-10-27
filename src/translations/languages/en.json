@@ -23,6 +23,11 @@
 			"noAccountButton": "Don't have an account?",
 			"alreadyHaveAccountButton": "Already have an account?",
 			"confirmPassword": "Confirm Password"
+		},
+		"chat": {
+			"chat": "Chat",
+			"initialMessage": "Ask me a question",
+			"send": "Send"
 		}
 	},
 	"info": {

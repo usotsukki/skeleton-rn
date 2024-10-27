@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, StyleSheet } from 'react-native'
 import { Button, Text, View } from 'react-native-ui-lib'
-import { AuthTextField, LoaderModal, SignInButton } from '@app/components'
+import { AuthTextField, Background, LoaderModal, SignInButton } from '@app/components'
 import { IS_DEV } from '@app/env'
 import { useAuth, useAvoidKeyboard } from '@app/hooks'
 import { useStore } from '@app/store'
@@ -39,35 +39,37 @@ const SignIn = () => {
 	useAvoidKeyboard()
 
 	return (
-		<ScrollView contentContainerStyle={styles.container} testID="SignIn">
-			<View flex paddingH-s6 centerV>
-				<LoaderModal visible={loading} />
-				<View center gap-s4 bg-blackTransparent4 style={styles.card}>
-					<Text tl white marginB-s10>
-						{i18n.t('signIn')}
-					</Text>
-					<AuthTextField
-						placeholder={capitalize(t('email'))}
-						textContentType="emailAddress"
-						value={email}
-						onChangeText={onChangeEmail}
-						validate={['required', validateEmail]}
-						validationMessage={[i18n.t('error.required'), i18n.t('error.wrongEmailFormat')]}
-						testID="SignIn.Email"
-					/>
-					<AuthTextField
-						value={password}
-						onChangeText={onChangePassword}
-						placeholder={capitalize(t('password'))}
-						secureTextEntry
-						textContentType="password"
-						testID="SignIn.Password"
-					/>
-					<SignInButton onPress={handleSubmit} disabled={submitDisabled} testID="SignIn.SubmitButton" />
-					<Button label={t('noAccountButton')} onPress={router.back} tm hyperlink white marginT-s4 />
+		<Background>
+			<ScrollView contentContainerStyle={styles.container} testID="SignIn">
+				<View flex paddingH-s6 centerV>
+					<LoaderModal visible={loading} />
+					<View center gap-s4 bg-blackTransparent4 style={styles.card}>
+						<Text tl white marginB-s10>
+							{i18n.t('signIn')}
+						</Text>
+						<AuthTextField
+							placeholder={capitalize(t('email'))}
+							textContentType="emailAddress"
+							value={email}
+							onChangeText={onChangeEmail}
+							validate={['required', validateEmail]}
+							validationMessage={[i18n.t('error.required'), i18n.t('error.wrongEmailFormat')]}
+							testID="SignIn.Email"
+						/>
+						<AuthTextField
+							value={password}
+							onChangeText={onChangePassword}
+							placeholder={capitalize(t('password'))}
+							secureTextEntry
+							textContentType="password"
+							testID="SignIn.Password"
+						/>
+						<SignInButton onPress={handleSubmit} disabled={submitDisabled} testID="SignIn.SubmitButton" />
+						<Button label={t('noAccountButton')} onPress={router.back} tm hyperlink white marginT-s4 />
+					</View>
 				</View>
-			</View>
-		</ScrollView>
+			</ScrollView>
+		</Background>
 	)
 }
 

@@ -23,6 +23,11 @@
 			"noAccountButton": "¿No tienes una cuenta?",
 			"alreadyHaveAccountButton": "¿Ya tienes una cuenta?",
 			"confirmPassword": "Confirmar Contraseña"
+		},
+		"chat": {
+			"chat": "Chat",
+			"initialMessage": "Hazme una pregunta",
+			"send": "Enviar"
 		}
 	},
 	"info": {

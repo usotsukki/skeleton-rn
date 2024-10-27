@@ -3,7 +3,7 @@ import * as Application from 'expo-application'
 import { useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { Colors, Text, View } from 'react-native-ui-lib'
-import { LoaderModal, Logo, SignInButton, SwitchLanguageButton } from '@app/components'
+import { Background, LoaderModal, Logo, SignInButton, SwitchLanguageButton } from '@app/components'
 import { IS_IOS } from '@app/env'
 import { useAuth } from '@app/hooks'
 
@@ -13,11 +13,11 @@ const Welcome = () => {
 
 	const { signInWithGoogle, signInWithApple, loading } = useAuth()
 
-	const navigateToSignIn = () => router.push('/(auth)/SignIn')
-	const navigateToSignUp = () => router.push('/(auth)/SignUp')
+	const navigateToSignIn = () => router.push('/SignIn')
+	const navigateToSignUp = () => router.push('/SignUp')
 
 	return (
-		<View flex center gap-s10 testID="Welcome">
+		<Background center gap-s10 testID="Welcome">
 			<LoaderModal visible={loading} />
 			<Logo />
 			<Text title white center>
@@ -40,7 +40,7 @@ const Welcome = () => {
 				/>
 			</View>
 			<SwitchLanguageButton testID="Welcome.SwitchLanguage" />
-		</View>
+		</Background>
 	)
 }
 export default withProfiler(Welcome)

@@ -6,7 +6,7 @@ const HomeStackLayout = () => {
 	const { t } = useTranslation()
 	return (
 		<Stack screenOptions={stackHeaderScreenOptions} initialRouteName="Home">
-			<Stack.Screen name="Home" options={{ title: t('home') }} />
+			<Stack.Screen name="Home" options={{ title: t('modules.chat.chat') }} />
 		</Stack>
 	)
 }

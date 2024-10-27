@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, StyleSheet } from 'react-native'
 import { Button, Text, View } from 'react-native-ui-lib'
-import { AuthTextField, LoaderModal, SignInButton } from '@app/components'
+import { AuthTextField, Background, LoaderModal, SignInButton } from '@app/components'
 import { useAuth, useAvoidKeyboard } from '@app/hooks'
 import { useStore } from '@app/store'
 import { validateEmail } from '@app/utils/validators'
@@ -48,46 +48,48 @@ const SignUp = () => {
 	useAvoidKeyboard()
 
 	return (
-		<ScrollView contentContainerStyle={styles.container} testID="SignUp">
-			<View flex paddingH-s6 centerV>
-				<LoaderModal visible={loading} />
-				<View center gap-s4 bg-blackTransparent4 style={styles.card}>
-					<Text tl white marginB-s10>
-						{i18n.t('signUp')}
-					</Text>
-					<AuthTextField
-						placeholder={capitalize(t('email'))}
-						value={email}
-						onChangeText={onChangeEmail}
-						validate={['required', validateEmail]}
-						validationMessage={[i18n.t('error.required'), i18n.t('error.wrongEmailFormat')]}
-						testID="SignUp.Email"
-					/>
-					<AuthTextField
-						value={password}
-						onChangeText={onChangePassword}
-						placeholder={capitalize(t('password'))}
-						validate={['required', v => !!v && v.length >= 6]}
-						validationMessage={[i18n.t('error.required'), i18n.t('error.shortPassword')]}
-						secureTextEntry
-						testID="SignUp.Password"
-					/>
-					<AuthTextField
-						value={confirmationPassword}
-						onChangeText={onChangeConfirmationPassword}
-						placeholder={capitalize(t('confirmPassword'))}
-						testID="SignUp.ConfirmationPassword"
-					/>
-					<SignInButton
-						label={t('signUpButton')}
-						onPress={handleSubmit}
-						disabled={submitDisabled}
-						testID="SignUp.SubmitButton"
-					/>
-					<Button label={t('alreadyHaveAccountButton')} onPress={router.back} tm hyperlink white marginT-s4 />
+		<Background>
+			<ScrollView contentContainerStyle={styles.container} testID="SignUp">
+				<View flex paddingH-s6 centerV>
+					<LoaderModal visible={loading} />
+					<View center gap-s4 bg-blackTransparent4 style={styles.card}>
+						<Text tl white marginB-s10>
+							{i18n.t('signUp')}
+						</Text>
+						<AuthTextField
+							placeholder={capitalize(t('email'))}
+							value={email}
+							onChangeText={onChangeEmail}
+							validate={['required', validateEmail]}
+							validationMessage={[i18n.t('error.required'), i18n.t('error.wrongEmailFormat')]}
+							testID="SignUp.Email"
+						/>
+						<AuthTextField
+							value={password}
+							onChangeText={onChangePassword}
+							placeholder={capitalize(t('password'))}
+							validate={['required', v => !!v && v.length >= 6]}
+							validationMessage={[i18n.t('error.required'), i18n.t('error.shortPassword')]}
+							secureTextEntry
+							testID="SignUp.Password"
+						/>
+						<AuthTextField
+							value={confirmationPassword}
+							onChangeText={onChangeConfirmationPassword}
+							placeholder={capitalize(t('confirmPassword'))}
+							testID="SignUp.ConfirmationPassword"
+						/>
+						<SignInButton
+							label={t('signUpButton')}
+							onPress={handleSubmit}
+							disabled={submitDisabled}
+							testID="SignUp.SubmitButton"
+						/>
+						<Button label={t('alreadyHaveAccountButton')} onPress={router.back} tm hyperlink white marginT-s4 />
+					</View>
 				</View>
-			</View>
-		</ScrollView>
+			</ScrollView>
+		</Background>
 	)
 }
 

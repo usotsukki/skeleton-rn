@@ -2,12 +2,13 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import * as Sentry from '@sentry/react-native'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { isRunningInExpoGo } from 'expo'
-import { Slot, useNavigationContainerRef, useRouter, useSegments } from 'expo-router'
+import { Stack, useNavigationContainerRef, useRouter, useSegments } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
+import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableScreens } from 'react-native-screens'
-import { NetInfoToast, Toast } from '@app/components'
+import { ErrorFallback, NetInfoToast, Toast } from '@app/components'
 import { GOOGLE_WEB_CLIENT_ID, IS_PROD, SENTRY_DEBUG, SENTRY_DSN } from '@app/env'
 import { useLoadFonts } from '@app/hooks'
 import { useStorageDevTools } from '@app/storage'
@@ -31,7 +32,7 @@ Sentry.init({
 	],
 })
 
-enableScreens(false)
+enableScreens(true)
 
 const RootLayout = () => {
 	const ref = useNavigationContainerRef()
@@ -41,6 +42,15 @@ const RootLayout = () => {
 	const queryClient = new QueryClient()
 	const user = useStore(state => state.auth.user)
 	const authRequired = segments[0] === '(tabs)'
+
+	const onReset = () => router.replace('/')
+
+	const renderFallback = useCallback(
+		({ error, resetErrorBoundary }: FallbackProps) => (
+			<ErrorFallback error={error} resetErrorBoundary={resetErrorBoundary} />
+		),
+		[],
+	)
 
 	useEffect(() => {
 		if (fontsFinishedLoading) {
@@ -55,10 +65,10 @@ const RootLayout = () => {
 
 	useEffect(() => {
 		if (authRequired && !user) {
-			router.replace('/(auth)/Welcome')
+			router.replace('/')
 		}
 		if (!authRequired && user) {
-			router.replace('/(tabs)/Home')
+			router.replace('/(tabs)/(home)/Home')
 		}
 	}, [user, authRequired])
 
@@ -67,9 +77,16 @@ const RootLayout = () => {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<SafeAreaProvider>
-				<NetInfoToast />
-				<Toast />
-				<Slot />
+				<ErrorBoundary fallbackRender={renderFallback} onReset={onReset}>
+					<NetInfoToast />
+					<Toast />
+					<Stack
+						screenOptions={{
+							headerShown: false,
+							animation: 'fade',
+						}}
+					/>
+				</ErrorBoundary>
 			</SafeAreaProvider>
 		</QueryClientProvider>
 	)
