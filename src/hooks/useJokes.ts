@@ -5,7 +5,6 @@ const useJokes = () => {
 	return useQuery({
 		queryKey: ['joke'],
 		queryFn: fetchRandomJoke,
-		select: data => data.joke,
 		refetchOnReconnect: 'always',
 		experimental_prefetchInRender: true,
 	})

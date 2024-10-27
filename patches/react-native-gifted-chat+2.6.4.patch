@@ -1,0 +1,44 @@
+diff --git a/node_modules/react-native-gifted-chat/lib/GiftedChat.d.ts b/node_modules/react-native-gifted-chat/lib/GiftedChat.d.ts
+index eb9b7de..a5dfeb2 100644
+--- a/node_modules/react-native-gifted-chat/lib/GiftedChat.d.ts
++++ b/node_modules/react-native-gifted-chat/lib/GiftedChat.d.ts
+@@ -27,6 +27,7 @@ export interface GiftedChatProps<TMessage extends IMessage = IMessage> {
+     isTyping?: boolean;
+     renderUsernameOnMessage?: boolean;
+     messagesContainerStyle?: StyleProp<ViewStyle>;
++    messageContainerStyle?: LeftRightStyle<ViewStyle>
+     text?: string;
+     alignTop?: boolean;
+     scrollToBottom?: boolean;
+diff --git a/node_modules/react-native-gifted-chat/lib/Message.js b/node_modules/react-native-gifted-chat/lib/Message.js
+index 0f33b49..7d11bc7 100644
+--- a/node_modules/react-native-gifted-chat/lib/Message.js
++++ b/node_modules/react-native-gifted-chat/lib/Message.js
+@@ -105,6 +105,7 @@ class Message extends React.Component {
+                     ? (this.renderSystemMessage())
+                     : (<View style={[
+                             styles[position].container,
++                            this.props.messageContainerStyle && this.props.messageContainerStyle[position],
+                             { marginBottom: sameUser ? 2 : 10 },
+                             !this.props.inverted && { marginBottom: 2 },
+                             containerStyle && containerStyle[position],
+@@ -133,6 +134,7 @@ Message.defaultProps = {
+     inverted: true,
+     shouldUpdateMessage: undefined,
+     onMessageLayout: undefined,
++    messageContainerStyle: {},
+ };
+ Message.propTypes = {
+     renderAvatar: PropTypes.func,
+@@ -152,6 +154,10 @@ Message.propTypes = {
+     }),
+     shouldUpdateMessage: PropTypes.func,
+     onMessageLayout: PropTypes.func,
++    messageContainerStyle: PropTypes.shape({
++        left: StylePropType,
++        right: StylePropType,
++    }),
+ };
+ export default Message;
+ //# sourceMappingURL=Message.js.map
+\ No newline at end of file

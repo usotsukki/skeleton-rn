@@ -14,7 +14,7 @@ const Demo = () => {
 		await scheduleNotificationAsync({
 			content: {
 				title: t('jokeOfTheDay'),
-				body: jokeQuery.data,
+				body: jokeQuery.data?.joke,
 			},
 			trigger: null,
 		})
