@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "Skeleton",
 		"slug": "skeleton",
-		"version": "1.1.0",
+		"version": "1.1.1",
 		"icon": "./assets/png/app-icon.png",
 		"scheme": "skeleton",
 		"experiments": {
@@ -14,10 +14,10 @@
 			"backgroundColor": "#151B26"
 		},
 		"ios": {
-			"buildNumber": "1.1.0"
+			"buildNumber": "1.1.1"
 		},
 		"android": {
-			"versionCode": 51010100
+			"versionCode": 51010101
 		},
 		"web": {
 			"bundler": "metro",
