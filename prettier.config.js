@@ -1,4 +1,5 @@
-module.exports = {
+const config = {
+	plugins: [require.resolve('@trivago/prettier-plugin-sort-imports'), require.resolve('propocd')],
 	printWidth: 120,
 	useTabs: true,
 	tabWidth: 2,
@@ -12,8 +13,9 @@ module.exports = {
 	trailingComma: 'all',
 	singleAttributePerLine: false,
 
-	plugins: [require.resolve('@trivago/prettier-plugin-sort-imports')],
 	importOrderSortSpecifiers: true,
 	importOrderCaseInsensitive: true,
 	importOrder: ['@assets/*', '@app/*', '^[../*]', '^[./*]'],
 }
+
+module.exports = config

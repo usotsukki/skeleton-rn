@@ -26,8 +26,8 @@ const TabLayout = () => {
 	return (
 		<ErrorBoundary fallbackRender={renderFallback} onReset={onReset}>
 			<Tabs
-				sceneContainerStyle={{ backgroundColor: Colors.grayBlack }}
 				detachInactiveScreens={false}
+				sceneContainerStyle={{ backgroundColor: Colors.grayBlack }}
 				screenOptions={{
 					tabBarTestID: 'TabBar',
 					headerShown: false,
@@ -50,7 +50,7 @@ const TabLayout = () => {
 					options={{
 						title: t('home'),
 						tabBarIcon: ({ color }) => (
-							<FontAwesome5 testID="TabBar.Home" size={iconSizes.navigation} name="react" color={color} />
+							<FontAwesome5 color={color} name="react" size={iconSizes.navigation} testID="TabBar.Home" />
 						),
 					}}
 				/>
@@ -59,7 +59,7 @@ const TabLayout = () => {
 					options={{
 						title: t('demo'),
 						tabBarIcon: ({ color }) => (
-							<FontAwesome6 testID="TabBar.Demo" size={iconSizes.navigation} name="circle-notch" color={color} />
+							<FontAwesome6 color={color} name="circle-notch" size={iconSizes.navigation} testID="TabBar.Demo" />
 						),
 					}}
 				/>

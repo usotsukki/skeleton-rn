@@ -7146,7 +7146,7 @@ debug@2.6.9, debug@^2.2.0, debug@^2.6.9:
   dependencies:
     ms "2.0.0"
 
-debug@4, debug@^4.1.0, debug@^4.1.1, debug@^4.3.1, debug@^4.3.2, debug@^4.3.4, debug@^4.3.5, debug@~4.3.6:
+debug@4, debug@^4.1.0, debug@^4.1.1, debug@^4.3.1, debug@^4.3.2, debug@^4.3.4, debug@^4.3.5, debug@^4.3.7, debug@~4.3.6:
   version "4.3.7"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.7.tgz#87945b4151a011d76d95a198d7111c865c360a52"
   integrity sha512-Er2nc/H7RrMXZBFCEim6TCmMk02Z8vLC2Rbi1KEBggpo0fS6l0S1nnapwmIi3yW/+GOJap1Krg4w0Hg80oCqgQ==
@@ -12748,6 +12748,14 @@ proper-lockfile@^3.0.2:
     graceful-fs "^4.1.11"
     retry "^0.12.0"
     signal-exit "^3.0.2"
+
+propocd@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/propocd/-/propocd-1.2.1.tgz#981fa69fa8d01051874989fa775cae66302ba76f"
+  integrity sha512-ZCvIjUc9qXqk7o7EufgJ1ADxMyU1xa1i/3rFgtuG/wgiZ5sEaSUKFV7OQuvVsArJPf1EGyKdf+bNtCnaGQyaAQ==
+  dependencies:
+    "@babel/types" "^7.25.8"
+    debug "^4.3.7"
 
 protobufjs@^7.2.5:
   version "7.4.0"

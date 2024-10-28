@@ -20,23 +20,23 @@ const Welcome = () => {
 		<Background center gap-s10 testID="Welcome">
 			<LoaderModal visible={loading} />
 			<Logo />
-			<Text title white center>
+			<Text center title white>
 				{t('welcome', { appName: Application.applicationName })}
 			</Text>
 			<View gap-s3>
 				<SignInButton onPress={navigateToSignIn} testID="Welcome.SignIn" />
-				<SignInButton onPress={signInWithGoogle} authProvider="google" testID="Welcome.GoogleSignIn" />
-				{IS_IOS && <SignInButton onPress={signInWithApple} authProvider="apple" testID="Welcome.AppleSignIn" />}
-				<Text white center>
+				<SignInButton authProvider="google" onPress={signInWithGoogle} testID="Welcome.GoogleSignIn" />
+				{IS_IOS && <SignInButton authProvider="apple" onPress={signInWithApple} testID="Welcome.AppleSignIn" />}
+				<Text center white>
 					{i18n.t('or')}
 				</Text>
 				<SignInButton
-					label={t('signUpButton')}
-					testID="Welcome.SignUpButton"
-					onPress={navigateToSignUp}
-					white
 					outline={true}
+					label={t('signUpButton')}
+					onPress={navigateToSignUp}
 					outlineColor={Colors.primary}
+					testID="Welcome.SignUpButton"
+					white
 				/>
 			</View>
 			<SwitchLanguageButton testID="Welcome.SwitchLanguage" />

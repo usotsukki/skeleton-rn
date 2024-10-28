@@ -7,14 +7,14 @@ import { Image, View } from 'react-native-ui-lib'
 const LanguageIconMask = () => {
 	return (
 		<MaskedView
-			testID={'language-icon.container'}
-			style={styles.maskContainer}
 			maskElement={
-				<View testID={'language-icon.mask'} style={styles.maskElement}>
+				<View style={styles.maskElement} testID={'language-icon.mask'}>
 					<Entypo name="language" size={300} />
 				</View>
-			}>
-			<Image testID={'language-icon.image'} width={700} assetGroup="illustrations" assetName="graphicBackground" />
+			}
+			style={styles.maskContainer}
+			testID={'language-icon.container'}>
+			<Image width={700} assetGroup="illustrations" assetName="graphicBackground" testID={'language-icon.image'} />
 		</MaskedView>
 	)
 }

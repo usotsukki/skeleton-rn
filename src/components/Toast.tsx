@@ -17,15 +17,15 @@ const Toast = () => {
 
 	return (
 		<Incubator.Toast
-			testID="toast-netinfo"
-			visible={visible}
-			swipeable
 			position="top"
-			preset={preset}
+			zIndex={6}
+			autoDismiss={duration}
 			message={message}
 			onDismiss={hideToast}
-			autoDismiss={duration}
-			zIndex={6}
+			preset={preset}
+			swipeable
+			testID="toast-netinfo"
+			visible={visible}
 		/>
 	)
 }

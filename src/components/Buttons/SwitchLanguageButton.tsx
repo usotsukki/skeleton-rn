@@ -7,12 +7,12 @@ const SwitchLanguageButton = ({ ...props }: ButtonProps) => {
 	const { i18n } = useTranslation()
 	return (
 		<Button
-			testID="switch-language-button"
+			hyperlink
 			label={supportedLanguages[i18n.language as Language]}
 			onPress={() => i18n.changeLanguage(i18n.language === Language.EN ? Language.ES : Language.EN)}
+			testID="switch-language-button"
 			ts
 			white
-			hyperlink
 			{...props}
 		/>
 	)

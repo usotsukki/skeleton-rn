@@ -50,42 +50,42 @@ const SignUp = () => {
 	return (
 		<Background>
 			<ScrollView contentContainerStyle={styles.container} testID="SignUp">
-				<View flex paddingH-s6 centerV>
+				<View flex centerV paddingH-s6>
 					<LoaderModal visible={loading} />
-					<View center gap-s4 bg-blackTransparent4 style={styles.card}>
-						<Text tl white marginB-s10>
+					<View bg-blackTransparent4 center gap-s4 style={styles.card}>
+						<Text marginB-s10 tl white>
 							{i18n.t('signUp')}
 						</Text>
 						<AuthTextField
-							placeholder={capitalize(t('email'))}
-							value={email}
 							onChangeText={onChangeEmail}
+							placeholder={capitalize(t('email'))}
+							testID="SignUp.Email"
 							validate={['required', validateEmail]}
 							validationMessage={[i18n.t('error.required'), i18n.t('error.wrongEmailFormat')]}
-							testID="SignUp.Email"
+							value={email}
 						/>
 						<AuthTextField
-							value={password}
 							onChangeText={onChangePassword}
 							placeholder={capitalize(t('password'))}
-							validate={['required', v => !!v && v.length >= 6]}
-							validationMessage={[i18n.t('error.required'), i18n.t('error.shortPassword')]}
 							secureTextEntry
 							testID="SignUp.Password"
+							validate={['required', v => !!v && v.length >= 6]}
+							validationMessage={[i18n.t('error.required'), i18n.t('error.shortPassword')]}
+							value={password}
 						/>
 						<AuthTextField
-							value={confirmationPassword}
 							onChangeText={onChangeConfirmationPassword}
 							placeholder={capitalize(t('confirmPassword'))}
 							testID="SignUp.ConfirmationPassword"
+							value={confirmationPassword}
 						/>
 						<SignInButton
+							disabled={submitDisabled}
 							label={t('signUpButton')}
 							onPress={handleSubmit}
-							disabled={submitDisabled}
 							testID="SignUp.SubmitButton"
 						/>
-						<Button label={t('alreadyHaveAccountButton')} onPress={router.back} tm hyperlink white marginT-s4 />
+						<Button hyperlink label={t('alreadyHaveAccountButton')} marginT-s4 onPress={router.back} tm white />
 					</View>
 				</View>
 			</ScrollView>

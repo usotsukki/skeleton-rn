@@ -19,18 +19,18 @@ const SignInButton = ({ onPress, authProvider, ...props }: Props & ButtonProps) 
 
 	const renderProviderIcon = () => (
 		<View style={styles.iconContainer}>
-			<Ionicons name={authProvider && `logo-${authProvider}`} size={24} color="black" />
+			<Ionicons color="black" name={authProvider && `logo-${authProvider}`} size={24} />
 		</View>
 	)
 
 	return (
 		<Button
-			testID="sign-in-button"
+			bg-primary
+			iconSource={authProvider && renderProviderIcon}
 			label={label}
 			onPress={onPress}
-			iconSource={authProvider && renderProviderIcon}
 			style={styles.button}
-			bg-primary
+			testID="sign-in-button"
 			tm
 			{...props}
 		/>

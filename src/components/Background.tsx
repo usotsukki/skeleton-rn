@@ -5,11 +5,11 @@ import { View, ViewProps } from 'react-native-ui-lib'
 const Background = ({ children, ...props }: PropsWithChildren & ViewProps) => {
 	return (
 		<ImageBackground
-			style={styles.container}
 			resizeMode="cover"
 			source={require('@assets/png/image-auth-background.png')}
+			style={styles.container}
 			testID="background-view">
-			<View flex useSafeArea bg-blackTransparent6 {...props}>
+			<View flex bg-blackTransparent6 useSafeArea {...props}>
 				{children}
 			</View>
 		</ImageBackground>

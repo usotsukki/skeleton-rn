@@ -15,22 +15,22 @@ const ErrorFallback = ({ error, resetErrorBoundary }: Props) => {
 
 	return (
 		<View flex center>
-			<View br60 bg-blackTransparent4 center paddingH-s5 paddingV-s10 gap-s4 width={400}>
-				<LottieView style={styles.mainAnimation} source={Assets.lottie.robot404} autoPlay />
+			<View width={400} bg-blackTransparent4 br60 center gap-s4 paddingH-s5 paddingV-s10>
+				<LottieView autoPlay source={Assets.lottie.robot404} style={styles.mainAnimation} />
 				<View>
-					<Text white h1 marginB-s2 center>
+					<Text center h1 marginB-s2 white>
 						{t('error.title')}
 					</Text>
-					<Text white tl marginB-s2 center>
+					<Text center marginB-s2 tl white>
 						{t('error.subtitle')}
 					</Text>
 					{error?.message && IS_DEV && (
-						<Text white marginT-s4 ts center>
+						<Text center marginT-s4 ts white>
 							{error.message}
 						</Text>
 					)}
 				</View>
-				<Button label={t('error.button')} onPress={resetErrorBoundary} bg-primary tl style={styles.buttonContainer} />
+				<Button bg-primary label={t('error.button')} onPress={resetErrorBoundary} style={styles.buttonContainer} tl />
 			</View>
 		</View>
 	)

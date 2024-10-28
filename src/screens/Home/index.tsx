@@ -63,8 +63,8 @@ const Home = () => {
 		(props: BubbleProps<IMessage>) => (
 			<Bubble
 				{...props}
-				wrapperStyle={getRightLeftStyle(styles.wrapper)}
 				containerStyle={getRightLeftStyle(styles.container)}
+				wrapperStyle={getRightLeftStyle(styles.wrapper)}
 			/>
 		),
 		[],
@@ -72,14 +72,14 @@ const Home = () => {
 
 	return (
 		<GiftedChat
+			messageContainerStyle={getRightLeftStyle(styles.messageContainer)}
 			messages={messages}
 			onSend={data => onSend(data)}
+			renderBubble={renderBubble}
+			showUserAvatar={false}
 			user={{
 				_id: 2,
 			}}
-			renderBubble={renderBubble}
-			messageContainerStyle={getRightLeftStyle(styles.messageContainer)}
-			showUserAvatar={false}
 		/>
 	)
 }

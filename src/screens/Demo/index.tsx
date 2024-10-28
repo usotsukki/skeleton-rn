@@ -22,7 +22,7 @@ const Demo = () => {
 	}
 
 	return (
-		<View flex center backgroundColor={Colors.grayBlack} testID="Demo" gap-s4>
+		<View flex backgroundColor={Colors.grayBlack} center gap-s4 testID="Demo">
 			<Link href="/(demo)/Map">
 				<Text h1 white>
 					{t('navigateToMap')}

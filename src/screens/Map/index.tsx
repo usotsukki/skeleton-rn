@@ -28,7 +28,7 @@ const Map = () => {
 	}, [status])
 
 	return (
-		<View flex center backgroundColor={Colors.grayBlack}>
+		<View flex backgroundColor={Colors.grayBlack} center>
 			<MapView provider={PROVIDER_GOOGLE} style={styles.map}>
 				{location && <Marker coordinate={location.coords} title={'You are here'} />}
 			</MapView>

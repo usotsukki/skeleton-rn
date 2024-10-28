@@ -5,7 +5,7 @@ import { stackHeaderScreenOptions } from '@app/utils/navigation'
 const HomeStackLayout = () => {
 	const { t } = useTranslation()
 	return (
-		<Stack screenOptions={stackHeaderScreenOptions} initialRouteName="Home">
+		<Stack initialRouteName="Home" screenOptions={stackHeaderScreenOptions}>
 			<Stack.Screen name="Home" options={{ title: t('modules.chat.chat') }} />
 		</Stack>
 	)

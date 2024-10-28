@@ -41,31 +41,31 @@ const SignIn = () => {
 	return (
 		<Background>
 			<ScrollView contentContainerStyle={styles.container} testID="SignIn">
-				<View flex paddingH-s6 centerV>
+				<View flex centerV paddingH-s6>
 					<LoaderModal visible={loading} />
-					<View center gap-s4 bg-blackTransparent4 style={styles.card}>
-						<Text tl white marginB-s10>
+					<View bg-blackTransparent4 center gap-s4 style={styles.card}>
+						<Text marginB-s10 tl white>
 							{i18n.t('signIn')}
 						</Text>
 						<AuthTextField
-							placeholder={capitalize(t('email'))}
-							textContentType="emailAddress"
-							value={email}
 							onChangeText={onChangeEmail}
+							placeholder={capitalize(t('email'))}
+							testID="SignIn.Email"
+							textContentType="emailAddress"
 							validate={['required', validateEmail]}
 							validationMessage={[i18n.t('error.required'), i18n.t('error.wrongEmailFormat')]}
-							testID="SignIn.Email"
+							value={email}
 						/>
 						<AuthTextField
-							value={password}
 							onChangeText={onChangePassword}
 							placeholder={capitalize(t('password'))}
 							secureTextEntry
-							textContentType="password"
 							testID="SignIn.Password"
+							textContentType="password"
+							value={password}
 						/>
-						<SignInButton onPress={handleSubmit} disabled={submitDisabled} testID="SignIn.SubmitButton" />
-						<Button label={t('noAccountButton')} onPress={router.back} tm hyperlink white marginT-s4 />
+						<SignInButton disabled={submitDisabled} onPress={handleSubmit} testID="SignIn.SubmitButton" />
+						<Button hyperlink label={t('noAccountButton')} marginT-s4 onPress={router.back} tm white />
 					</View>
 				</View>
 			</ScrollView>

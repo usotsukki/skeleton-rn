@@ -8,10 +8,10 @@ const HeaderBackButton = () => {
 
 	return navigation.getState().index > 0 ? (
 		<Button
-			testID="nav-back-button"
 			backgroundColor={'transparent'}
+			iconSource={() => <Ionicons color="black" name="arrow-back" size={iconSizes.medium} />}
 			onPress={() => navigation.goBack()}
-			iconSource={() => <Ionicons name="arrow-back" size={iconSizes.medium} color="black" />}
+			testID="nav-back-button"
 		/>
 	) : null
 }

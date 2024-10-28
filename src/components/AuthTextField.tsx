@@ -11,17 +11,17 @@ interface Props {
 const AuthTextField = ({ ...props }: Props & TextFieldProps) => {
 	return (
 		<TextField
-			white
-			floatingPlaceholder
-			floatOnFocus
-			placeholderTextColor-white
-			floatingPlaceholderColor-white
 			containerStyle={styles.inputContainer}
 			enableErrors
-			validateOnBlur
+			floatingPlaceholder
+			floatingPlaceholderColor-white
+			floatOnFocus
+			placeholderTextColor-white
 			retainValidationSpace
-			validationMessageStyle={styles.validationMessageStyle}
+			validateOnBlur
 			validationMessagePosition="top"
+			validationMessageStyle={styles.validationMessageStyle}
+			white
 			{...props}
 		/>
 	)

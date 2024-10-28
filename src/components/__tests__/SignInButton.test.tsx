@@ -25,7 +25,7 @@ describe('SignInButton', () => {
 	})
 
 	it('should render SignIn button with with provider', async () => {
-		const renderTree = render(<SignInButton onPress={mockedSignIn} authProvider={'apple'} />)
+		const renderTree = render(<SignInButton authProvider={'apple'} onPress={mockedSignIn} />)
 		const ButtonNode = ButtonDriver({ renderTree, testID: 'sign-in-button' })
 
 		expect(ButtonNode.exists()).toBe(true)

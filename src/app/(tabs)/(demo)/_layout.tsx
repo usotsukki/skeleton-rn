@@ -5,7 +5,7 @@ import { stackHeaderScreenOptions } from '@app/utils/navigation'
 const DemoStackLayout = () => {
 	const { t } = useTranslation()
 	return (
-		<Stack screenOptions={stackHeaderScreenOptions} initialRouteName="Demo">
+		<Stack initialRouteName="Demo" screenOptions={stackHeaderScreenOptions}>
 			<Stack.Screen name="Demo" options={{ title: t('demo') }} />
 			<Stack.Screen name="Map" options={{ title: t('map') }} />
 		</Stack>

@@ -16,14 +16,14 @@ const NetInfoToast = () => {
 
 	return (
 		<Incubator.Toast
+			position="top"
+			zIndex={5}
+			icon={require('@assets/png/offline.png')}
+			message={message}
+			onDismiss={() => setVisible(false)}
+			swipeable
 			testID="toast-netinfo"
 			visible={visible}
-			swipeable
-			position="top"
-			onDismiss={() => setVisible(false)}
-			message={message}
-			icon={require('@assets/png/offline.png')}
-			zIndex={5}
 		/>
 	)
 }
