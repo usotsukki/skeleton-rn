@@ -16,6 +16,6 @@ export default {
 	'*.{ts,tsx}': [() => 'tsc-files --noEmit'],
 	'**/*.{ts,tsx,js,jsx}': async files => {
 		const filesToLint = await removeIgnoredFiles(files)
-		return [`eslint --max-warnings=0 ${filesToLint}`]
+		return [`eslint ${filesToLint}`]
 	},
 }

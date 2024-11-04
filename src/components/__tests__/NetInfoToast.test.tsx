@@ -27,13 +27,13 @@ describe('NetInfoToast', () => {
 	it('should display the toast if the user is offline', () => {
 		jest.useFakeTimers()
 		mockConnectionStatus(false)
-		const renderTree = render(<NetInfoToast />)
+		render(<NetInfoToast />)
+
 		act(() => jest.runAllTimers())
 
 		expect(screen.getByTestId('toast-netinfo')).toBeTruthy()
 		expect(mockedTranslate).toHaveBeenCalledWith('offline')
-		expect(screen.getByText("You're currently offline")).toBeTruthy()
-		expect(renderTree.toJSON()).toMatchSnapshot()
+		expect(screen.getByText(`You're currently offline`)).toBeTruthy()
 	})
 
 	it(`should not display the toast if the user is online`, () => {

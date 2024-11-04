@@ -29,7 +29,6 @@ const TabLayout = () => {
 				detachInactiveScreens={false}
 				sceneContainerStyle={{ backgroundColor: Colors.grayBlack }}
 				screenOptions={{
-					tabBarTestID: 'TabBar',
 					headerShown: false,
 					freezeOnBlur: true,
 					tabBarVisibilityAnimationConfig: {

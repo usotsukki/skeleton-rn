@@ -1,6 +1,7 @@
-import appleAuth from '@invertase/react-native-apple-authentication'
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth'
 import { GoogleSignin, isSuccessResponse } from '@react-native-google-signin/google-signin'
+import * as AppleAuthentication from 'expo-apple-authentication'
+import { CryptoDigestAlgorithm, digestStringAsync } from 'expo-crypto'
 import i18next from 'i18next'
 import { useEffect } from 'react'
 import { useStore } from '@app/store'
@@ -71,21 +72,31 @@ const useAuth = () => {
 
 	const getGoogleAuthCredential = async () => {
 		const res = await GoogleSignin.signIn()
+
 		if (!isSuccessResponse(res)) {
 			throw new Error(`GoogleSignIn ${res.type}`)
 		}
+
 		return auth.GoogleAuthProvider.credential(res.data.idToken)
 	}
 
 	const getAppleAuthCredential = async () => {
-		const appleAuthRequestResponse = await appleAuth.performRequest({
-			requestedOperation: appleAuth.Operation.LOGIN,
-			requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
+		const nonce = await digestStringAsync(CryptoDigestAlgorithm.SHA256, Math.random().toString(36).substring(2, 10))
+
+		const appleAuthRequestResponse = await AppleAuthentication.signInAsync({
+			nonce,
+			requestedScopes: [
+				AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+				AppleAuthentication.AppleAuthenticationScope.EMAIL,
+			],
 		})
+
 		if (!appleAuthRequestResponse.identityToken) {
 			throw new Error('Apple Sign-In failed - no identify token returned')
 		}
-		const { identityToken, nonce } = appleAuthRequestResponse
+
+		const { identityToken } = appleAuthRequestResponse
+
 		return auth.AppleAuthProvider.credential(identityToken, nonce)
 	}
 

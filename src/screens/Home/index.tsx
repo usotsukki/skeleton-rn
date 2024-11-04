@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { StyleSheet, ViewStyle } from 'react-native'
 import { Bubble, BubbleProps, GiftedChat, IMessage } from 'react-native-gifted-chat'
 import { Colors } from 'react-native-ui-lib'
+import { hashStringToNumber } from 'react-native-ui-lib/src/helpers/AvatarHelper'
 import { useChat } from '@app/hooks'
 
 const getRightLeftStyle = (style1: ViewStyle, style2?: ViewStyle) => ({
@@ -36,14 +37,15 @@ const Home = () => {
 		if (!chatData) {
 			return
 		}
+		const messageId = hashStringToNumber(chatData.id)
 		const chatResponse = generateMessage(chatData.choices[0].message.content, {
-			id: parseInt(chatData.id, 10),
+			id: messageId,
 			createdAt: chatData.created * 1000,
 		})
 
 		setMessages(prev =>
 			GiftedChat.append(
-				prev.filter(e => e._id !== chatData.id),
+				prev.filter(e => e._id !== messageId),
 				[chatResponse],
 			),
 		)

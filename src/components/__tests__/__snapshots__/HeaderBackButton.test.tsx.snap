@@ -46,6 +46,10 @@ exports[`BackButton renders correctly for second screen in stack 1`] = `
   }
   testID="nav-back-button"
 >
-  <Text />
+  <Ionicons
+    color="black"
+    name="arrow-back"
+    size={24}
+  />
 </View>
 `;

@@ -46,7 +46,10 @@ exports[`LanguageIconMask renders correctly 1`] = `
       }
       testID="language-icon.mask"
     >
-      <Text />
+      <Entypo
+        name="language"
+        size={300}
+      />
     </View>
   </View>
   <Image

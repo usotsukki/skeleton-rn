@@ -34,10 +34,8 @@ appId: 'com.skeleton'
 
 - extendedWaitUntil:
     visible:
-      id: 'TabBar'
+      id: 'TabBar.Home'
     timeout: 5000
-- assertVisible:
-    id: 'TabBar.Home'
 - assertVisible:
     id: 'TabBar.Demo'
 

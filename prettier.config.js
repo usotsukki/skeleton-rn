@@ -1,5 +1,4 @@
 const config = {
-	plugins: [require.resolve('@trivago/prettier-plugin-sort-imports'), require.resolve('propocd')],
 	printWidth: 120,
 	useTabs: true,
 	tabWidth: 2,
@@ -13,6 +12,7 @@ const config = {
 	trailingComma: 'all',
 	singleAttributePerLine: false,
 
+	plugins: ['propocd', '@trivago/prettier-plugin-sort-imports', 'prettier-plugin-merge'],
 	importOrderSortSpecifiers: true,
 	importOrderCaseInsensitive: true,
 	importOrder: ['@assets/*', '@app/*', '^[../*]', '^[./*]'],
