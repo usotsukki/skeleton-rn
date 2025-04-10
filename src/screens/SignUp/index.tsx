@@ -42,7 +42,7 @@ const SignUp = () => {
 			return
 		}
 
-		createUser(email, password)
+		createUser({ email, password })
 	}
 
 	useAvoidKeyboard()

@@ -16,3 +16,5 @@ export const zustandStorage = new MMKV({ id: 'zustand' })
 export const useStorageDevTools = (): void => useMMKVDevTools({ storage: zustandStorage })
 
 export const deviceStorage = new MMKVStorage<[], Device>({ id: 'device' })
+
+export const authStorage = new MMKV({ id: 'auth' })

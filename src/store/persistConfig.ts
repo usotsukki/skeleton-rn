@@ -11,12 +11,6 @@ const persistStorage: StateStorage = {
 const persistConfig: PersistOptions<RootStore> = {
 	name: 'rootStore',
 	storage: createJSONStorage(() => persistStorage),
-	partialize: state =>
-		({
-			auth: {
-				user: state.auth.user,
-			},
-		}) as RootStore,
 }
 
 export default persistConfig

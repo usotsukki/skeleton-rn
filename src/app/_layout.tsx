@@ -11,8 +11,8 @@ import { enableScreens } from 'react-native-screens'
 import { ErrorFallback, NetInfoToast, Toast } from '@app/components'
 import { GOOGLE_WEB_CLIENT_ID, IS_PROD, SENTRY_DEBUG, SENTRY_DSN } from '@app/env'
 import { useLoadFonts } from '@app/hooks'
+import { useAuthListener, useAuthStore } from '@app/hooks/useAuth'
 import { useStorageDevTools } from '@app/storage'
-import { useGlobalStore } from '@app/store'
 import '@app/theme'
 import '@app/translations'
 
@@ -40,7 +40,7 @@ const RootLayout = () => {
 	const router = useRouter()
 	const segments = useSegments()
 	const queryClient = new QueryClient()
-	const user = useGlobalStore(state => state.auth.user)
+	const { user } = useAuthStore()
 	const authRequired = segments[0] === '(tabs)'
 
 	const onReset = () => router.replace('/')
@@ -76,6 +76,8 @@ const RootLayout = () => {
 			router.replace('/(tabs)/(home)/Home')
 		}
 	}, [user, authRequired])
+
+	useAuthListener()
 
 	useStorageDevTools()
 

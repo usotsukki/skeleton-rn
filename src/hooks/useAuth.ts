@@ -1,127 +1,91 @@
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth'
-import { GoogleSignin, isSuccessResponse } from '@react-native-google-signin/google-signin'
-import * as AppleAuthentication from 'expo-apple-authentication'
-import { CryptoDigestAlgorithm, digestStringAsync } from 'expo-crypto'
-import i18next from 'i18next'
+import { useMutation } from '@tanstack/react-query'
 import { useEffect } from 'react'
-import { useGlobalStore } from '@app/store'
-import { getErrorData, logger } from '@app/utils'
-import useToast from './useToast'
+import { create } from 'zustand'
+import { createJSONStorage, persist, PersistOptions, StateStorage } from 'zustand/middleware'
+import {
+	createUser as authCreateUser,
+	signIn as authSignIn,
+	signOut as authSignOut,
+	getAppleAuthCredential,
+	getGoogleAuthCredential,
+	handleAuthErrors,
+	signInWithProvider,
+} from '@app/api/auth'
+import { authStorage } from '@app/storage'
 
-const authErrors = {
-	codes: {
-		'[auth/invalid-credential]': i18next.t('error.invalidEmailOrPassword'),
-		'1000': null,
-	},
-	messages: {
-		'GoogleSignIn cancelled': null,
-	},
+interface AuthState {
+	user: FirebaseAuthTypes.User | null
 }
 
-const useAuth = () => {
-	const loading = useGlobalStore(state => state.auth.loading)
-	const setLoading = useGlobalStore(state => state.setLoading)
-	const setUser = useGlobalStore(state => state.setUser)
-	const setError = useGlobalStore(state => state.setError)
-	const showToast = useToast(state => state.showToast)
+interface AuthStore extends AuthState {
+	setUser: (user: FirebaseAuthTypes.User | null) => void
+}
 
-	const handleErrors = (e: unknown) => {
-		const { code, message } = getErrorData(e)
+const persistStorage: StateStorage = {
+	setItem: (name, value) => authStorage.set(name, value),
+	getItem: name => authStorage.getString(name) || null,
+	removeItem: name => authStorage.delete(name),
+}
 
-		if (code && code in authErrors.codes) {
-			const errorMessage = authErrors.codes[code as keyof typeof authErrors.codes]
-			if (errorMessage) {
-				showToast(errorMessage, 'error')
-				setError(errorMessage)
-			}
-			return
-		}
+const persistConfig: PersistOptions<AuthStore> = {
+	name: 'auth',
+	storage: createJSONStorage(() => persistStorage),
+}
 
-		if (message && message in authErrors.messages) {
-			const errorMessage = authErrors.messages[message as keyof typeof authErrors.messages]
-			if (errorMessage) {
-				setError(errorMessage)
-				showToast(errorMessage, 'error')
-			}
-			return
-		}
+export const useAuthStore = create(
+	persist(
+		set => ({
+			user: null,
+			setUser: (user: FirebaseAuthTypes.User | null) => set({ user }),
+		}),
+		persistConfig,
+	),
+)
 
-		logger.error(new Error(`${message}`))
-		setError(message)
-		showToast(message, 'error')
-	}
-
-	const withLoading = async <T>(fn: () => Promise<T>): Promise<T | void> => {
-		if (loading) {
-			return
-		}
-		try {
-			setLoading(true)
-			setError(null)
-			return await fn()
-		} catch (e) {
-			handleErrors(e)
-		} finally {
-			setLoading(false)
-		}
-	}
+export const useAuthListener = () => {
+	const setUser = useAuthStore(state => state.setUser)
 
 	useEffect(() => {
 		const unsubscribe = auth().onAuthStateChanged(setUser)
 		return unsubscribe
 	}, [])
+}
 
-	const getGoogleAuthCredential = async () => {
-		const res = await GoogleSignin.signIn()
+const useAuth = () => {
+	const { mutate: createUser, isPending: isCreateUserPending } = useMutation({
+		mutationFn: ({ email, password }: { email: string; password: string }) => {
+			return authCreateUser(email, password)
+		},
+		onError: handleAuthErrors,
+	})
 
-		if (!isSuccessResponse(res)) {
-			throw new Error(`GoogleSignIn ${res.type}`)
-		}
+	const { mutate: signIn, isPending: isSignInPending } = useMutation({
+		mutationFn: ({ email, password }: { email: string; password: string }) => {
+			return authSignIn(email, password)
+		},
+		onError: handleAuthErrors,
+	})
 
-		return auth.GoogleAuthProvider.credential(res.data.idToken)
-	}
+	const { mutate: signInWithGoogle, isPending: isSignInWithGooglePending } = useMutation({
+		mutationFn: () => signInWithProvider(getGoogleAuthCredential),
+		onError: handleAuthErrors,
+	})
 
-	const getAppleAuthCredential = async () => {
-		const nonce = await digestStringAsync(CryptoDigestAlgorithm.SHA256, Math.random().toString(36).substring(2, 10))
+	const { mutate: signInWithApple, isPending: isSignInWithApplePending } = useMutation({
+		mutationFn: () => signInWithProvider(getAppleAuthCredential),
+		onError: handleAuthErrors,
+	})
 
-		const appleAuthRequestResponse = await AppleAuthentication.signInAsync({
-			nonce,
-			requestedScopes: [
-				AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-				AppleAuthentication.AppleAuthenticationScope.EMAIL,
-			],
-		})
+	const { mutate: signOut, isPending: isSignOutPending } = useMutation({
+		mutationFn: () => authSignOut(),
+		onError: handleAuthErrors,
+	})
 
-		if (!appleAuthRequestResponse.identityToken) {
-			throw new Error('Apple Sign-In failed - no identify token returned')
-		}
+	const loading =
+		isSignInPending || isSignInWithGooglePending || isSignInWithApplePending || isCreateUserPending || isSignOutPending
 
-		const { identityToken } = appleAuthRequestResponse
-
-		return auth.AppleAuthProvider.credential(identityToken, nonce)
-	}
-
-	const signIn = async (email: string, password: string) => {
-		return await withLoading(() => auth().signInWithEmailAndPassword(email, password))
-	}
-
-	const signInWithProvider = async (getCredential: () => Promise<FirebaseAuthTypes.AuthCredential>) => {
-		const providerCredential = await getCredential()
-		await auth().signInWithCredential(providerCredential)
-	}
-
-	const signInWithGoogle = () => withLoading(() => signInWithProvider(getGoogleAuthCredential))
-	const signInWithApple = () => withLoading(() => signInWithProvider(getAppleAuthCredential))
-
-	const createUser = async (email: string, password: string) => {
-		withLoading(() => auth().createUserWithEmailAndPassword(email, password))
-	}
-
-	const signOut = async () => {
-		withLoading(() => auth().signOut())
-	}
-
-	return { signIn, signInWithGoogle, createUser, signInWithApple, signOut, loading }
+	return { signIn, signInWithGoogle, signInWithApple, createUser, signOut, loading }
 }
 
 export default useAuth

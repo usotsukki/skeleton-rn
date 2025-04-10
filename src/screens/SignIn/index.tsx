@@ -33,7 +33,7 @@ const SignIn = () => {
 			return
 		}
 
-		signIn(email, password)
+		signIn({ email, password })
 	}
 
 	useAvoidKeyboard()

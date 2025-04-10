@@ -1,7 +1,7 @@
-import { default as authSlice, AuthSliceActions, AuthSliceState } from './authSlice'
+import { default as sampleSlice, SampleSliceActions, SampleSliceState } from './sampleSlice'
 
-interface RootStore extends AuthSliceActions {
-	auth: AuthSliceState
+interface RootStore extends SampleSliceActions {
+	sample: SampleSliceState
 }
 
-export { authSlice, RootStore }
+export { sampleSlice, RootStore }
