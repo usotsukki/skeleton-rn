@@ -11692,10 +11692,10 @@ react-native-svg@15.8.0:
     css-tree "^1.1.3"
     warn-once "0.1.1"
 
-react-native-ui-lib@^7.39.0:
-  version "7.39.1"
-  resolved "https://registry.yarnpkg.com/react-native-ui-lib/-/react-native-ui-lib-7.39.1.tgz#0e56f5b08450179b1dacdb32d96bc91b3c4fbdf5"
-  integrity sha512-5kbYrApBms+LCi8Q1mkuPjY9jreY2YacHeRB3Kcjit80GOw2CR8gwi0SMb9G9FT/BU/Q5PyF379SasXvlC7NIw==
+react-native-ui-lib@~7.34.2:
+  version "7.34.6"
+  resolved "https://registry.yarnpkg.com/react-native-ui-lib/-/react-native-ui-lib-7.34.6.tgz#f52ffedd6213500442fe7d1b781198e10d1cd5ed"
+  integrity sha512-NI6m7FSPoDR24riqpe9mzydYfKADsVqtfRxf/d8dJwbW1n9MCDcPPDrz9PI7DCR3g4Zy6swPGfPNFTxiTkE8MQ==
   dependencies:
     babel-plugin-transform-inline-environment-variables "^0.0.2"
     color "^3.1.0"
@@ -11710,7 +11710,6 @@ react-native-ui-lib@^7.39.0:
     react-native-redash "^12.0.3"
     semver "^5.5.0"
     tinycolor2 "^1.4.2"
-    uilib-native "4.5.1"
     url-parse "^1.2.0"
     wix-react-native-text-size "1.0.9"
 
@@ -13430,14 +13429,6 @@ ua-parser-js@^1.0.35:
   version "1.0.39"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-1.0.39.tgz#bfc07f361549bf249bd8f4589a4cccec18fd2018"
   integrity sha512-k24RCVWlEcjkdOxYmVJgeD/0a1TiSpqLg+ZalVGV9lsnr4yqu0w7tX/x2xX6G4zpkgQnRf89lxuZ1wsbjXM8lw==
-
-uilib-native@4.5.1:
-  version "4.5.1"
-  resolved "https://registry.yarnpkg.com/uilib-native/-/uilib-native-4.5.1.tgz#0a739a23d043dcc68be5e92beafa550dc491eb9a"
-  integrity sha512-hcs4RSIqFqO9b2yLzvcVzj85XmC3WOR16dyUOh4RAcOoNpTMf0f2Tc4MazNLCeU8B/UO8WyVOcr2NvSHaiU6KQ==
-  dependencies:
-    lodash "^4.17.21"
-    prop-types "^15.5.10"
 
 unbox-primitive@^1.0.2:
   version "1.0.2"
