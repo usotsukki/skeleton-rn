@@ -7,14 +7,14 @@ import { ScrollView, StyleSheet } from 'react-native'
 import { Button, Text, View } from 'react-native-ui-lib'
 import { AuthTextField, Background, LoaderModal, SignInButton } from '@app/components'
 import { useAuth, useAvoidKeyboard } from '@app/hooks'
-import { useStore } from '@app/store'
+import useToast from '@app/hooks/useToast'
 import { validateEmail } from '@app/utils/validators'
 
 const SignUp = () => {
 	const { t, i18n } = useTranslation('translation', { keyPrefix: 'modules.auth' })
 	const router = useRouter()
 	const { createUser, loading } = useAuth()
-	const { showToast } = useStore()
+	const showToast = useToast(state => state.showToast)
 
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')

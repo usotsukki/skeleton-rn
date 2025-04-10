@@ -1,12 +1,21 @@
 import * as NetInfo from '@react-native-community/netinfo'
 import { onlineManager } from '@tanstack/react-query'
 import { useEffect } from 'react'
-import { useStore } from '@app/store'
+import { create } from 'zustand'
 import { logger } from '@app/utils'
 
+interface ConnectionStore {
+	hasInternetConnection: boolean
+	setConnectionStatus: (status: boolean) => void
+}
+
+const useConnectionStore = create<ConnectionStore>(set => ({
+	hasInternetConnection: true,
+	setConnectionStatus: (status: boolean) => set({ hasInternetConnection: status }),
+}))
+
 const useConnectionStatus = () => {
-	const hasInternetConnection = useStore(state => state.connection.hasInternetConnection)
-	const setConnectionStatus = useStore(state => state.setConnectionStatus)
+	const { hasInternetConnection, setConnectionStatus } = useConnectionStore()
 
 	const onChange: NetInfo.NetInfoChangeHandler = ({ isInternetReachable }) => {
 		if (isInternetReachable != null) {

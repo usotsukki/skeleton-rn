@@ -1,13 +1,9 @@
 import React from 'react'
 import { Incubator, ToastPresets } from 'react-native-ui-lib'
-import { useStore } from '@app/store'
+import useToast from '@app/hooks/useToast'
 
 const Toast = () => {
-	const message = useStore(state => state.toast.message)
-	const visible = useStore(state => state.toast.visible)
-	const style = useStore(state => state.toast.style)
-	const duration = useStore(state => state.toast.duration)
-	const hideToast = useStore(state => state.hideToast)
+	const { message, visible, style, duration, hideToast } = useToast()
 
 	const preset = {
 		success: ToastPresets.SUCCESS,

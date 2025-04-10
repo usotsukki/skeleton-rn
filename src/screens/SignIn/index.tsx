@@ -8,7 +8,7 @@ import { Button, Text, View } from 'react-native-ui-lib'
 import { AuthTextField, Background, LoaderModal, SignInButton } from '@app/components'
 import { IS_DEV } from '@app/env'
 import { useAuth, useAvoidKeyboard } from '@app/hooks'
-import { useStore } from '@app/store'
+import useToast from '@app/hooks/useToast'
 import { validateEmail } from '@app/utils/validators'
 
 const defaultEmail = IS_DEV ? 'user@example.com' : ''
@@ -18,7 +18,7 @@ const SignIn = () => {
 	const { t, i18n } = useTranslation('translation', { keyPrefix: 'modules.auth' })
 	const router = useRouter()
 	const { signIn, loading } = useAuth()
-	const { showToast } = useStore()
+	const showToast = useToast(state => state.showToast)
 
 	const [email, setEmail] = useState(defaultEmail)
 	const [password, setPassword] = useState(defaultPassword)
