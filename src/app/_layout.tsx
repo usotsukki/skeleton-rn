@@ -18,18 +18,18 @@ import '@app/translations'
 
 SplashScreen.preventAutoHideAsync()
 
-const routingInstrumentation = new Sentry.ReactNavigationInstrumentation({ enableTimeToInitialDisplay: true })
+const navigationIntegration = Sentry.reactNavigationIntegration({
+	enableTimeToInitialDisplay: !isRunningInExpoGo(),
+	routeChangeTimeoutMs: 1000,
+	ignoreEmptyBackNavigationTransactions: true,
+})
 
 Sentry.init({
 	dsn: IS_PROD ? SENTRY_DSN : '',
 	debug: SENTRY_DEBUG,
-	tracesSampleRate: 0.2,
-	integrations: [
-		new Sentry.ReactNativeTracing({
-			routingInstrumentation,
-			enableNativeFramesTracking: !isRunningInExpoGo(),
-		}),
-	],
+	tracesSampleRate: 1.0,
+	enableNativeFramesTracking: !isRunningInExpoGo(),
+	integrations: [navigationIntegration],
 })
 
 enableScreens(true)
@@ -53,9 +53,14 @@ const RootLayout = () => {
 	)
 
 	useEffect(() => {
+		if (ref) {
+			navigationIntegration.registerNavigationContainer(ref)
+		}
+	}, [ref])
+
+	useEffect(() => {
 		if (fontsFinishedLoading) {
 			SplashScreen.hideAsync()
-			routingInstrumentation.registerNavigationContainer(ref)
 			GoogleSignin.configure({
 				webClientId: GOOGLE_WEB_CLIENT_ID,
 			})

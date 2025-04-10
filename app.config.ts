@@ -4,6 +4,7 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 	const appName = initConfig?.name || 'Skeleton'
 	const environment = process.env.EXPO_PUBLIC_NODE_ENV as 'production' | 'development' | 'testing'
 	const projectId = process.env.EXPO_PUBLIC_EAS_PROJECT_ID
+	const owner = process.env.EXPO_PUBLIC_EAS_OWNER
 
 	const name = {
 		production: appName,
@@ -51,5 +52,6 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 				projectId,
 			},
 		},
+		owner,
 	}
 }

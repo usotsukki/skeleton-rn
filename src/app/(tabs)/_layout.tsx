@@ -16,7 +16,7 @@ const TabLayout = () => {
 
 	const router = useRouter()
 
-	const onReset = () => router.replace('/(tabs)/Home')
+	const onReset = () => router.replace('/(tabs)/(home)/Home')
 	const renderFallback = ({ error, resetErrorBoundary }: FallbackProps) => (
 		<ErrorFallback error={error} resetErrorBoundary={resetErrorBoundary} />
 	)
@@ -27,10 +27,10 @@ const TabLayout = () => {
 		<ErrorBoundary fallbackRender={renderFallback} onReset={onReset}>
 			<Tabs
 				detachInactiveScreens={false}
-				sceneContainerStyle={{ backgroundColor: Colors.grayBlack }}
 				screenOptions={{
 					headerShown: false,
 					freezeOnBlur: true,
+					sceneStyle: { backgroundColor: Colors.grayBlack },
 					tabBarVisibilityAnimationConfig: {
 						show: { animation: 'timing', config: { duration: 500 } },
 						hide: { animation: 'timing', config: { duration: 500 } },

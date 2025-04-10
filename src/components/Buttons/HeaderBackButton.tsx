@@ -5,8 +5,9 @@ import { iconSizes } from '@app/theme/designSystem'
 
 const HeaderBackButton = () => {
 	const navigation = useNavigation()
+	const index = navigation?.getState()?.index ?? -1
 
-	return navigation.getState().index > 0 ? (
+	return index > 0 ? (
 		<Button
 			backgroundColor={'transparent'}
 			iconSource={() => <Ionicons color="black" name="arrow-back" size={iconSizes.medium} />}

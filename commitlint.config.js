@@ -28,10 +28,10 @@ module.exports = {
 		 * Intended to be used with ticket numbers. (NA-033, KOV-99002, etc)
 		 */
 
-		'scope-case': [2, 'always', 'upper-case'],
+		'scope-case': [2, 'always', 'kebab-case'],
 		// 'scope-empty': [2, 'never'],
 		// 'scope-min-length': [2, 'always', 5],
-		'scope-max-length': [2, 'always', 10],
+		'scope-max-length': [2, 'always', 20],
 
 		'subject-empty': [2, 'never'],
 		'subject-max-length': [2, 'always', 120],
