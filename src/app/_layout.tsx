@@ -18,6 +18,11 @@ import '@app/translations'
 
 SplashScreen.preventAutoHideAsync()
 
+GoogleSignin.configure({
+	webClientId: GOOGLE_WEB_CLIENT_ID,
+})
+GoogleSignin.hasPlayServices()
+
 const navigationIntegration = Sentry.reactNavigationIntegration({
 	enableTimeToInitialDisplay: !isRunningInExpoGo(),
 	routeChangeTimeoutMs: 1000,
@@ -43,7 +48,11 @@ const RootLayout = () => {
 	const { user } = useAuthStore()
 	const authRequired = segments[0] === '(tabs)'
 
-	const onReset = () => router.replace('/')
+	const onReset = () => {
+		if (ref.isReady()) {
+			ref.navigate('/' as never)
+		}
+	}
 
 	const renderFallback = useCallback(
 		({ error, resetErrorBoundary }: FallbackProps) => (
@@ -53,18 +62,9 @@ const RootLayout = () => {
 	)
 
 	useEffect(() => {
-		if (ref) {
-			navigationIntegration.registerNavigationContainer(ref)
-		}
-	}, [ref])
-
-	useEffect(() => {
 		if (fontsFinishedLoading) {
+			navigationIntegration.registerNavigationContainer(ref)
 			SplashScreen.hideAsync()
-			GoogleSignin.configure({
-				webClientId: GOOGLE_WEB_CLIENT_ID,
-			})
-			GoogleSignin.hasPlayServices()
 		}
 	}, [fontsFinishedLoading])
 
@@ -91,6 +91,7 @@ const RootLayout = () => {
 						screenOptions={{
 							headerShown: false,
 							animation: 'fade',
+							animationDuration: 200,
 						}}
 					/>
 				</ErrorBoundary>

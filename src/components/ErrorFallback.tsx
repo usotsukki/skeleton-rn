@@ -14,8 +14,8 @@ const ErrorFallback = ({ error, resetErrorBoundary }: Props) => {
 	const { t } = useTranslation()
 
 	return (
-		<View flex center>
-			<View width={400} bg-blackTransparent4 br60 center gap-s4 paddingH-s5 paddingV-s10>
+		<View flex bg-darkGrayBlue center paddingH-s5>
+			<View bg-blackTransparent4 br60 center gap-s4 paddingH-s5 paddingV-s10>
 				<LottieView autoPlay source={Assets.lottie.robot404} style={styles.mainAnimation} />
 				<View>
 					<Text center h1 marginB-s2 white>
