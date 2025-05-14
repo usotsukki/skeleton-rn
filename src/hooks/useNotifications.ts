@@ -5,9 +5,11 @@ import { EAS_PROJECT_ID } from '@app/env'
 
 Notifications.setNotificationHandler({
 	handleNotification: async () => ({
+		shouldPlaySound: false,
+		shouldSetBadge: true,
 		shouldShowAlert: true,
-		shouldPlaySound: true,
-		shouldSetBadge: false,
+		shouldShowBanner: true,
+		shouldShowList: true,
 	}),
 })
 

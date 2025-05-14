@@ -9,9 +9,9 @@
 		"esModuleInterop": true,
 		"jsx": "react-native",
 		"lib": ["DOM", "ESNext"],
-		"moduleResolution": "Node10",
+		"moduleResolution": "bundler",
 		"resolveJsonModule": true,
-		"module": "CommonJS",
+		"module": "Preserve",
 		"target": "ESNext",
 		"baseUrl": "./",
 		"paths": {
