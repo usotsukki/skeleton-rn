@@ -16,7 +16,7 @@ COMMIT_VERSION_UPDATE=true  # Set to false to disable Git commit
 json_file="app.json"
 
 # Define the expo_sdk_version variable
-expo_sdk_version="051"
+expo_sdk_version="053"
 
 # Get the update type argument (major, minor, or patch) and optional --decrement flag
 update_type="$1"
