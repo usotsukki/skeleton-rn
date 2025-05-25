@@ -3,6 +3,7 @@ patches/*
 ios/*
 android/*
 node_modules/*
+dist/*
 cpd/*
 
 .eslintrc.js

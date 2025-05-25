@@ -1,6 +1,6 @@
 {
 	"cli": {
-		"version": ">= 12.5.1",
+		"version": ">= 16.6.2",
 		"appVersionSource": "remote"
 	},
 	"build": {
@@ -8,7 +8,7 @@
 			"node": "22.14.0",
 			"yarn": "1.22.1",
 			"cache": {
-				"key": "v1"
+				"key": "v2"
 			},
 			"ios": {
 				"image": "latest"
@@ -19,7 +19,9 @@
 			"env": {
 				"EXPO_PUBLIC_ENABLE_DEV_MODE": "true",
 				"EXPO_PUBLIC_LOG_DEBUG": "false",
-				"EXPO_PUBLIC_LOG_LEVEL": "debug"
+				"EXPO_PUBLIC_LOG_LEVEL": "debug",
+				"NODE_ENV": "development",
+				"EXPO_PUBLIC_NODE_ENV": "development"
 			}
 		},
 		"development": {
@@ -31,18 +33,17 @@
 			},
 			"android": {
 				"buildType": "apk"
-			},
-			"env": {
-				"NODE_ENV": "development",
-				"EXPO_PUBLIC_NODE_ENV": "development"
 			}
 		},
 		"production": {
 			"extends": "base",
+			"channel": "production"
+		},
+		"prod-apk": {
+			"extends": "production",
 			"channel": "production",
-			"env": {
-				"NODE_ENV": "production",
-				"EXPO_PUBLIC_NODE_ENV": "production"
+			"android": {
+				"buildType": "apk"
 			}
 		}
 	},
