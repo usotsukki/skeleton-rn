@@ -1,4 +1,4 @@
-import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth'
+import { AppleAuthProvider, FirebaseAuthTypes, getAuth, GoogleAuthProvider } from '@react-native-firebase/auth'
 import { GoogleSignin, isSuccessResponse } from '@react-native-google-signin/google-signin'
 import * as AppleAuthentication from 'expo-apple-authentication'
 import { CryptoDigestAlgorithm, digestStringAsync } from 'expo-crypto'
@@ -48,7 +48,7 @@ export const getGoogleAuthCredential = async () => {
 		throw new Error(`GoogleSignIn ${res.type}`)
 	}
 
-	return auth.GoogleAuthProvider.credential(res.data.idToken)
+	return GoogleAuthProvider.credential(res.data.idToken)
 }
 
 export const getAppleAuthCredential = async () => {
@@ -68,22 +68,22 @@ export const getAppleAuthCredential = async () => {
 
 	const { identityToken } = appleAuthRequestResponse
 
-	return auth.AppleAuthProvider.credential(identityToken, nonce)
+	return AppleAuthProvider.credential(identityToken, nonce)
 }
 
 export const signInWithProvider = async (getCredential: () => Promise<FirebaseAuthTypes.AuthCredential>) => {
 	const providerCredential = await getCredential()
-	await auth().signInWithCredential(providerCredential)
+	await getAuth().signInWithCredential(providerCredential)
 }
 
 export const signIn = async (email: string, password: string) => {
-	await auth().signInWithEmailAndPassword(email, password)
+	await getAuth().signInWithEmailAndPassword(email, password)
 }
 
 export const createUser = async (email: string, password: string) => {
-	await auth().createUserWithEmailAndPassword(email, password)
+	await getAuth().createUserWithEmailAndPassword(email, password)
 }
 
 export const signOut = async () => {
-	await auth().signOut()
+	await getAuth().signOut()
 }

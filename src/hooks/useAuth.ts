@@ -1,4 +1,4 @@
-import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth'
+import { FirebaseAuthTypes, getAuth } from '@react-native-firebase/auth'
 import { useMutation } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { create } from 'zustand'
@@ -43,11 +43,14 @@ export const useAuthStore = create(
 	),
 )
 
-export const useAuthListener = () => {
+export const useAuthListener = (cb: (user: FirebaseAuthTypes.User | null) => void) => {
 	const setUser = useAuthStore(state => state.setUser)
 
 	useEffect(() => {
-		const unsubscribe = auth().onAuthStateChanged(setUser)
+		const unsubscribe = getAuth().onAuthStateChanged(user => {
+			setUser(user)
+			cb(user)
+		})
 		return unsubscribe
 	}, [])
 }

@@ -7,7 +7,6 @@ Notifications.setNotificationHandler({
 	handleNotification: async () => ({
 		shouldPlaySound: false,
 		shouldSetBadge: true,
-		shouldShowAlert: true,
 		shouldShowBanner: true,
 		shouldShowList: true,
 	}),
@@ -64,10 +63,10 @@ const useNotifications = () => {
 
 		return () => {
 			if (notificationListener.current) {
-				Notifications.removeNotificationSubscription(notificationListener.current)
+				notificationListener.current.remove()
 			}
 			if (responseListener.current) {
-				Notifications.removeNotificationSubscription(responseListener.current)
+				responseListener.current.remove()
 			}
 		}
 	}, [])

@@ -2,16 +2,15 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import * as Sentry from '@sentry/react-native'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { isRunningInExpoGo } from 'expo'
-import { Stack, useNavigationContainerRef, useRouter, useSegments } from 'expo-router'
+import { Stack, useNavigationContainerRef, useRouter } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableScreens } from 'react-native-screens'
 import { ErrorFallback, NetInfoToast, Toast } from '@app/components'
 import { GOOGLE_WEB_CLIENT_ID, IS_PROD, SENTRY_DEBUG, SENTRY_DSN } from '@app/env'
-import { useLoadFonts } from '@app/hooks'
-import { useAuthListener, useAuthStore } from '@app/hooks/useAuth'
+import { useAuthListener } from '@app/hooks/useAuth'
 import { useStorageDevTools } from '@app/storage'
 import '@app/theme'
 import '@app/translations'
@@ -41,14 +40,8 @@ enableScreens(true)
 
 const RootLayout = () => {
 	const ref = useNavigationContainerRef()
-	const { fontsFinishedLoading } = useLoadFonts()
 	const router = useRouter()
-	const segments = useSegments()
 	const queryClient = new QueryClient()
-	const { user } = useAuthStore()
-	const authRequired = segments[0] === '(tabs)'
-
-	const [hasInitialized, setHasInitialized] = useState(false)
 
 	const onReset = () => {
 		if (ref.isReady()) {
@@ -64,24 +57,17 @@ const RootLayout = () => {
 	)
 
 	useEffect(() => {
-		if (fontsFinishedLoading) {
-			navigationIntegration.registerNavigationContainer(ref)
-			SplashScreen.hideAsync()
-			setHasInitialized(true)
-		}
-	}, [fontsFinishedLoading])
+		navigationIntegration.registerNavigationContainer(ref)
+		SplashScreen.hideAsync()
+	}, [])
 
-	useEffect(() => {
-		if (!hasInitialized) return
-		if (authRequired && !user) {
+	useAuthListener(userData => {
+		if (userData) {
+			router.replace('/(tabs)/(home)/Home')
+		} else {
 			router.replace('/')
 		}
-		if (!authRequired && user) {
-			router.replace('/(tabs)/(home)/Home')
-		}
-	}, [user, authRequired, hasInitialized])
-
-	useAuthListener()
+	})
 
 	useStorageDevTools()
 
