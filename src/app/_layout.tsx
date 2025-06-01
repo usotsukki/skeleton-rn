@@ -14,6 +14,7 @@ import { useAuthListener } from '@app/hooks/useAuth'
 import { useStorageDevTools } from '@app/storage'
 import '@app/theme'
 import '@app/translations'
+import '../../global.css'
 
 SplashScreen.preventAutoHideAsync()
 

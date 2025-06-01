@@ -76,7 +76,6 @@ const createTextSize = ({
 	fontSize,
 	lineHeight: leading,
 	letterSpacing,
-	marginCorrection,
 }: {
 	fontSize: number
 	lineHeight: number
@@ -95,15 +94,11 @@ const createTextSize = ({
 		}),
 	} as const
 
-	const marginCorrectionForPlatform = marginCorrection[ios ? 'ios' : 'android']
-
 	if (Platform.OS === 'web') {
 		return styles
 	}
 	return {
 		...styles,
-		marginTop: PixelRatio.roundToNearestPixel(styles.marginTop + marginCorrectionForPlatform),
-		marginBottom: PixelRatio.roundToNearestPixel(styles.marginBottom - marginCorrectionForPlatform),
 	}
 }
 

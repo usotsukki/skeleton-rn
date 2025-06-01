@@ -16,7 +16,8 @@
 		"baseUrl": "./",
 		"paths": {
 			"@app/*": ["src/*"],
-			"@assets/*": ["assets/*"]
+			"@assets/*": ["assets/*"],
+			"@shared": ["src/components/shared"]
 		}
 	},
 	"exclude": ["node_modules", "ios", "android"],
@@ -30,6 +31,7 @@
 		".lintstagedrc.mjs",
 		".eslintrc.js",
 		".expo/types/**/*.ts",
-		"expo-env.d.ts"
+		"expo-env.d.ts",
+		"nativewind-env.d.ts"
 	]
 }

@@ -32,8 +32,68 @@
 			"@react-native-firebase/perf",
 			"expo-apple-authentication",
 			"expo-router",
-			"expo-font",
 			"expo-localization",
+			[
+				"expo-font",
+				{
+					"fonts": [
+						"./assets/fonts/SF-Pro-Rounded-Black.otf",
+						"./assets/fonts/SF-Pro-Rounded-Bold.otf",
+						"./assets/fonts/SF-Pro-Rounded-Heavy.otf",
+						"./assets/fonts/SF-Pro-Rounded-Medium.otf",
+						"./assets/fonts/SF-Pro-Rounded-Regular.otf",
+						"./assets/fonts/SF-Pro-Rounded-Semibold.otf",
+						"./assets/fonts/SF-Mono-Bold.otf",
+						"./assets/fonts/SF-Mono-Semibold.otf"
+					],
+					"android": {
+						"fonts": [
+							{
+								"fontFamily": "SF Pro Rounded",
+								"fontDefinitions": [
+									{
+										"path": "./assets/fonts/SF-Pro-Rounded-Black.otf",
+										"weight": "900"
+									},
+									{
+										"path": "./assets/fonts/SF-Pro-Rounded-Heavy.otf",
+										"weight": "800"
+									},
+									{
+										"path": "./assets/fonts/SF-Pro-Rounded-Bold.otf",
+										"weight": "700"
+									},
+									{
+										"path": "./assets/fonts/SF-Pro-Rounded-Semibold.otf",
+										"weight": "600"
+									},
+									{
+										"path": "./assets/fonts/SF-Pro-Rounded-Medium.otf",
+										"weight": "500"
+									},
+									{
+										"path": "./assets/fonts/SF-Pro-Rounded-Regular.otf",
+										"weight": "400"
+									}
+								]
+							},
+							{
+								"fontFamily": "SF Mono",
+								"fontDefinitions": [
+									{
+										"path": "./assets/fonts/SF-Mono-Bold.otf",
+										"weight": "700"
+									},
+									{
+										"path": "./assets/fonts/SF-Mono-Semibold.otf",
+										"weight": "600"
+									}
+								]
+							}
+						]
+					}
+				}
+			],
 			[
 				"expo-build-properties",
 				{
