@@ -16,7 +16,8 @@
 			"backgroundColor": "#151B26"
 		},
 		"ios": {
-			"buildNumber": "1.2.0"
+			"buildNumber": "1.2.0",
+			"appleTeamId": "2ZDPCXEHU3"
 		},
 		"android": {
 			"versionCode": 53010200
