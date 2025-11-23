@@ -10,6 +10,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableScreens } from 'react-native-screens'
 import { ErrorFallback, NetInfoToast, Toast } from '@app/components'
 import { GOOGLE_WEB_CLIENT_ID, IS_PROD, SENTRY_DEBUG, SENTRY_DSN } from '@app/env'
+import { useUpdates } from '@app/hooks'
 import { useAuthListener } from '@app/hooks/useAuth'
 import { useStorageDevTools } from '@app/storage'
 import '@app/theme'
@@ -56,6 +57,8 @@ const RootLayout = () => {
 		),
 		[],
 	)
+
+	useUpdates()
 
 	useEffect(() => {
 		navigationIntegration.registerNavigationContainer(ref)

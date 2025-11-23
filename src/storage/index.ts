@@ -1,12 +1,12 @@
 import { useMMKVDevTools } from '@dev-plugins/react-native-mmkv'
-import { MMKV } from 'react-native-mmkv'
+import { createMMKV } from 'react-native-mmkv'
 import { Device, MMKVStorage } from './schema'
 
 /**
  * Storage used by zustand's persist middleware.
  * DO NOT use this directly.
  */
-export const zustandStorage = new MMKV({ id: 'zustand' })
+export const zustandStorage = createMMKV({ id: 'zustand' })
 
 /**
  * Hook to use MMKV DevTools for debugging.
@@ -17,4 +17,4 @@ export const useStorageDevTools = (): void => useMMKVDevTools({ storage: zustand
 
 export const deviceStorage = new MMKVStorage<[], Device>({ id: 'device' })
 
-export const authStorage = new MMKV({ id: 'auth' })
+export const authStorage = createMMKV({ id: 'auth' })

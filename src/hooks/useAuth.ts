@@ -1,4 +1,4 @@
-import { FirebaseAuthTypes, getAuth } from '@react-native-firebase/auth'
+import { FirebaseAuthTypes, getAuth, onAuthStateChanged } from '@react-native-firebase/auth'
 import { useMutation } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { create } from 'zustand'
@@ -25,7 +25,7 @@ interface AuthStore extends AuthState {
 const persistStorage: StateStorage = {
 	setItem: (name, value) => authStorage.set(name, value),
 	getItem: name => authStorage.getString(name) || null,
-	removeItem: name => authStorage.delete(name),
+	removeItem: name => authStorage.remove(name),
 }
 
 const persistConfig: PersistOptions<AuthStore> = {
@@ -45,12 +45,12 @@ export const useAuthStore = create(
 
 export const useAuthListener = (cb: (user: FirebaseAuthTypes.User | null) => void) => {
 	const setUser = useAuthStore(state => state.setUser)
-
+	const callback = (user: FirebaseAuthTypes.User | null) => {
+		setUser(user)
+		cb(user)
+	}
 	useEffect(() => {
-		const unsubscribe = getAuth().onAuthStateChanged(user => {
-			setUser(user)
-			cb(user)
-		})
+		const unsubscribe = onAuthStateChanged(getAuth(), callback)
 		return unsubscribe
 	}, [])
 }

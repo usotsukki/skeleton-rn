@@ -1,8 +1,8 @@
-import LottieView from 'lottie-react-native'
+// import LottieView from 'lottie-react-native'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
-import { Assets, Button, Text, View } from 'react-native-ui-lib'
+import { Button, Text, View } from 'react-native-ui-lib'
 import { IS_DEV } from '@app/env'
 
 interface Props {
@@ -16,7 +16,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }: Props) => {
 	return (
 		<View flex bg-darkGrayBlue center paddingH-s5>
 			<View bg-blackTransparent4 br60 center gap-s4 paddingH-s5 paddingV-s10>
-				<LottieView autoPlay source={Assets.lottie.robot404} style={styles.mainAnimation} />
+				{/* <LottieView autoPlay source={Assets.lottie.robot404} style={styles.mainAnimation} /> */}
 				<View>
 					<Text center h1 marginB-s2 white>
 						{t('error.title')}

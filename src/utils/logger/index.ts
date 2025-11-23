@@ -208,6 +208,7 @@ export class Logger {
 			this.transport(LogLevel.Error, error, metadata)
 		} else {
 			this.transport(LogLevel.Error, new AppError(`logger.error was not provided a AppError`), metadata)
+			this.transport(LogLevel.Error, error)
 		}
 	}
 

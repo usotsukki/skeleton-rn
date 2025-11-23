@@ -30,7 +30,6 @@
 			"@react-native-google-signin/google-signin",
 			"@react-native-firebase/app",
 			"@react-native-firebase/auth",
-			"@react-native-firebase/perf",
 			"expo-apple-authentication",
 			"expo-router",
 			"expo-localization",
@@ -99,7 +98,8 @@
 				"expo-build-properties",
 				{
 					"ios": {
-						"useFrameworks": "static"
+						"useFrameworks": "static",
+						"forceStaticLinking": ["RNFBApp", "RNFBAuth"]
 					}
 				}
 			],
@@ -112,7 +112,7 @@
 				}
 			],
 			[
-				"expo-dev-launcher",
+				"expo-dev-client",
 				{
 					"launchMode": "most-recent",
 					"addGeneratedScheme": false

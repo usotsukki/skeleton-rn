@@ -31,6 +31,7 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 			},
 			infoPlist: {
 				UIBackgroundModes: ['remote-notification', 'processing'],
+				UIDesignRequiresCompatibility: true,
 			},
 		},
 		android: {
