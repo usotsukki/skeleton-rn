@@ -5,6 +5,7 @@ android/*
 node_modules/*
 dist/*
 cpd/*
+libs/*
 
 .eslintrc.js
 babel.config.js

@@ -1,5 +1,5 @@
 {
-	"home": "Casa",
+	"home": "Escáner",
 	"demo": "Demo",
 	"map": "Mapa",
 	"signIn": "Iniciar Sesión",
@@ -28,6 +28,49 @@
 			"chat": "Chat",
 			"initialMessage": "Hazme una pregunta",
 			"send": "Enviar"
+		},
+		"ocr": {
+			"scanner": {
+				"title": "Escáner de tarjeta",
+				"description": "Escanea un tablero y conviértelo en un juego rápido.",
+				"pickPhoto": "Elige una foto clara de tu tarjeta para obtener mejores resultados.",
+				"selectPhoto": "Seleccionar foto",
+				"reselectPhoto": "Volver a seleccionar",
+				"scanning": "Escaneando...",
+				"continue": "Continuar al juego",
+				"detectedLines": "Líneas detectadas: {{count}} • Toca \"Continuar al juego\" para empezar.",
+				"preview": "Vista previa (primeras 4 filas)",
+				"moreLines": "+ {{count}} líneas más detectadas",
+				"reading": "Leyendo la tarjeta... esto suele tardar un segundo.",
+				"errors": {
+					"noRows": "No pudimos detectar filas. Intenta con una foto más clara.",
+					"generic": "Algo salió mal al leer esta imagen. Inténtalo de nuevo.",
+					"permission": "Necesitas dar permiso para acceder a la biblioteca."
+				}
+			},
+			"game": {
+				"title": "Tarjetas",
+				"progress": "Progreso",
+				"cardCounter": "Tarjeta {{current}} de {{total}}",
+				"matchTerm": "Une el término con su valor",
+				"score": "Puntuación {{correct}}/{{total}}",
+				"streak": "Racha {{count}} 🔥",
+				"leftOption": "Opción izquierda",
+				"rightOption": "Opción derecha",
+				"correct": "¡Correcto! 🎉",
+				"wrong": "¡Ups! Revisa la respuesta correcta arriba 👆",
+				"exit": "Salir del juego"
+			},
+			"gameOver": {
+				"keepPracticing": "¡Sigue practicando!",
+				"perfectScore": "¡Puntuación perfecta! 🌟",
+				"greatJob": "¡Gran trabajo! 🎉",
+				"goodEffort": "¡Buen esfuerzo! 👍",
+				"resultMessage": "Acertaste {{correct}} de {{total}} ({{percentage}}%).",
+				"review": "Revisar",
+				"playAgain": "Jugar de nuevo",
+				"scanNew": "Escanear nuevo"
+			}
 		}
 	},
 	"info": {

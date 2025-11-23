@@ -6,6 +6,7 @@ import { Stack, useNavigationContainerRef, useRouter } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { useCallback, useEffect } from 'react'
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableScreens } from 'react-native-screens'
 import { ErrorFallback, NetInfoToast, Toast } from '@app/components'
@@ -77,19 +78,21 @@ const RootLayout = () => {
 
 	return (
 		<QueryClientProvider client={queryClient}>
-			<SafeAreaProvider>
-				<ErrorBoundary fallbackRender={renderFallback} onReset={onReset}>
-					<NetInfoToast />
-					<Toast />
-					<Stack
-						screenOptions={{
-							headerShown: false,
-							animation: 'fade',
-							animationDuration: 200,
-						}}
-					/>
-				</ErrorBoundary>
-			</SafeAreaProvider>
+			<GestureHandlerRootView style={{ flex: 1 }}>
+				<SafeAreaProvider>
+					<ErrorBoundary fallbackRender={renderFallback} onReset={onReset}>
+						<NetInfoToast />
+						<Toast />
+						<Stack
+							screenOptions={{
+								headerShown: false,
+								animation: 'fade',
+								animationDuration: 200,
+							}}
+						/>
+					</ErrorBoundary>
+				</SafeAreaProvider>
+			</GestureHandlerRootView>
 		</QueryClientProvider>
 	)
 }

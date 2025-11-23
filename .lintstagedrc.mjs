@@ -13,9 +13,15 @@ const removeIgnoredFiles = async files => {
 
 export default {
 	'*.{js,jsx,ts,tsx,json,html}': ['prettier . --write'],
-	'*.{ts,tsx}': [() => 'tsc-files --noEmit'],
+	'*.{ts,tsx}': files => {
+		const filteredFiles = files.filter(f => !f.includes('/libs/'))
+		if (filteredFiles.length === 0) return []
+		return ['npm run lint:ts']
+	},
 	'**/*.{ts,tsx,js,jsx}': async files => {
-		const filesToLint = await removeIgnoredFiles(files)
+		const nonLibFiles = files.filter(f => !f.includes('/libs/'))
+		const filesToLint = await removeIgnoredFiles(nonLibFiles)
+		if (filesToLint.length === 0) return []
 		return [`eslint ${filesToLint}`]
 	},
 }

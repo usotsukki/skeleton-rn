@@ -20,7 +20,7 @@
 			"@shared": ["src/components/shared"]
 		}
 	},
-	"exclude": ["node_modules", "ios", "android"],
+	"exclude": ["node_modules", "ios", "android", "libs"],
 	"include": [
 		"**/*.ts",
 		"**/*.tsx",

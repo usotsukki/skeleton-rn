@@ -1,5 +1,5 @@
 {
-	"home": "Home",
+	"home": "Scanner",
 	"demo": "Demo",
 	"map": "Map",
 	"signIn": "Sign In",
@@ -28,6 +28,49 @@
 			"chat": "Chat",
 			"initialMessage": "Ask me a question",
 			"send": "Send"
+		},
+		"ocr": {
+			"scanner": {
+				"title": "Scorecard scanner",
+				"description": "Scan a board and turn it into a quick guessing game.",
+				"pickPhoto": "Pick a clear photo of your scorecard to get the best results.",
+				"selectPhoto": "Select photo",
+				"reselectPhoto": "Reselect photo",
+				"scanning": "Scanning...",
+				"continue": "Continue to game",
+				"detectedLines": "Detected lines: {{count}} • Tap \"Continue to game\" to start playing.",
+				"preview": "Preview (first 4 rows)",
+				"moreLines": "+ {{count}} more lines detected",
+				"reading": "Reading the card… this usually takes a second or two.",
+				"errors": {
+					"noRows": "We could not detect any rows. Try a clearer, closer photo.",
+					"generic": "Something went wrong while reading this image. Please try again.",
+					"permission": "You need to grant permission to access the library."
+				}
+			},
+			"game": {
+				"title": "Cards",
+				"progress": "Progress",
+				"cardCounter": "Card {{current}} of {{total}}",
+				"matchTerm": "Match the term to its value",
+				"score": "Score {{correct}}/{{total}}",
+				"streak": "Streak {{count}} 🔥",
+				"leftOption": "Left option",
+				"rightOption": "Right option",
+				"correct": "Correct! 🎉",
+				"wrong": "Oops! Check the correct answer above 👆",
+				"exit": "Exit game"
+			},
+			"gameOver": {
+				"keepPracticing": "Keep practicing!",
+				"perfectScore": "Perfect Score! 🌟",
+				"greatJob": "Great Job! 🎉",
+				"goodEffort": "Good Effort! 👍",
+				"resultMessage": "You got {{correct}} out of {{total}} correct ({{percentage}}%).",
+				"review": "Review",
+				"playAgain": "Play again",
+				"scanNew": "Scan new"
+			}
 		}
 	},
 	"info": {
