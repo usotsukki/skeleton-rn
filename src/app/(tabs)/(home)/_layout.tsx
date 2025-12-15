@@ -7,6 +7,7 @@ const HomeStackLayout = () => {
 	return (
 		<Stack initialRouteName="Home" screenOptions={stackHeaderScreenOptions}>
 			<Stack.Screen name="Home" options={{ title: t('modules.chat.chat') }} />
+			<Stack.Screen name="ChatAnalysis" options={{ title: t('modules.chat.chat') }} />
 		</Stack>
 	)
 }

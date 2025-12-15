@@ -26,4 +26,6 @@ export const GOOGLE_WEB_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID
 
 export const EAS_PROJECT_ID = process.env.EXPO_PUBLIC_EAS_PROJECT_ID
 
-export const BASE_API_URL = process.env.EXPO_PUBLIC_BASE_API_URL
+// export const BASE_API_URL = process.env.EXPO_PUBLIC_BASE_API_URL
+
+export const BASE_API_URL = 'http://localhost:8081/api'

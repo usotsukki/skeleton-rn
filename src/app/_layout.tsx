@@ -2,7 +2,8 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import * as Sentry from '@sentry/react-native'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { isRunningInExpoGo } from 'expo'
-import { Stack, useNavigationContainerRef, useRouter } from 'expo-router'
+import { Stack, useNavigationContainerRef } from 'expo-router'
+import { ShareIntentProvider } from 'expo-share-intent'
 import * as SplashScreen from 'expo-splash-screen'
 import { useCallback, useEffect } from 'react'
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
@@ -16,6 +17,8 @@ import { useStorageDevTools } from '@app/storage'
 import '@app/theme'
 import '@app/translations'
 import '../../global.css'
+
+const queryClient = new QueryClient()
 
 SplashScreen.preventAutoHideAsync()
 
@@ -40,10 +43,8 @@ Sentry.init({
 
 enableScreens(true)
 
-const RootLayout = () => {
+const RootLayoutContent = () => {
 	const ref = useNavigationContainerRef()
-	const router = useRouter()
-	const queryClient = new QueryClient()
 
 	const onReset = () => {
 		if (ref.isReady()) {
@@ -65,13 +66,8 @@ const RootLayout = () => {
 		SplashScreen.hideAsync()
 	}, [])
 
-	useAuthListener(userData => {
-		if (userData) {
-			router.replace('/(tabs)/(home)/Home')
-		} else {
-			router.replace('/')
-		}
-	})
+	// Just sync auth state to store, no navigation here
+	useAuthListener(() => {})
 
 	useStorageDevTools()
 
@@ -91,6 +87,14 @@ const RootLayout = () => {
 				</ErrorBoundary>
 			</SafeAreaProvider>
 		</QueryClientProvider>
+	)
+}
+
+const RootLayout = () => {
+	return (
+		<ShareIntentProvider options={{ resetOnBackground: false }}>
+			<RootLayoutContent />
+		</ShareIntentProvider>
 	)
 }
 
