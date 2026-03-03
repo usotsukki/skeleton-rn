@@ -33,6 +33,8 @@
 			"expo-apple-authentication",
 			"expo-router",
 			"expo-localization",
+			"@sentry/react-native",
+			"expo-image",
 			[
 				"expo-font",
 				{
