@@ -1,4 +1,4 @@
-const firebaseErrorRegExp = /(\[[^\]]+\])\s*(.*)$/
+const bracketedErrorCodeRegExp = /(\[[^\]]+\])\s*(.*)$/
 
 export const getErrorData = (e: unknown): { code: string; message: string } => {
 	let message = 'unknown error'
@@ -21,7 +21,7 @@ export const getErrorData = (e: unknown): { code: string; message: string } => {
 		message = e
 	}
 
-	const match = message.match(firebaseErrorRegExp)
+	const match = message.match(bracketedErrorCodeRegExp)
 	if (match) {
 		code = match[1]
 		message = match[2]
