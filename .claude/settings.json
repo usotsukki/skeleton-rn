@@ -1,0 +1,40 @@
+{
+	"permissions": {
+		"deny": [
+			"Read(./.env)",
+			"Read(./.env.*)",
+			"Read(./secrets/**)",
+			"Bash(git stash*)",
+			"Bash(git add *)",
+			"Bash(git add .*)",
+			"Bash(git stage *)",
+			"Bash(git stage .*)",
+			"Bash(git checkout *)",
+			"Bash(git reset*)",
+			"Bash(git clean*)",
+			"Bash(git restore*)",
+			"Bash(git rm *)",
+			"Bash(git revert*)",
+			"Bash(git cherry-pick*)",
+			"Bash(git rebase*)",
+			"Bash(git merge *)",
+			"Bash(git push*)",
+			"Bash(git commit --amend*)",
+			"Bash(git commit -a*)"
+		]
+	},
+	"hooks": {
+		"Stop": [
+			{
+				"hooks": [
+					{
+						"type": "command",
+						"command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/verify-on-stop.sh",
+						"timeout": 120,
+						"statusMessage": "Running quick verification checks"
+					}
+				]
+			}
+		]
+	}
+}

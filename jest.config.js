@@ -3,8 +3,12 @@ const { compilerOptions } = require('./tsconfig')
 
 module.exports = {
 	preset: 'jest-expo',
-	setupFiles: ['./node_modules/react-native-gesture-handler/jestSetup.js'],
-	setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect', './src/utils/__mocks__/index.ts'],
+	setupFiles: ['./jest.env.js', './node_modules/react-native-gesture-handler/jestSetup.js'],
+	setupFilesAfterEnv: [
+		'@testing-library/jest-native/extend-expect',
+		'./src/utils/__mocks__/index.ts',
+		'./src/utils/test-utils/setup.ts',
+	],
 	testRegex: '(/__tests__/.*|(\\.|/)(test|spec))(?<!\\.disabled)\\.[jt]sx?$',
 	transform: {
 		'\\.[jt]sx?$': 'babel-jest',

@@ -4,6 +4,6 @@
 	"minLines": 10,
 	"blame": true,
 	"threshold": 5,
-	"ignore": ["import .*", "**/theme/**", "*test.tsx", "*test.ts"],
+	"ignore": ["import .*", "**/theme/**", "**/__tests__/**", "**/*.test.ts", "**/*.test.tsx"],
 	"path": ["src"]
 }
