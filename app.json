@@ -6,21 +6,26 @@
 		"icon": "./assets/png/app-icon.png",
 		"scheme": "skeleton",
 		"newArchEnabled": true,
+		"userInterfaceStyle": "dark",
 		"experiments": {
 			"typedRoutes": true,
-			"tsconfigPaths": true
+			"tsconfigPaths": true,
+			"reactCompiler": true
 		},
 		"splash": {
 			"image": "./assets/png/image-splash.png",
 			"resizeMode": "cover",
-			"backgroundColor": "#151B26"
+			"backgroundColor": "#1f1e1d"
 		},
 		"ios": {
 			"buildNumber": "1.3.0",
-			"appleTeamId": "2ZDPCXEHU3"
+			"appleTeamId": "2ZDPCXEHU3",
+			"backgroundColor": "#1f1e1d",
+			"userInterfaceStyle": "dark"
 		},
 		"android": {
-			"versionCode": 53010300
+			"versionCode": 53010300,
+			"userInterfaceStyle": "dark"
 		},
 		"web": {
 			"bundler": "metro",
@@ -28,80 +33,26 @@
 		},
 		"plugins": [
 			"@react-native-google-signin/google-signin",
-			"@react-native-firebase/app",
-			"@react-native-firebase/auth",
 			"expo-apple-authentication",
 			"expo-router",
 			"expo-localization",
 			"@sentry/react-native",
 			"expo-image",
+			"expo-video",
+			"expo-sqlite",
 			[
-				"expo-font",
+				"expo-system-ui",
 				{
-					"fonts": [
-						"./assets/fonts/SF-Pro-Rounded-Black.otf",
-						"./assets/fonts/SF-Pro-Rounded-Bold.otf",
-						"./assets/fonts/SF-Pro-Rounded-Heavy.otf",
-						"./assets/fonts/SF-Pro-Rounded-Medium.otf",
-						"./assets/fonts/SF-Pro-Rounded-Regular.otf",
-						"./assets/fonts/SF-Pro-Rounded-Semibold.otf",
-						"./assets/fonts/SF-Mono-Bold.otf",
-						"./assets/fonts/SF-Mono-Semibold.otf"
-					],
-					"android": {
-						"fonts": [
-							{
-								"fontFamily": "SF Pro Rounded",
-								"fontDefinitions": [
-									{
-										"path": "./assets/fonts/SF-Pro-Rounded-Black.otf",
-										"weight": "900"
-									},
-									{
-										"path": "./assets/fonts/SF-Pro-Rounded-Heavy.otf",
-										"weight": "800"
-									},
-									{
-										"path": "./assets/fonts/SF-Pro-Rounded-Bold.otf",
-										"weight": "700"
-									},
-									{
-										"path": "./assets/fonts/SF-Pro-Rounded-Semibold.otf",
-										"weight": "600"
-									},
-									{
-										"path": "./assets/fonts/SF-Pro-Rounded-Medium.otf",
-										"weight": "500"
-									},
-									{
-										"path": "./assets/fonts/SF-Pro-Rounded-Regular.otf",
-										"weight": "400"
-									}
-								]
-							},
-							{
-								"fontFamily": "SF Mono",
-								"fontDefinitions": [
-									{
-										"path": "./assets/fonts/SF-Mono-Bold.otf",
-										"weight": "700"
-									},
-									{
-										"path": "./assets/fonts/SF-Mono-Semibold.otf",
-										"weight": "600"
-									}
-								]
-							}
-						]
-					}
+					"userInterfaceStyle": "dark",
+					"backgroundColor": "#1f1e1d"
 				}
 			],
+			"react-native-maps",
 			[
 				"expo-build-properties",
 				{
 					"ios": {
-						"useFrameworks": "static",
-						"forceStaticLinking": ["RNFBApp", "RNFBAuth"]
+						"useFrameworks": "static"
 					}
 				}
 			],
@@ -109,7 +60,7 @@
 				"expo-notifications",
 				{
 					"icon": "./assets/png/logo.png",
-					"color": "#ffffff",
+					"color": "#1f1e1d",
 					"defaultChannel": "default"
 				}
 			],

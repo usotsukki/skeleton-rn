@@ -1,34 +1,87 @@
 {
-	"home": "Casa",
-	"demo": "Demo",
+	"appName": "Skeleton",
+	"home": "Inicio",
 	"map": "Mapa",
+	"skia": "Skia",
+	"settings": "Ajustes",
 	"signIn": "Iniciar Sesión",
 	"signUp": "Regístrate",
+	"signOut": "Cerrar Sesión",
 	"changeLanguage": "Cambiar Idioma",
 	"or": "o",
 	"modules": {
-		"demoScreen": {
-			"navigateToMap": "Mapa",
-			"getRandomJoke": "Obtener Chiste Aleatorio",
-			"jokeOfTheDay": "Chiste del Día"
+		"common": {
+			"close": "Cerrar",
+			"cancel": "Cancelar",
+			"somethingWentWrong": "Algo salió mal",
+			"great": "Genial",
+			"done": "Hecho"
 		},
 		"auth": {
-			"welcome": "Bienvenido a {{appName}}",
+			"welcomeSubtitle": "Una plantilla moderna de Expo + Supabase.",
+			"getStarted": "Empezar",
+			"signInTitle": "Bienvenido de nuevo",
+			"signInSubtitle": "Inicia sesión para continuar.",
+			"signUpTitle": "Crea tu cuenta",
+			"signUpSubtitle": "Comienza en segundos.",
 			"email": "Correo Electrónico",
 			"password": "Contraseña",
-			"signInButton": "Iniciar Sesión",
-			"signUpButton": "Regístrate",
-			"signInWith": "Iniciar Sesión con {{provider}}",
-			"signOut": "Cerrar Sesión",
-			"noAccountButton": "¿No tienes una cuenta?",
-			"alreadyHaveAccountButton": "¿Ya tienes una cuenta?",
+			"forgotPassword": "¿Olvidaste tu contraseña?",
+			"staySignedIn": "Mantener sesión iniciada",
+			"forgotPasswordTitle": "Restablece tu contraseña",
+			"forgotPasswordSubtitle": "Introduce tu correo y te enviaremos un enlace para restablecer la contraseña.",
+			"sendResetEmail": "Enviar enlace de restablecimiento",
+			"resetEmailSent": "Correo enviado. Revisa tu bandeja de entrada.",
+			"resetPasswordTitle": "Crea una nueva contraseña",
+			"resetPasswordInstructions": "La contraseña debe tener al menos 6 caracteres.",
+			"resetPasswordButton": "Actualizar contraseña",
+			"resetPasswordComplete": "Contraseña cambiada correctamente.",
+			"noAccount": "¿No tienes una cuenta?",
+			"alreadyHaveAccount": "¿Ya tienes una cuenta?",
 			"confirmPassword": "Confirmar Contraseña"
-		},
-		"chat": {
-			"chat": "Chat",
-			"initialMessage": "Hazme una pregunta",
-			"send": "Enviar"
 		}
+	},
+	"homeScreen": {
+		"greeting": "Bienvenido de nuevo",
+		"defaultUser": "Usuario",
+		"buttons": "Botones",
+		"primary": "Primario",
+		"secondary": "Secundario",
+		"ghost": "Fantasma",
+		"destructive": "Destructivo",
+		"link": "Botón enlace",
+		"inputs": "Entradas",
+		"textField": "Campo de texto",
+		"checkbox": "Casilla",
+		"triggers": "Disparadores",
+		"fireToastSuccess": "Mostrar toast de éxito",
+		"fireToastError": "Mostrar toast de error",
+		"toastSuccess": "Guardado correctamente.",
+		"toastError": "Algo salió mal.",
+		"fireAlert": "Mostrar alerta",
+		"alertTitle": "Atención",
+		"alertBody": "Esto es una alerta nativa al estilo iOS.",
+		"openSheet": "Abrir hoja inferior",
+		"sheetTitle": "Hoja inferior",
+		"sheetBody": "Construido con @gorhom/bottom-sheet sobre el componente Modal compartido."
+	},
+	"settingsScreen": {
+		"preferences": "Preferencias",
+		"appearance": "Apariencia",
+		"theme": {
+			"system": "Sistema",
+			"light": "Claro",
+			"dark": "Oscuro"
+		}
+	},
+	"skiaScreen": {
+		"planets": "Planetas",
+		"speed": "Velocidad",
+		"pause": "Pausar",
+		"resume": "Reanudar"
+	},
+	"a11y": {
+		"openMenu": "Abrir menú de navegación"
 	},
 	"info": {
 		"offline": "Estás desconectado"
@@ -42,6 +95,19 @@
 		"shortPassword": "La contraseña debe tener al menos 6 caracteres",
 		"passwordsDoNotMatch": "Las contraseñas no coinciden",
 		"invalidEmailOrPassword": "Correo electrónico o contraseña inválidos",
-		"emailAlreadyInUse": "La dirección de correo electrónico ya está en uso por otra cuenta"
+		"emailAlreadyInUse": "La dirección de correo electrónico ya está en uso por otra cuenta",
+		"passwordResetLinkInvalid": "El enlace de restablecimiento de contraseña no es válido o ha expirado",
+		"networkError": "Error de red. Por favor, comprueba tu conexión.",
+		"providerDisabled": "Este proveedor de inicio de sesión no está habilitado.",
+		"genericAuth": "Falló la autenticación. Por favor, inténtelo de nuevo.",
+		"invalidEmail": "Por favor, introduzca una dirección de correo electrónico válida.",
+		"emailRateLimit": "Demasiadas solicitudes de correo. Espera unos minutos e inténtalo de nuevo.",
+		"repo": {
+			"notFound": "No encontrado",
+			"forbidden": "No tienes permiso para hacer esto",
+			"conflict": "Este cambio entra en conflicto con el estado actual",
+			"validation": "Algunos campos son inválidos",
+			"upstream": "Error del servidor. Por favor, inténtelo de nuevo."
+		}
 	}
 }

@@ -49,6 +49,8 @@ TS_FILES=()
 
 for file in "${CHANGED_FILES[@]}"; do
   [[ -z "$file" ]] && continue
+  # Skip files that don't exist on disk (e.g. staged-add then deleted in worktree).
+  [[ ! -f "$file" ]] && continue
   if [[ -z "${seen[$file]+x}" ]]; then
     seen[$file]=1
     case "$file" in
@@ -86,7 +88,7 @@ if [[ -x ./node_modules/.bin/tsc-files && "${#TS_FILES[@]}" -gt 0 ]]; then
 fi
 
 if [[ -x ./node_modules/.bin/jest && "${#JS_TS_FILES[@]}" -gt 0 ]]; then
-  TZ=UTC yarn jest --runInBand --findRelatedTests "${JS_TS_FILES[@]}" >/tmp/skeleton-claude-related-tests.log 2>&1 || fail "Stop blocked: related tests failed."
+  TZ=UTC yarn jest --runInBand --passWithNoTests --findRelatedTests "${JS_TS_FILES[@]}" >/tmp/skeleton-claude-related-tests.log 2>&1 || fail "Stop blocked: related tests failed."
 fi
 
 exit 0
