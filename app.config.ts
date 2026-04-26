@@ -18,7 +18,7 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 		...initConfig,
 		name,
 		slug: initConfig?.slug || 'skeleton',
-		userInterfaceStyle: environment === 'development' ? 'dark' : 'automatic',
+		userInterfaceStyle: 'dark',
 		ios: {
 			...initConfig.ios,
 			bundleIdentifier,

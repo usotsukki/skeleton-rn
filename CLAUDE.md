@@ -11,7 +11,9 @@ Skeleton is an Expo / React Native template (SDK 55, RN 0.83, React 19, Expo Rou
 
 ## Repo Commands
 
-See `.claude/rules/commands.md` (auto-loaded). Quick hits: `yarn start`, `yarn check`, `yarn test`, `yarn lint`.
+See `.claude/rules/commands.md` (auto-loaded). Quick hits: `yarn start`, `yarn run check`, `yarn test`, `yarn lint`.
+
+On Yarn 1, **`yarn check` is a built-in** (lockfile / install verification), not the `lint && test` script. Use **`yarn run check`** for the project gate.
 
 ## Safety & Constraints
 

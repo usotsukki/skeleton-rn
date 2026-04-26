@@ -1,34 +1,87 @@
 {
+	"appName": "Skeleton",
 	"home": "Home",
-	"demo": "Demo",
 	"map": "Map",
+	"skia": "Skia",
+	"settings": "Settings",
 	"signIn": "Sign In",
 	"signUp": "Sign Up",
+	"signOut": "Sign Out",
 	"changeLanguage": "Change Language",
 	"or": "or",
 	"modules": {
-		"demoScreen": {
-			"navigateToMap": "Map",
-			"getRandomJoke": "Get Random Joke",
-			"jokeOfTheDay": "Joke of the Day"
+		"common": {
+			"close": "Close",
+			"cancel": "Cancel",
+			"somethingWentWrong": "Something went wrong",
+			"great": "Great",
+			"done": "Done"
 		},
 		"auth": {
-			"welcome": "Welcome to {{appName}}",
+			"welcomeSubtitle": "A modern Expo + Supabase template.",
+			"getStarted": "Get started",
+			"signInTitle": "Welcome back",
+			"signInSubtitle": "Sign in to continue.",
+			"signUpTitle": "Create your account",
+			"signUpSubtitle": "Get started in seconds.",
 			"email": "Email",
 			"password": "Password",
-			"signInButton": "Sign In",
-			"signUpButton": "Sign Up",
-			"signInWith": "Sign In with {{provider}}",
-			"signOut": "Sign Out",
-			"noAccountButton": "Don't have an account?",
-			"alreadyHaveAccountButton": "Already have an account?",
+			"forgotPassword": "Forgot password?",
+			"staySignedIn": "Stay signed in",
+			"forgotPasswordTitle": "Reset your password",
+			"forgotPasswordSubtitle": "Enter your email and we'll send you a link to reset your password.",
+			"sendResetEmail": "Send reset link",
+			"resetEmailSent": "Reset email sent. Check your inbox.",
+			"resetPasswordTitle": "Create a new password",
+			"resetPasswordInstructions": "Password must be at least 6 characters.",
+			"resetPasswordButton": "Update password",
+			"resetPasswordComplete": "Password changed successfully.",
+			"noAccount": "Don't have an account?",
+			"alreadyHaveAccount": "Already have an account?",
 			"confirmPassword": "Confirm Password"
-		},
-		"chat": {
-			"chat": "Chat",
-			"initialMessage": "Ask me a question",
-			"send": "Send"
 		}
+	},
+	"homeScreen": {
+		"greeting": "Welcome back",
+		"defaultUser": "User",
+		"buttons": "Buttons",
+		"primary": "Primary",
+		"secondary": "Secondary",
+		"ghost": "Ghost",
+		"destructive": "Destructive",
+		"link": "Link button",
+		"inputs": "Inputs",
+		"textField": "Text Field",
+		"checkbox": "Checkbox",
+		"triggers": "Triggers",
+		"fireToastSuccess": "Show success toast",
+		"fireToastError": "Show error toast",
+		"toastSuccess": "Saved successfully.",
+		"toastError": "Something went wrong.",
+		"fireAlert": "Show alert",
+		"alertTitle": "Heads up",
+		"alertBody": "This is a native iOS-style alert.",
+		"openSheet": "Open bottom sheet",
+		"sheetTitle": "Bottom sheet",
+		"sheetBody": "Built on @gorhom/bottom-sheet via the shared Modal primitive."
+	},
+	"settingsScreen": {
+		"preferences": "Preferences",
+		"appearance": "Appearance",
+		"theme": {
+			"system": "System",
+			"light": "Light",
+			"dark": "Dark"
+		}
+	},
+	"skiaScreen": {
+		"planets": "Planets",
+		"speed": "Speed",
+		"pause": "Pause",
+		"resume": "Resume"
+	},
+	"a11y": {
+		"openMenu": "Open navigation menu"
 	},
 	"info": {
 		"offline": "You are offline"
@@ -42,6 +95,19 @@
 		"shortPassword": "Password must be at least 6 characters long",
 		"passwordsDoNotMatch": "Passwords don't match",
 		"invalidEmailOrPassword": "Invalid email or password",
-		"emailAlreadyInUse": "The email address is already in use by another account"
+		"emailAlreadyInUse": "The email address is already in use by another account",
+		"passwordResetLinkInvalid": "Password reset link is invalid or expired",
+		"networkError": "Network error. Please check your connection.",
+		"providerDisabled": "This sign-in provider is not enabled.",
+		"genericAuth": "Authentication failed. Please try again.",
+		"invalidEmail": "Please enter a valid email address.",
+		"emailRateLimit": "Too many email requests. Please wait a few minutes and try again.",
+		"repo": {
+			"notFound": "Not found",
+			"forbidden": "You do not have permission to do this",
+			"conflict": "This change conflicts with the current state",
+			"validation": "Some fields are invalid",
+			"upstream": "Server error. Please try again."
+		}
 	}
 }

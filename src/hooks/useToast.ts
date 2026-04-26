@@ -1,27 +1,47 @@
 import { create } from 'zustand'
+import { TOAST_DURATION } from './toastDurations'
 
-interface ToastStore {
-	visible: boolean
+export type ToastStyle = 'success' | 'error' | 'info'
+
+export interface ToastItem {
+	id: string
 	message: string
-	style: 'success' | 'error' | 'info'
+	style: ToastStyle
 	duration: number
-	showToast: (message: string, style?: 'success' | 'error' | 'info', duration?: number) => void
-	hideToast: () => void
+	isDismissable?: boolean
 }
 
+interface ToastStore {
+	toasts: ToastItem[]
+	showToast: (message: string, style?: ToastStyle, duration?: number, isDismissable?: boolean) => string
+	hideToast: (id: string) => void
+}
+
+let toastId = 0
+
 const useToast = create<ToastStore>(set => ({
-	message: '',
-	visible: false,
-	style: 'success',
-	duration: 3000,
-	showToast: (message: string, style?: 'success' | 'error' | 'info', duration?: number) =>
-		set({
-			visible: true,
-			message,
-			style: style || 'success',
-			duration: duration || 3000,
-		}),
-	hideToast: () => set({ visible: false }),
+	toasts: [],
+	showToast: (message, style, duration, isDismissable) => {
+		const id = `toast-${++toastId}`
+		const resolvedStyle = style ?? 'success'
+		set(state => ({
+			toasts: [
+				...state.toasts,
+				{
+					id,
+					message,
+					style: resolvedStyle,
+					duration: duration ?? TOAST_DURATION[resolvedStyle],
+					isDismissable,
+				},
+			],
+		}))
+		return id
+	},
+	hideToast: (id: string) =>
+		set(state => ({
+			toasts: state.toasts.filter(t => t.id !== id),
+		})),
 }))
 
 export default useToast

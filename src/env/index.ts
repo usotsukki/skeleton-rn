@@ -23,7 +23,11 @@ export const TRANSLATIONS_DEBUG = !IS_PROD && false
 export const SENTRY_DSN = process.env.EXPO_PUBLIC_SENTRY_DSN
 
 export const GOOGLE_WEB_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID
+export const GOOGLE_IOS_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID
 
 export const EAS_PROJECT_ID = process.env.EXPO_PUBLIC_EAS_PROJECT_ID
 
 export const BASE_API_URL = process.env.EXPO_PUBLIC_BASE_API_URL
+
+export const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL
+export const SUPABASE_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY
