@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "App",
 		"slug": "app",
-		"version": "1.3.0",
+		"version": "1.4.0",
 		"icon": "./assets/png/app-icon.png",
 		"scheme": "app",
 		"newArchEnabled": true,
@@ -13,14 +13,14 @@
 			"reactCompiler": true
 		},
 		"ios": {
-			"buildNumber": "1.3.0",
+			"buildNumber": "1.4.0",
 			"bundleIdentifier": "com.example.app",
 			"backgroundColor": "#1f1e1d",
 			"userInterfaceStyle": "dark"
 		},
 		"android": {
 			"package": "com.example.app",
-			"versionCode": 53010300,
+			"versionCode": 53010400,
 			"userInterfaceStyle": "dark"
 		},
 		"web": {
