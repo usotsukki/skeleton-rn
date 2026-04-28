@@ -1,12 +1,47 @@
-name: eas ios build
+name: eas build
+
 on:
   workflow_dispatch:
+    inputs:
+      platform:
+        description: Platform to build
+        required: true
+        type: choice
+        default: ios
+        options:
+          - ios
+          - android
+          - all
+      profile:
+        description: EAS build profile
+        required: true
+        type: choice
+        default: production
+        options:
+          - development
+          - production
+          - prod-apk
+
 jobs:
   build:
-    name: Install and build
+    name: Install, verify, and build
     runs-on: ubuntu-latest
+    env:
+      EXPO_PUBLIC_NODE_ENV: ${{ inputs.profile == 'production' && 'production' || inputs.profile == 'prod-apk' && 'production' || 'development' }}
+      EXPO_PUBLIC_ENABLE_DEV_MODE: ${{ inputs.profile == 'production' && 'false' || inputs.profile == 'prod-apk' && 'false' || 'true' }}
+      EXPO_PUBLIC_EAS_PROJECT_ID: ${{ vars.EXPO_PUBLIC_EAS_PROJECT_ID }}
+      EXPO_PUBLIC_BASE_API_URL: ${{ vars.EXPO_PUBLIC_BASE_API_URL }}
+      EXPO_PUBLIC_EAS_OWNER: ${{ vars.EXPO_PUBLIC_EAS_OWNER }}
+      EXPO_PUBLIC_APP_NAME: ${{ vars.EXPO_PUBLIC_APP_NAME }}
+      EXPO_PUBLIC_APP_SLUG: ${{ vars.EXPO_PUBLIC_APP_SLUG }}
+      EXPO_PUBLIC_APP_SCHEME: ${{ vars.EXPO_PUBLIC_APP_SCHEME }}
+      EXPO_PUBLIC_IOS_BUNDLE_ID: ${{ vars.EXPO_PUBLIC_IOS_BUNDLE_ID }}
+      EXPO_PUBLIC_IOS_BUNDLE_ID_TESTING: ${{ vars.EXPO_PUBLIC_IOS_BUNDLE_ID_TESTING }}
+      EXPO_PUBLIC_ANDROID_PACKAGE: ${{ vars.EXPO_PUBLIC_ANDROID_PACKAGE }}
+      EXPO_PUBLIC_ANDROID_PACKAGE_TESTING: ${{ vars.EXPO_PUBLIC_ANDROID_PACKAGE_TESTING }}
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -19,7 +54,7 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Install dependencies
-        run: yarn
+        run: yarn install --frozen-lockfile
 
       - name: Run linters
         run: yarn lint
@@ -28,4 +63,4 @@ jobs:
         run: yarn test
 
       - name: Build on EAS
-        run: yarn eas-ios --non-interactive
+        run: eas build --platform "${{ inputs.platform }}" --profile "${{ inputs.profile }}" --non-interactive --no-wait

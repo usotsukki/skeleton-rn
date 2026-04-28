@@ -1,9 +1,8 @@
 name: Lint and test
 on:
   workflow_dispatch:
+  pull_request:
   push:
-    branches:
-      - main
 jobs:
   lint-and-test:
     name: Lint and test
@@ -20,7 +19,6 @@ jobs:
 
       - name: Run linters
         run: yarn lint
-
 
       - name: Run tests
         run: yarn test
