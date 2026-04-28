@@ -203,7 +203,7 @@ jest.mock('expo-image', () => {
 
 jest.mock('expo-linking', () => ({
 	openURL: jest.fn().mockResolvedValue(undefined),
-	createURL: jest.fn(() => 'skeleton://ResetPassword'),
+	createURL: jest.fn(() => 'app://ResetPassword'),
 	getInitialURL: jest.fn(() => Promise.resolve(null)),
 	addEventListener: jest.fn(() => ({ remove: jest.fn() })),
 }))
