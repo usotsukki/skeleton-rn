@@ -80,15 +80,15 @@ if [[ ! -x ./node_modules/.bin/eslint ]]; then
 fi
 
 if [[ "${#JS_TS_FILES[@]}" -gt 0 ]]; then
-  ./node_modules/.bin/eslint --cache "${JS_TS_FILES[@]}" >/tmp/skeleton-claude-eslint.log 2>&1 || fail "Stop blocked: eslint failed on changed files. Re-run and fix the reported issues."
+  ./node_modules/.bin/eslint --cache "${JS_TS_FILES[@]}" >/tmp/expo-app-claude-eslint.log 2>&1 || fail "Stop blocked: eslint failed on changed files. Re-run and fix the reported issues."
 fi
 
 if [[ -x ./node_modules/.bin/tsc-files && "${#TS_FILES[@]}" -gt 0 ]]; then
-  ./node_modules/.bin/tsc-files --noEmit --pretty false nativewind-env.d.ts "${TS_FILES[@]}" >/tmp/skeleton-claude-tsc.log 2>&1 || fail "Stop blocked: TypeScript check failed on changed files."
+  ./node_modules/.bin/tsc-files --noEmit --pretty false nativewind-env.d.ts "${TS_FILES[@]}" >/tmp/expo-app-claude-tsc.log 2>&1 || fail "Stop blocked: TypeScript check failed on changed files."
 fi
 
 if [[ -x ./node_modules/.bin/jest && "${#JS_TS_FILES[@]}" -gt 0 ]]; then
-  TZ=UTC yarn jest --runInBand --passWithNoTests --findRelatedTests "${JS_TS_FILES[@]}" >/tmp/skeleton-claude-related-tests.log 2>&1 || fail "Stop blocked: related tests failed."
+  TZ=UTC yarn jest --runInBand --passWithNoTests --findRelatedTests "${JS_TS_FILES[@]}" >/tmp/expo-app-claude-related-tests.log 2>&1 || fail "Stop blocked: related tests failed."
 fi
 
 exit 0

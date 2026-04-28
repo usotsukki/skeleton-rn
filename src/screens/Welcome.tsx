@@ -1,3 +1,4 @@
+import Constants from 'expo-constants'
 import { useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
@@ -7,12 +8,13 @@ import { AppButton, AppText } from '@app/components/shared'
 export default function Welcome() {
 	const { t } = useTranslation()
 	const router = useRouter()
+	const displayName = Constants.expoConfig?.name ?? 'App'
 
 	return (
 		<SafeAreaView className="flex-1 bg-bg" edges={['top', 'bottom']}>
 			<View className="flex-1 items-center justify-center gap-4 px-6">
 				<AppText className="text-accent" variant="disp">
-					{t('appName')}
+					{displayName}
 				</AppText>
 				<AppText className="text-center text-text-secondary" variant="tl">
 					{t('modules.auth.welcomeSubtitle')}
