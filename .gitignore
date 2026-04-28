@@ -26,6 +26,7 @@ credentials.json
 npm-debug.*
 yarn-debug.*
 yarn-error.*
+*.trace
 
 # macOS
 .DS_Store
@@ -34,6 +35,8 @@ yarn-error.*
 # local env files
 .env
 .env.*
+.env.local
+!.env.example
 
 # typescript
 *.tsbuildinfo
@@ -47,6 +50,8 @@ android
 # Archives
 build-*.tar.gz
 build-*.apk
+application-*.apk
+*.apk
 
 # Firebase 
 GoogleService-Info.plist
@@ -54,3 +59,4 @@ google-services.json
 
 # Dev
 cpd
+coverage

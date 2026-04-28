@@ -61,6 +61,30 @@ export type ThemeColors = typeof darkColors
 /** Static fallback — defaults to dark. Prefer `useThemeColors()` in components. */
 export const colors: ThemeColors = darkColors
 
+const toRgbChannels = (color: string): string => {
+	if (color.startsWith('#')) {
+		const hex = color.slice(1)
+		const r = parseInt(hex.slice(0, 2), 16)
+		const g = parseInt(hex.slice(2, 4), 16)
+		const b = parseInt(hex.slice(4, 6), 16)
+		return `${r} ${g} ${b}`
+	}
+	const m = color.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/)
+	if (!m) throw new Error(`unsupported color format: ${color}`)
+	return `${m[1]} ${m[2]} ${m[3]}`
+}
+
+const toVars = (palette: Readonly<Record<string, string>>) =>
+	Object.fromEntries(Object.entries(palette).map(([k, v]) => [`--color-${k}`, toRgbChannels(v)]))
+
+/**
+ * NativeWind `vars()` payload — RGB channels only (`'r g b'`). Alpha from
+ * palette entries is dropped on purpose; opacity belongs on Tailwind class
+ * modifiers (e.g. `bg-bg-elevated/90`). Single source of truth with `lightColors` / `darkColors`.
+ */
+export const lightVars = toVars(lightColors)
+export const darkVars = toVars(darkColors)
+
 /** Resolves themeStore mode + device scheme to the active palette. */
 export function useThemeColors(): ThemeColors {
 	const mode = useThemeStore(s => s.mode)

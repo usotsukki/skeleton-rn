@@ -37,7 +37,12 @@
 		},
 		"production": {
 			"extends": "base",
-			"channel": "production"
+			"channel": "production",
+			"autoIncrement": true,
+			"env": {
+				"NODE_ENV": "production",
+				"EXPO_PUBLIC_NODE_ENV": "production"
+			}
 		},
 		"prod-apk": {
 			"extends": "production",

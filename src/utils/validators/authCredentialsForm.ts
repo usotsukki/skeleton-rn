@@ -19,6 +19,9 @@ export const authCredentialsFormOpts = formOptions({
 		password: '',
 	} satisfies AuthCredentialsFormValues,
 	validators: {
+		// onMount keeps `canSubmit=false` on empty form so the submit button is disabled.
+		// Field components gate error DISPLAY on dirty/submit state so initial mount
+		// errors don't surface visually.
 		onMount: authCredentialsSchema,
 		onChange: authCredentialsSchema,
 		onSubmit: authCredentialsSchema,

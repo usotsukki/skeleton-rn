@@ -12,11 +12,6 @@
 			"tsconfigPaths": true,
 			"reactCompiler": true
 		},
-		"splash": {
-			"image": "./assets/png/image-splash.png",
-			"resizeMode": "cover",
-			"backgroundColor": "#1f1e1d"
-		},
 		"ios": {
 			"buildNumber": "1.3.0",
 			"appleTeamId": "2ZDPCXEHU3",
@@ -45,6 +40,14 @@
 				{
 					"userInterfaceStyle": "dark",
 					"backgroundColor": "#1f1e1d"
+				}
+			],
+			[
+				"expo-splash-screen",
+				{
+					"backgroundColor": "#1f1e1d",
+					"image": "./assets/png/image-splash.png",
+					"resizeMode": "cover"
 				}
 			],
 			"react-native-maps",

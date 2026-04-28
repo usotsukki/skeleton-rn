@@ -1,3 +1,4 @@
+export { useAndroidStableTabBar } from './useAndroidStableTabBar'
 export { useAppStateChange, type AppStateChangeHandler } from './useAppStateChange'
 export { default as useAuth, useAuthListener, useAuthStore, useCurrentUid } from './useAuth'
 export { useAuthDeepLink } from './useAuthDeepLink'

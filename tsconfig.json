@@ -8,7 +8,7 @@
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
 		"jsx": "react-native",
-		"lib": ["DOM", "ESNext"],
+		"lib": ["ESNext"],
 		"moduleResolution": "bundler",
 		"resolveJsonModule": true,
 		"module": "Preserve",

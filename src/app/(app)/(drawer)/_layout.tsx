@@ -12,7 +12,7 @@ const DrawerLayout = () => {
 				freezeOnBlur: true,
 			}}>
 			<Drawer.Screen name="(tabs)" />
-			<Drawer.Screen name="Settings" options={{ headerShown: false }} />
+			<Drawer.Screen name="Settings" />
 		</Drawer>
 	)
 }
