@@ -1,4 +1,5 @@
 import { DrawerContentComponentProps, DrawerContentScrollView } from '@react-navigation/drawer'
+import { DrawerActions } from '@react-navigation/native'
 import { useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { Pressable, View } from 'react-native'
@@ -21,7 +22,7 @@ function DrawerLink({ label, onPress }: DrawerLinkProps) {
 	)
 }
 
-export function DrawerContent(_: DrawerContentComponentProps) {
+export function DrawerContent(props: DrawerContentComponentProps) {
 	const { t } = useTranslation()
 	const router = useRouter()
 	const { signOut, loading } = useAuth()
@@ -29,6 +30,18 @@ export function DrawerContent(_: DrawerContentComponentProps) {
 	const displayName = user ? user.displayName : null
 	const email = user ? user.email : null
 	const avatarLabel = displayName ?? email
+
+	const closeDrawer = () => props.navigation.dispatch(DrawerActions.closeDrawer())
+
+	const goTab = (path: '/Home' | '/Map' | '/Skia') => {
+		router.navigate(path)
+		closeDrawer()
+	}
+
+	const goSettings = () => {
+		router.push('/Settings')
+		closeDrawer()
+	}
 
 	return (
 		<SafeAreaView className="flex-1 bg-bg" edges={['top', 'bottom']}>
@@ -46,13 +59,13 @@ export function DrawerContent(_: DrawerContentComponentProps) {
 				</View>
 
 				<View className="px-2 py-2">
-					<DrawerLink label={t('home')} onPress={() => router.push('/Home')} />
-					<DrawerLink label={t('map')} onPress={() => router.push('/Map')} />
-					<DrawerLink label={t('skia')} onPress={() => router.push('/Skia')} />
+					<DrawerLink label={t('home')} onPress={() => goTab('/Home')} />
+					<DrawerLink label={t('map')} onPress={() => goTab('/Map')} />
+					<DrawerLink label={t('skia')} onPress={() => goTab('/Skia')} />
 				</View>
 
 				<View className="border-t border-separator px-2 pt-4">
-					<DrawerLink label={t('settings')} onPress={() => router.push('/Settings')} />
+					<DrawerLink label={t('settings')} onPress={goSettings} />
 				</View>
 			</DrawerContentScrollView>
 

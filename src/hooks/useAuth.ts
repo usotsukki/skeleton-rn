@@ -25,6 +25,7 @@ interface AuthState {
 	staySignedIn: boolean
 	passwordRecoveryUserId: string | null
 	pendingPostAuthRoute: string | null
+	hydrated: boolean
 }
 
 interface AuthStore extends AuthState {
@@ -32,6 +33,7 @@ interface AuthStore extends AuthState {
 	setStaySignedIn: (stay: boolean) => void
 	setPasswordRecoveryUserId: (uid: string | null) => void
 	setPendingPostAuthRoute: (route: string | null) => void
+	setHydrated: (hydrated: boolean) => void
 }
 
 const persistStorage: StateStorage = {
@@ -58,10 +60,12 @@ export const useAuthStore = create<AuthStore>()(
 			staySignedIn: true,
 			passwordRecoveryUserId: null,
 			pendingPostAuthRoute: null,
+			hydrated: false,
 			setUser: (user: AuthUser | null) => set({ user }),
 			setStaySignedIn: (stay: boolean) => set({ staySignedIn: stay }),
 			setPasswordRecoveryUserId: (uid: string | null) => set({ passwordRecoveryUserId: uid }),
 			setPendingPostAuthRoute: (route: string | null) => set({ pendingPostAuthRoute: route }),
+			setHydrated: (hydrated: boolean) => set({ hydrated }),
 		}),
 		persistConfig,
 	),
@@ -86,6 +90,9 @@ export const useAuthListener = (cb: (user: AuthUser | null, event: string) => vo
 		const callback = (user: AuthUser | null, event: string) => {
 			if (!isActive) return
 			setUser(user)
+			if (!useAuthStore.getState().hydrated) {
+				useAuthStore.getState().setHydrated(true)
+			}
 			if (!user && persistNullAuthEvents.has(event) && useAuthStore.getState().passwordRecoveryUserId) {
 				useAuthStore.getState().setPasswordRecoveryUserId(null)
 			}
@@ -120,10 +127,15 @@ export const useAuthListener = (cb: (user: AuthUser | null, event: string) => vo
 				unsubscribe = next
 			} catch (err) {
 				console.error('[useAuthListener] subscribe failed', err)
+
+				if (!useAuthStore.getState().hydrated) useAuthStore.getState().setHydrated(true)
 			}
 		}
 
-		bootstrap().catch(err => console.error('[useAuthListener] bootstrap failed', err))
+		bootstrap().catch(err => {
+			console.error('[useAuthListener] bootstrap failed', err)
+			if (!useAuthStore.getState().hydrated) useAuthStore.getState().setHydrated(true)
+		})
 
 		return () => {
 			isActive = false

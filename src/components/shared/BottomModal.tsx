@@ -9,7 +9,7 @@ import { ActivityIndicator, Keyboard, Platform, StyleSheet, View } from 'react-n
 import { useThemeColors } from '@app/theme/colors'
 import { ScreenHeader } from './ScreenHeader'
 
-interface ModalProps {
+interface BottomModalProps {
 	snapPoints: BottomSheetModalProps['snapPoints']
 	title: string
 	closeLabel: string
@@ -22,7 +22,7 @@ interface ModalProps {
 	children: ReactNode
 }
 
-export const Modal = React.forwardRef<BottomSheetModal, ModalProps>(function Modal(
+export const BottomModal = React.forwardRef<BottomSheetModal, BottomModalProps>(function BottomModal(
 	{
 		snapPoints,
 		title,
@@ -68,7 +68,10 @@ export const Modal = React.forwardRef<BottomSheetModal, ModalProps>(function Mod
 		[c],
 	)
 
-	const sheetBg = useMemo(() => ({ backgroundColor: c['bg-elevated'] }), [c])
+	const sheetBg = useMemo(
+		() => ({ backgroundColor: c['bg-elevated'], borderTopLeftRadius: 24, borderTopRightRadius: 24 }),
+		[c],
+	)
 
 	const renderBackdrop = useCallback(
 		(props: BottomSheetBackdropProps) => (

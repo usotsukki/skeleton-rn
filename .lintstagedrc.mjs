@@ -12,7 +12,7 @@ const removeIgnoredFiles = async files => {
 }
 
 export default {
-	'*.{js,jsx,ts,tsx,json,html}': ['prettier . --write'],
+	'*.{js,jsx,ts,tsx,json,html}': ['prettier --write'],
 	'*.{ts,tsx}': [() => 'tsc-files --noEmit'],
 	'**/*.{ts,tsx,js,jsx}': async files => {
 		const filesToLint = await removeIgnoredFiles(files)

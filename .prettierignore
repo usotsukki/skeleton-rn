@@ -3,6 +3,8 @@
 .husky
 .yarn
 .easignore
+*.md
+*.mdx
 android
 ios
 patches

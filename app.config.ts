@@ -14,8 +14,20 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 
 	const bundleIdentifier = environment === 'testing' ? 'com.skeleton.test' : 'com.skeleton'
 
+	const androidMapsKey = process.env.GOOGLE_MAPS_API_KEY_ANDROID
+	const iosMapsKey = process.env.GOOGLE_MAPS_API_KEY_IOS
+
+	const plugins = (initConfig.plugins ?? []).map(p => {
+		const pluginName = Array.isArray(p) ? p[0] : p
+		if (pluginName === 'react-native-maps') {
+			return ['react-native-maps', { androidGoogleMapsApiKey: androidMapsKey, iosGoogleMapsApiKey: iosMapsKey }]
+		}
+		return p
+	})
+
 	return {
 		...initConfig,
+		plugins: plugins as ExpoConfig['plugins'],
 		name,
 		slug: initConfig?.slug || 'skeleton',
 		userInterfaceStyle: 'dark',
@@ -24,6 +36,7 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 			bundleIdentifier,
 			usesAppleSignIn: true,
 			requireFullScreen: true,
+			appleTeamId: process.env.APPLE_TEAM_ID || initConfig.ios?.appleTeamId,
 			googleServicesFile: process.env.GOOGLE_SERVICE_FILE_IOS || './GoogleService-Info.plist',
 			config: {
 				googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY_IOS,
@@ -31,7 +44,7 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 			},
 			infoPlist: {
 				UIBackgroundModes: ['remote-notification', 'processing'],
-				UIDesignRequiresCompatibility: true,
+				CADisableMinimumFrameDurationOnPhone: true,
 			},
 		},
 		android: {
