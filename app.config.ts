@@ -1,6 +1,12 @@
-import { ConfigContext, ExpoConfig } from 'expo/config'
+import type { ConfigContext, ExpoConfig } from 'expo/config'
 import { z, type ZodError } from 'zod'
 import envRules from './env.rules.json'
+
+const nativeBuildOnlyProductionKeys = new Set([
+	'GOOGLE_MAPS_API_KEY_ANDROID',
+	'GOOGLE_MAPS_API_KEY_IOS',
+	'APPLE_TEAM_ID',
+])
 
 function envKeysRequiredInProduction(map: Readonly<Record<string, boolean>>): string[] {
 	return (Object.entries(map) as [string, boolean][]).filter(([, required]) => required).map(([key]) => key)
@@ -60,9 +66,13 @@ function hasNonEmptyValue(value: unknown): boolean {
 function validateProductionResolvedValues(
 	environment: AppConfigEnv['EXPO_PUBLIC_NODE_ENV'] | 'development',
 	values: Record<string, unknown>,
+	requireNativeBuildOnlyValues: boolean,
 ): void {
 	if (environment !== 'production') return
-	const missing = appConfigProductionKeys.filter(key => !hasNonEmptyValue(values[key]))
+	const missing = appConfigProductionKeys.filter(key => {
+		if (nativeBuildOnlyProductionKeys.has(key) && !requireNativeBuildOnlyValues) return false
+		return !hasNonEmptyValue(values[key])
+	})
 	if (missing.length > 0) {
 		throw new Error(
 			`Invalid environment (app.config):\n${missing
@@ -151,22 +161,28 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 	const androidMapsKey = env.GOOGLE_MAPS_API_KEY_ANDROID
 	const iosMapsKey = env.GOOGLE_MAPS_API_KEY_IOS
 	const appleTeamId = env.APPLE_TEAM_ID || initConfig.ios?.appleTeamId
+	const requireNativeBuildOnlyValues =
+		process.env.EAS_BUILD === 'true' || process.env.EXPO_REQUIRE_NATIVE_CONFIG === 'true'
 
-	validateProductionResolvedValues(environment, {
-		EXPO_PUBLIC_NODE_ENV: environment,
-		EXPO_PUBLIC_EAS_PROJECT_ID: projectId,
-		EXPO_PUBLIC_EAS_OWNER: owner,
-		EXPO_PUBLIC_APP_NAME: baseName,
-		EXPO_PUBLIC_APP_SLUG: slug,
-		EXPO_PUBLIC_APP_SCHEME: scheme,
-		EXPO_PUBLIC_IOS_BUNDLE_ID: iosBundleBase,
-		EXPO_PUBLIC_IOS_BUNDLE_ID_TESTING: env.EXPO_PUBLIC_IOS_BUNDLE_ID_TESTING,
-		EXPO_PUBLIC_ANDROID_PACKAGE: androidBase,
-		EXPO_PUBLIC_ANDROID_PACKAGE_TESTING: env.EXPO_PUBLIC_ANDROID_PACKAGE_TESTING,
-		GOOGLE_MAPS_API_KEY_ANDROID: androidMapsKey,
-		GOOGLE_MAPS_API_KEY_IOS: iosMapsKey,
-		APPLE_TEAM_ID: appleTeamId,
-	})
+	validateProductionResolvedValues(
+		environment,
+		{
+			EXPO_PUBLIC_NODE_ENV: environment,
+			EXPO_PUBLIC_EAS_PROJECT_ID: projectId,
+			EXPO_PUBLIC_EAS_OWNER: owner,
+			EXPO_PUBLIC_APP_NAME: baseName,
+			EXPO_PUBLIC_APP_SLUG: slug,
+			EXPO_PUBLIC_APP_SCHEME: scheme,
+			EXPO_PUBLIC_IOS_BUNDLE_ID: iosBundleBase,
+			EXPO_PUBLIC_IOS_BUNDLE_ID_TESTING: env.EXPO_PUBLIC_IOS_BUNDLE_ID_TESTING,
+			EXPO_PUBLIC_ANDROID_PACKAGE: androidBase,
+			EXPO_PUBLIC_ANDROID_PACKAGE_TESTING: env.EXPO_PUBLIC_ANDROID_PACKAGE_TESTING,
+			GOOGLE_MAPS_API_KEY_ANDROID: androidMapsKey,
+			GOOGLE_MAPS_API_KEY_IOS: iosMapsKey,
+			APPLE_TEAM_ID: appleTeamId,
+		},
+		requireNativeBuildOnlyValues,
+	)
 
 	const plugins = (initConfig.plugins ?? []).map(p => {
 		const pluginName = Array.isArray(p) ? p[0] : p
