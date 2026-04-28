@@ -1,31 +1,48 @@
 name: eas update auto
+
 on:
   workflow_dispatch:
   push:
     branches:
       - main
+
 jobs:
   commit-filter:
     uses: ./.github/workflows/commit-filter.yml
+
   update:
-      runs-on: ubuntu-latest
-      needs: commit-filter
-      if: ${{ github.event_name == 'workflow_dispatch' || needs.commit-filter.outputs.skip-eas-workflow == 'false' }}
-      steps:
+    runs-on: ubuntu-latest
+    needs: commit-filter
+    if: ${{ github.event_name == 'workflow_dispatch' || needs.commit-filter.outputs.skip-eas-workflow == 'true' }}
+    env:
+      EXPO_PUBLIC_NODE_ENV: production
+      EXPO_PUBLIC_ENABLE_DEV_MODE: "false"
+      EXPO_PUBLIC_EAS_PROJECT_ID: ${{ vars.EXPO_PUBLIC_EAS_PROJECT_ID }}
+      EXPO_PUBLIC_BASE_API_URL: ${{ vars.EXPO_PUBLIC_BASE_API_URL }}
+      EXPO_PUBLIC_EAS_OWNER: ${{ vars.EXPO_PUBLIC_EAS_OWNER }}
+      EXPO_PUBLIC_APP_NAME: ${{ vars.EXPO_PUBLIC_APP_NAME }}
+      EXPO_PUBLIC_APP_SLUG: ${{ vars.EXPO_PUBLIC_APP_SLUG }}
+      EXPO_PUBLIC_APP_SCHEME: ${{ vars.EXPO_PUBLIC_APP_SCHEME }}
+      EXPO_PUBLIC_IOS_BUNDLE_ID: ${{ vars.EXPO_PUBLIC_IOS_BUNDLE_ID }}
+      EXPO_PUBLIC_IOS_BUNDLE_ID_TESTING: ${{ vars.EXPO_PUBLIC_IOS_BUNDLE_ID_TESTING }}
+      EXPO_PUBLIC_ANDROID_PACKAGE: ${{ vars.EXPO_PUBLIC_ANDROID_PACKAGE }}
+      EXPO_PUBLIC_ANDROID_PACKAGE_TESTING: ${{ vars.EXPO_PUBLIC_ANDROID_PACKAGE_TESTING }}
+    steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: yarn
 
-      - name: 🏗 Setup EAS
+      - name: Setup EAS
         uses: expo/expo-github-action@v8
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: 📦 Install dependencies
-        run: yarn install
-          
-      - name: 🚀 Create update
-        run: eas update --auto --non-interactive
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Create update
+        run: eas update --channel production --environment production --non-interactive --auto

@@ -5,6 +5,7 @@
 	},
 	"build": {
 		"base": {
+			"environment": "development",
 			"node": "22.14.0",
 			"yarn": "1.22.1",
 			"cache": {
@@ -37,6 +38,7 @@
 		},
 		"production": {
 			"extends": "base",
+			"environment": "production",
 			"channel": "production",
 			"autoIncrement": true,
 			"env": {
