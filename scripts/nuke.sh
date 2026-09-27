@@ -134,6 +134,6 @@ EOF
 echo -e "${NC}"
 
 echo -e "${YELLOW}🚀 ${BOLD}Project nuked!${NC}"
-echo -e "${CYAN}You can now run ${BOLD}'yarn install-all'${NC}${CYAN} to install all dependencies.${NC}"
+echo -e "${CYAN}You can now run ${BOLD}'yarn install'${NC}${CYAN} to install all dependencies.${NC}"
 
 separator

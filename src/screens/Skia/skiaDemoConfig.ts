@@ -64,7 +64,7 @@ export const MIN_PLANETS = 1
 export const MAX_PLANETS = PLANETS.length
 export const SPEED_STEPS = [0.25, 0.5, 1, 2, 4, 8, 16, 32]
 export const CONTROL_PANEL_BOTTOM_GAP = 8
-export const STAR_COUNT = 72
+const STAR_COUNT = 72
 
 export function buildStarLayers(count = STAR_COUNT): StarLayer[] {
 	return Array.from({ length: count }, (_, i) => {

@@ -39,7 +39,7 @@ export interface CometDustConfig {
 	opacity: number
 }
 
-export interface SceneCenter {
+interface SceneCenter {
 	cx: number
 	cy: number
 }

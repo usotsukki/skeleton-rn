@@ -132,6 +132,7 @@ jest.mock('react-native-reanimated', () => {
 			Text: View,
 			ScrollView: View,
 			FlatList: View,
+			Image: View,
 			createAnimatedComponent: passthrough,
 		},
 		View,
@@ -140,6 +141,7 @@ jest.mock('react-native-reanimated', () => {
 		useAnimatedStyle: (cb: () => unknown) => cb(),
 		useAnimatedScrollHandler: () => jest.fn(),
 		useAnimatedReaction: jest.fn(),
+		useReducedMotion: () => false,
 		useDerivedValue: (cb: () => unknown) => ({ value: cb() }),
 		withTiming: identity,
 		withSpring: identity,
@@ -221,6 +223,8 @@ jest.mock('expo-localization', () => ({
 
 jest.mock('expo-splash-screen', () => ({
 	preventAutoHideAsync: jest.fn().mockResolvedValue(undefined),
+	hide: jest.fn(),
+	setOptions: jest.fn(),
 	hideAsync: jest.fn().mockResolvedValue(undefined),
 }))
 

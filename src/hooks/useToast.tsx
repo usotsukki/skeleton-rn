@@ -51,10 +51,15 @@ interface ToastStore {
 
 let toastId = 0
 
+const nextToastId = () => {
+	toastId += 1
+	return `toast-${toastId}`
+}
+
 const useToast = create<ToastStore>(set => ({
 	toasts: [],
 	showToast: (message: string, style?: ToastStyle, duration?: number, isDismissable?: boolean) => {
-		const newId = `toast-${++toastId}`
+		const newId = nextToastId()
 		const resolvedStyle = style ?? 'success'
 		set(state => ({
 			toasts: [
@@ -83,7 +88,7 @@ const useToast = create<ToastStore>(set => ({
 		onBodyPress,
 		bodyPressKeepOpen,
 	}: ShowActionToastParams) => {
-		const useId = replaceId ?? `toast-${++toastId}`
+		const useId = replaceId ?? nextToastId()
 		const item: ToastItem = {
 			id: useId,
 			message,

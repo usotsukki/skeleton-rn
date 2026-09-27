@@ -1,7 +1,9 @@
 # Git Safety
 
-Git is **read-only by default**. `settings.json` blocks all mutating commands: `add`, `stash`, `checkout`, `reset`, `clean`, `restore`, `rm`, `revert`, `cherry-pick`, `rebase`, `merge`, `push`, `commit --amend`, `commit -a`.
+Git is **read-only by default**. `settings.json` hard-blocks destructive commands: `reset`, `clean`, `restore`, `rebase`, `commit --amend`, `commit -a`/`--all`, discarding checkouts/switches (`checkout -- <path>`, `checkout -f`, `switch -f`), force pushes (incl. `+branch`), pushes to `main`, `branch -D`, and remote branch deletion.
 
-Allowed (read-only): `status`, `log`, `diff`, `show`, `branch` (list), `remote -v`, `blame`, `rev-parse`, `describe`, `tag` (list).
+Always allowed (read-only): `status`, `log`, `diff`, `show`, `branch` (list), `remote -v`, `blame`, `rev-parse`, `describe`, `tag` (list).
 
-Run a mutating command **only** when the user explicitly grants it in the current conversation ("commit", "stash that", "switch branches"). Editing a file ≠ permission to stage it. Run only the specific command requested — do not chain extras (e.g. don't push after a commit unless asked). Report what you did.
+Other mutating commands (`add`, `commit`, `switch`, `stash`, `push` to a feature branch) are technically permitted but run **only** when the user explicitly grants it in the current conversation ("commit", "stage these", "push and open a PR"). Editing a file ≠ permission to stage it. Run only what was requested — do not chain extras (e.g. don't push after a commit unless asked). Report what you did.
+
+Unstaging needs `restore`/`reset` (blocked) — ask the user. To commit a subset while other files are staged, use `git commit --only -m "…" -- <paths>`; it commits those paths and leaves the rest staged.

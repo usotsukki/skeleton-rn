@@ -24,7 +24,7 @@ Stack: Expo 55, React Native 0.83, React 19 (React Compiler), Expo Router, Nativ
 
 - `.env*` and secret files blocked. Ask user.
 - Git is read-only by default. See `.claude/rules/git-safety.md`.
-- No build / EAS / sim-rebuild commands without explicit user permission (multi-minute blocks).
+- Local sim builds (`yarn ios` / `yarn android` / `:rebuild`) are allowed when native deps or config plugins change. No EAS or `yarn nuke` without explicit user permission.
 - On Yarn 1, `yarn check` is the built-in lockfile validator. For lint + test use **`yarn run check`**.
 - Don't substitute different abstractions than what was requested. If unsure, ask.
 
