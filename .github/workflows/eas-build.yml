@@ -22,11 +22,16 @@ on:
           - production
           - prod-apk
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Install, verify, and build
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     env:
+      HUSKY: 0
       EXPO_PUBLIC_NODE_ENV: ${{ inputs.profile == 'production' && 'production' || inputs.profile == 'prod-apk' && 'production' || 'development' }}
       EXPO_PUBLIC_ENABLE_DEV_MODE: ${{ inputs.profile == 'production' && 'false' || inputs.profile == 'prod-apk' && 'false' || 'true' }}
       EXPO_PUBLIC_EAS_PROJECT_ID: ${{ vars.EXPO_PUBLIC_EAS_PROJECT_ID }}
@@ -44,7 +49,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version-file: .nvmrc
           cache: yarn
 
       - name: Setup Expo and EAS

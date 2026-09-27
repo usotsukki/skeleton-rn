@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Stop hook: incremental lint + typecheck + related-tests on changed files.
-# Skips if eslint/tsc-files/jest aren't installed yet.
+# Skips if eslint/tsc/jest aren't installed yet.
 
 set -euo pipefail
 
@@ -79,12 +79,22 @@ if [[ ! -x ./node_modules/.bin/eslint ]]; then
   exit 0
 fi
 
-if [[ "${#JS_TS_FILES[@]}" -gt 0 ]]; then
-  ./node_modules/.bin/eslint --cache "${JS_TS_FILES[@]}" >/tmp/expo-app-claude-eslint.log 2>&1 || fail "Stop blocked: eslint failed on changed files. Re-run and fix the reported issues."
+# ESLint warns on explicitly passed ignored files, which --max-warnings=0 turns into a failure (same filter as .lintstagedrc.mjs).
+mapfile -t LINTABLE_FILES < <(node -e "
+const { ESLint } = require('eslint');
+const eslint = new ESLint();
+Promise.all(process.argv.slice(1).map(async f => ((await eslint.isPathIgnored(f)) ? null : f))).then(files =>
+  files.filter(Boolean).forEach(f => console.log(f)),
+);
+" "${JS_TS_FILES[@]}")
+
+if [[ "${#LINTABLE_FILES[@]}" -gt 0 ]]; then
+  ./node_modules/.bin/eslint --cache --max-warnings=0 "${LINTABLE_FILES[@]}" >/tmp/expo-app-claude-eslint.log 2>&1 || fail "Stop blocked: eslint failed on changed files. See /tmp/expo-app-claude-eslint.log."
 fi
 
-if [[ -x ./node_modules/.bin/tsc-files && "${#TS_FILES[@]}" -gt 0 ]]; then
-  ./node_modules/.bin/tsc-files --noEmit --pretty false nativewind-env.d.ts "${TS_FILES[@]}" >/tmp/expo-app-claude-tsc.log 2>&1 || fail "Stop blocked: TypeScript check failed on changed files."
+# Project-wide (incremental via tsconfig): per-file checks miss breakage in importers.
+if [[ -x ./node_modules/.bin/tsc && "${#TS_FILES[@]}" -gt 0 ]]; then
+  ./node_modules/.bin/tsc --noEmit --pretty false >/tmp/expo-app-claude-tsc.log 2>&1 || fail "Stop blocked: TypeScript check failed. See /tmp/expo-app-claude-tsc.log."
 fi
 
 if [[ -x ./node_modules/.bin/jest && "${#JS_TS_FILES[@]}" -gt 0 ]]; then

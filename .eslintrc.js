@@ -25,9 +25,8 @@ module.exports = {
 			version: 'detect',
 		},
 		'import/resolver': {
-			'typescript': true,
-			'node': true,
-			'babel-module': true,
+			typescript: true,
+			node: true,
 		},
 	},
 
@@ -61,6 +60,9 @@ module.exports = {
 		'react-hooks/exhaustive-deps': 'off',
 		'react/no-unstable-nested-components': 'off',
 		'react/react-in-jsx-scope': 'off',
+		// NativeWind project: remaining inline styles are on props without className support
+		// (contentContainerStyle, navigator header options, dynamic values).
+		'react-native/no-inline-styles': 'off',
 	},
 
 	overrides: [

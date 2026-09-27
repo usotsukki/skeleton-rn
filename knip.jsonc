@@ -1,0 +1,56 @@
+{
+	"$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
+	// app.config.ts needs env to evaluate; app.json carries the full plugin list.
+	"expo": { "config": ["app.json"] },
+	"entry": ["app.config.ts", "src/metro/reactNativeMapsStub.tsx", "scripts/generate-brand-assets.cjs", "plugins/*.js"],
+	"ignore": [
+		// Template helpers not wired into the demo app yet.
+		"src/hooks/useAppStateChange.ts",
+		"src/hooks/useUpdates.ts",
+		"src/store/persistStorage.ts",
+		"src/utils/sentry/captureRepoError.ts",
+		// Barrels kept for consumers; routes import screens/hooks directly.
+		"src/hooks/index.ts",
+		"src/screens/index.tsx",
+	],
+	"ignoreDependencies": [
+		// Starter extras: shipped with the template for new apps, not used by the demo.
+		"@react-native-community/datetimepicker",
+		"@rn-primitives/popover",
+		"@tanstack/query-persist-client-core",
+		"es-toolkit",
+		"expo-application",
+		"expo-blur",
+		"expo-clipboard",
+		"expo-device",
+		"expo-document-picker",
+		"expo-font",
+		"expo-image-manipulator",
+		"expo-image-picker",
+		"expo-location",
+		"luxon",
+		"@types/luxon",
+		// Peer of @react-navigation/elements.
+		"@react-native-masked-view/masked-view",
+		// Yarn 1: re-runs root postinstall (patch-package) after `yarn add/remove`.
+		"postinstall-postinstall",
+		// Plugins of @react-native/eslint-config; legacy eslintrc resolves them from the project root.
+		"eslint-plugin-eslint-comments",
+		"eslint-plugin-ft-flow",
+		"eslint-plugin-jest",
+		// Installed ad hoc for scripts/generate-brand-assets.cjs (see its header).
+		"sharp",
+		// TODO(sdk-57): expo-router codemod replaces these imports.
+		"@react-navigation/elements",
+		"@react-navigation/native-stack",
+	],
+	"ignoreBinaries": ["eas", "pod"],
+	"rules": {
+		// Template ships helpers and barrels that generated apps will use.
+		"exports": "warn",
+		"types": "warn",
+		"nsExports": "warn",
+		"nsTypes": "warn",
+		"duplicates": "warn",
+	},
+}
