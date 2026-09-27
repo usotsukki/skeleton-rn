@@ -2,7 +2,13 @@
 	"$schema": "https://unpkg.com/knip@6/schema-jsonc.json",
 	// app.config.ts needs env to evaluate; app.json carries the full plugin list.
 	"expo": { "config": ["app.json"] },
-	"entry": ["app.config.ts", "src/metro/reactNativeMapsStub.tsx", "scripts/generate-brand-assets.cjs", "plugins/*.js"],
+	"entry": [
+		"app.config.ts",
+		"src/metro/reactNativeMapsStub.tsx",
+		"scripts/generate-brand-assets.cjs",
+		"plugins/*.js",
+		".claude/hooks/*.mjs",
+	],
 	"ignore": [
 		// Template helpers not wired into the demo app yet.
 		"src/hooks/useAppStateChange.ts",

@@ -1,6 +1,6 @@
 // Copies keystores/debug.keystore over the template's shared debug keystore on every prebuild,
 // so debug builds are signed with a project-specific key (see scripts/generate-debug-keystore.sh).
-// EAS signs with its own credentials and .easignore excludes *.keystore, so a missing file is fine.
+// The keystore is gitignored (generated per machine); EAS signs with its own credentials, so a missing file is fine.
 
 const fs = require('fs')
 const path = require('path')

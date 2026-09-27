@@ -37,10 +37,38 @@
 			"Bash(git push* main*)",
 			"Bash(git push*:main*)",
 			"Bash(git branch -D*)",
-			"Bash(git push* --delete*)"
+			"Bash(git push* --delete*)",
+			"Bash(git commit* --no-verify*)",
+			"Bash(git -c core.hooksPath*)",
+			"Bash(HUSKY=0 git*)",
+			"Bash(export HUSKY=0*)"
 		]
 	},
 	"hooks": {
+		"PreToolUse": [
+			{
+				"matcher": "Bash",
+				"hooks": [
+					{
+						"type": "command",
+						"command": "node \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/guard-bash.mjs",
+						"timeout": 10
+					}
+				]
+			}
+		],
+		"SessionStart": [
+			{
+				"matcher": "compact|resume",
+				"hooks": [
+					{
+						"type": "command",
+						"command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/plan-status.sh",
+						"timeout": 10
+					}
+				]
+			}
+		],
 		"Stop": [
 			{
 				"hooks": [

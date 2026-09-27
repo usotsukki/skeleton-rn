@@ -24,4 +24,6 @@ Agent-runnable scripts. EAS and destructive utilities are user-only and not list
 - **Yarn 1:** the built-in command `yarn check` is **not** the script above. It validates `node_modules` vs the lockfile. For lint + test, use **`yarn run check`**.
 - Don't smoke-test lint-staged with `--diff`: it stages the files it touches.
 - `yarn ios` / `yarn android` / `:rebuild` / `expo prebuild` are allowed (multi-minute; run in background). Only rebuild when native deps or config plugins changed; JS-only changes just need Metro (`yarn start`).
+- Native builds on macOS: `LANG=en_US.UTF-8` (CocoaPods), JDK 17 for Android (`JAVA_HOME=$(/usr/libexec/java_home -v 17)`); `expo run:android --device` takes the AVD name.
+- The Bash tool's shell may be zsh: quote globs (`--include='*.ts'`) and run array-heavy scripts with `bash -c`.
 - `yarn nuke` is destructive (clears node_modules, pods, Xcode caches). User-only.

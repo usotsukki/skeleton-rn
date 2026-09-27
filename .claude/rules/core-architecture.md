@@ -21,13 +21,17 @@ Expo 55, React Native 0.83, React 19 (React Compiler enabled), Expo Router, Nati
 - `src/api/auth` — auth boundary. `index.ts` is the public facade. `authErrorMessages.ts` maps API errors to i18n (no side effects, test in isolation from `supabase.ts`).
 - `src/api/supabase` — Supabase client, session-adjacent helpers (e.g. deep links for auth recovery).
 - `src/api/db` — repository and storage boundaries.
-- `src/theme` — design tokens (colors, etc.).
+- `src/theme` — design tokens: `colors` (use `useThemeColors()` in components — no static palette), `brand.ts` (from `assets/brand/brand.json`).
+- `src/env` — client env: every `EXPO_PUBLIC_*` read statically (release inlining); schema in `clientEnvSchema.ts`.
+- `src/store` — shared Zustand stores (`themeStore`, `persistStorage`).
+- `src/components/auth`, `src/components/svg` — auth form building blocks, SVG icons.
 - `src/translations` — i18n resources and app-side translation wiring.
 - `src/metro` — bundler-only files (e.g. native-module stubs for web/CI), not app runtime.
 - `src/storage` — on-device storage schema and access where applicable.
 - `src/types` — split by domain. Add to existing files before creating new buckets. **Optional in the minimal tree;** introduce when a domain needs shared types.
 - `src/utils` — generic helpers. `src/utils/test-utils` for Jest setup and shared mocks.
 - Constants belong next to the owning component, screen, or feature.
+- Outside `src`: `plugins/` (Expo config plugins), `assets/brand` (icon/splash sources → `scripts/generate-brand-assets.cjs`), `keystores/` (per-machine debug key, gitignored — `scripts/generate-debug-keystore.sh`).
 
 ## State Rules
 

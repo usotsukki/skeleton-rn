@@ -1,41 +1,26 @@
 # Debugging
 
-When the user reports — or you encounter — a runtime warning, error, or log message: it emit from a specific file. Find that file before theorizing.
+**Emitter gate (every warning/error, before any theory).**
 
-## Hard gate (do this first, every time)
+1. Take the exact string and locate its source. For JS/dependency messages, use `rg -n '<unique substring>' node_modules src`; for native, build, or remote failures, inspect the corresponding source/logs/tool output. Do not keep searching JS directories for an emitter owned by another system.
+2. Read the emitting line and enough surrounding context to understand it; cite `path:line` and the literal line. If source is unavailable, cite the relevant log/tool evidence and state that limitation.
+3. Only then propose a cause. User-flagged warnings are grep pointers, not hypotheses to weigh.
 
-Before proposing a fix, theory, architectural cause, or "likely culprit":
+`node_modules` is local truth. Wrapper layers (NativeWind/css-interop, Sentry wraps, Reanimated shims) are frequent culprits. No stack trace in the log? Grep for the *caller* of the deprecated getter/API.
 
-1. Take the exact warning/error string the user gave you.
-2. Run: `grep -rn '<exact substring>' node_modules src` (or `rg -n` if available). Trim string to a unique substring if too long.
-3. Open the emitter file. Read the line that produce the message and the surrounding 30–50 lines.
-4. Quote the emitter line in your reply (path:line and the literal source line).
-5. Only then propose a cause or fix.
+**Loops.**
 
-No exceptions. Not "I'm pretty sure I know this one." Not "this is a known RNKC/Reanimated/NativeWind issue." Pattern-match memory has a documented failure mode (see history) where the most-frequent training-data fix is wrong for the actual emitter. Always read the emitter.
+- After **2 failed fixes** in the same layer: stop. Write hypothesis, evidence for/against, 2 alternative frames, the layer above/below, and the smallest failing check that defines "fixed".
+- Before **fix #3**: a failing test (or a one-shot diagnostic with expected output) must exist and fail for the intended reason.
+- Cap any architecture/provider/ABI theory at ~10 minutes, then return to the emitter.
+- Probe before theorizing: a 5-line component or one log line beats an explanation.
 
-## Why
+**Traps seen in this stack.**
 
-- Warnings are strings. Strings are greppable. The emitter is always findable.
-- `node_modules` is part of local repo truth, same as `src`. Treat third-party source as readable, not opaque. Bugs frequently live in wrapper/HOC layers (NativeWind / `react-native-css-interop`, Sentry wraps, Reanimated wrappers, animated-component shims) that sit between the consumer and the native primitive.
-- Pattern-matching from memory bias toward the most narratively coherent explanation, which is often not the actual emitter's logic.
+- **Dev ≠ release.** Dev polyfills hide release bugs (e.g. `parse(process.env)` isn't inlined; only static `process.env.EXPO_PUBLIC_X` is). Env/config/native issues need a release build (`release-check` skill).
+- **Hermes bundles are binary:** `grep -a`, or you'll get false "not in bundle".
+- **Working sibling repo:** diff `node_modules/<lib>` and installed versions, not just lockfiles.
+- **Native registration / portals / sheets:** read the library path end-to-end; treat virtualized children as multi-instance.
+- **Upstream noise:** if the emitter is a dependency and our code doesn't trigger it, say so and leave it (or patch via `patches/` with a comment).
 
-## When user-flagged warning, weight it
-
-If the user explicitly says "this warning is the cause" or "this is likely related" — that is a high-signal pointer to grep, not a hypothesis to evaluate against your prior. Translate it into a grep, not into a theory.
-
-## Comparing working vs broken sibling repos
-
-When a working sibling exists (user say "X works in the other project"):
-
-- Diff `node_modules/<suspect-lib>` between the two, not just `package.json` / `yarn.lock`. Lockfiles can lie when they're stale.
-- Confirm the actual installed version with `cat node_modules/<lib>/package.json | grep version` on both sides.
-- Diff the file that emit the warning across both copies.
-
-## Probe before theorize
-
-When a hypothesis can be cheaply disproved with a probe (a 5-line component, a console log, a single hook call), run the probe before writing a long explanation. If the probe disprove the theory, drop the theory immediately — do not refine it.
-
-## Budget
-
-Cap any single architecture/provider/ABI hypothesis at 10 minutes of investigation. If not resolved in that window, abandon the theory and return to the emitter file. Three sessions of provider-order theorizing have produced wrong fixes; one grep of the warning string would have located the bug in minutes.
+**Why.** Pattern-matched "known fixes" were wrong for the actual emitter across multiple sessions; two-fix loops without reframing burned hours.

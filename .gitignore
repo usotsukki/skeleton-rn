@@ -17,9 +17,10 @@ credentials.json
 *.key
 *.mobileprovision
 *.keystore
-# Project debug key (not secret; see scripts/generate-debug-keystore.sh)
-!keystores/debug.keystore
 .idea/
+
+# Local MCP servers (project refs stay out of git; copy .mcp.example.json)
+.mcp.json
 
 # Metro
 .metro-health-check*
@@ -62,3 +63,7 @@ google-services.json
 # Dev
 cpd
 coverage
+
+# Agent working files
+.claude/plans/
+.claude/worktrees/

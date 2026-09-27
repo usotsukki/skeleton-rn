@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "App",
 		"slug": "app",
-		"version": "1.4.0",
+		"version": "1.5.0",
 		"icon": "./assets/png/icon.png",
 		"scheme": "app",
 		"userInterfaceStyle": "dark",
@@ -12,14 +12,14 @@
 			"reactCompiler": true
 		},
 		"ios": {
-			"buildNumber": "1.4.0",
+			"buildNumber": "1.5.0",
 			"bundleIdentifier": "com.example.app",
 			"backgroundColor": "#1f1e1d",
 			"userInterfaceStyle": "dark"
 		},
 		"android": {
 			"package": "com.example.app",
-			"versionCode": 53010400,
+			"versionCode": 53010500,
 			"userInterfaceStyle": "dark",
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/png/adaptive-foreground.png",
