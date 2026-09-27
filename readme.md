@@ -37,7 +37,7 @@ Skeleton is an opinionated Expo 55 / React Native 0.83 template with the boring-
 - **React Native Maps**, **Shopify React Native Skia**
 - **Sentry**, **i18next**, **Zod**
 - **Jest** + **React Native Testing Library**
-- **EAS Build / Update**, GitHub Actions, Maestro-ready e2e script
+- **EAS Build / Update**, GitHub Actions, Knip, lint-staged pre-commit
 
 ## Quick Start
 
@@ -93,7 +93,7 @@ Core variables:
 | `EXPO_PUBLIC_SUPABASE_URL` | Supabase project URL |
 | `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase anon / publishable key |
 | `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID` | Google Sign-In web client id |
-| `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID` | Google Sign-In iOS client id |
+| `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID` | Google Sign-In iOS client id; `app.config.ts` also derives the iOS URL scheme from it (required for production native builds) |
 | `GOOGLE_MAPS_API_KEY_ANDROID` | Android maps key |
 | `GOOGLE_MAPS_API_KEY_IOS` | iOS maps key |
 | `EXPO_PUBLIC_SENTRY_DSN` | Optional Sentry DSN |
@@ -140,15 +140,17 @@ Skeleton does not ship a backend. Create your own Supabase project, add OAuth pr
 | Command | Use |
 | --- | --- |
 | `yarn start` | Start Expo dev server for a dev client |
-| `yarn run check` | Project gate: TypeScript, ESLint, Prettier, Jest |
+| `yarn run check` | Project gate: all `lint:*` checks, then Jest (read-only, never rewrites files) |
 | `yarn lint:ts` | TypeScript check |
-| `yarn lint:js` | ESLint |
-| `yarn lint:format:check` | Prettier check |
+| `yarn lint:js` | ESLint, fails on any warning |
+| `yarn lint:format` | Prettier check |
+| `yarn lint:unused` | Knip: unused files, dependencies, exports |
+| `yarn fix` | Prettier write + ESLint `--fix` |
 | `yarn test` | Jest tests under `src`, with `TZ=UTC` |
+| `yarn test:coverage` | Jest with coverage report in `coverage/` |
 | `yarn duplication:check` | jscpd copy/paste report |
 | `yarn ios` / `yarn android` | Run native app after native projects exist |
 | `yarn ios:rebuild` / `yarn android:rebuild` | Prebuild then run |
-| `yarn test-e2e` | Run Maestro flows from `e2e/*.yaml` |
 | `yarn eas-ios` / `yarn eas-android` | Development EAS builds |
 | `yarn eas-ios:prod` / `yarn eas-android:prod` | Production EAS builds |
 | `yarn eas-update:prod` | Production EAS update |
@@ -162,8 +164,9 @@ Important Yarn 1 footnote: `yarn check` is Yarn's built-in lockfile/node_modules
 - Unit and component tests use Jest + React Native Testing Library.
 - Test setup lives in `src/utils/test-utils/setup.ts`.
 - Auth, env validation, screen, validator, and Skia config tests are included.
-- GitHub Actions runs install, lint, tests, and duplication checks on pushes to `main` and manual dispatches.
-- Maestro is wired as an optional e2e runner; add flows under `e2e/*.yaml`.
+- Pre-commit (husky + lint-staged) runs ESLint `--fix`, Prettier, then a project-wide `tsc` on staged JS/TS; commit messages go through commitlint.
+- GitHub Actions (`lint-and-test.yml`) runs on pull requests, pushes to `main`, and manual dispatch: ESLint, TypeScript, Prettier, Knip, Jest with a coverage summary, jscpd, and commitlint over the PR's commits. Node version comes from `.nvmrc`.
+- Knip config (`knip.jsonc`) lists the starter dependencies the template ships without using them yet; drop the ones your app doesn't need.
 
 ## Design Rules
 
@@ -186,7 +189,9 @@ After cloning or forking, replace the template identity with your product identi
 - Set `.env` values for Supabase, OAuth, maps, EAS, Apple team, Sentry, and production env requirements.
 - Tune `env.rules.json` so production fails fast when required product config is missing.
 - Confirm redirect URLs in Supabase for email recovery and OAuth callbacks.
-- Replace app icon, splash, logo, and screenshots under `assets/png`.
+- Rebrand icon and splash: edit `assets/brand/skull.svg` (any 24×24 stroke icon, e.g. from Lucide) and `assets/brand/brand.json` (gradient, splash color, icon size), regenerate with `scripts/generate-brand-assets.cjs` (see its header), then mirror `splashBackground` / `splashIconSize` in the `expo-splash-screen` entry of `app.json` (a test fails if they drift). Native rebuild required.
+- Replace screenshots under `assets/png/screenshots`.
+- Generate your own Android debug key with `./scripts/generate-debug-keystore.sh --force` (the shared React Native debug key's SHA-1 is usually already claimed in Google Cloud for common package names). Register its SHA-1 and the EAS keystore SHA-1 (expo.dev → Credentials → Android) as Android OAuth clients in the same Google Cloud project as `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID`, or Android Google Sign-In fails with "Android clients and Web clients must be in the same project".
 - Rename `package.json` `name`; keep or remove `"private": true` based on your publishing needs.
 - Update EAS owner/project values and build profiles for your release process.
 - Add product screens under `src/screens` and route to them from `src/app`.

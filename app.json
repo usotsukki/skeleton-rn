@@ -3,9 +3,8 @@
 		"name": "App",
 		"slug": "app",
 		"version": "1.4.0",
-		"icon": "./assets/png/app-icon.png",
+		"icon": "./assets/png/icon.png",
 		"scheme": "app",
-		"newArchEnabled": true,
 		"userInterfaceStyle": "dark",
 		"experiments": {
 			"typedRoutes": true,
@@ -21,7 +20,12 @@
 		"android": {
 			"package": "com.example.app",
 			"versionCode": 53010400,
-			"userInterfaceStyle": "dark"
+			"userInterfaceStyle": "dark",
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/png/adaptive-foreground.png",
+				"backgroundImage": "./assets/png/adaptive-background.png",
+				"monochromeImage": "./assets/png/adaptive-monochrome.png"
+			}
 		},
 		"web": {
 			"bundler": "metro",
@@ -46,9 +50,10 @@
 			[
 				"expo-splash-screen",
 				{
-					"backgroundColor": "#1f1e1d",
-					"image": "./assets/png/image-splash.png",
-					"resizeMode": "cover"
+					"backgroundColor": "#E0664A",
+					"image": "./assets/png/splash-icon.png",
+					"imageWidth": 100,
+					"resizeMode": "contain"
 				}
 			],
 			"react-native-maps",
@@ -63,8 +68,8 @@
 			[
 				"expo-notifications",
 				{
-					"icon": "./assets/png/logo.png",
-					"color": "#1f1e1d",
+					"icon": "./assets/png/notification-icon.png",
+					"color": "#E0664A",
 					"defaultChannel": "default"
 				}
 			],
@@ -75,6 +80,8 @@
 					"addGeneratedScheme": false
 				}
 			],
+			"./plugins/withSuppressDevMenuOnboarding",
+			"./plugins/withProjectDebugKeystore",
 			[
 				"expo-screen-orientation",
 				{
