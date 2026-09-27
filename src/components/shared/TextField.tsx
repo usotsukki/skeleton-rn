@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Pressable, TextInput, TextInputProps, View } from 'react-native'
-import { colors } from '@app/theme/colors'
+import { useThemeColors } from '@app/theme/colors'
 import { cn } from '@app/utils'
 import { EyeIcon } from '../svg'
 import { FormFieldLabel } from './FormFieldLabel'
@@ -23,6 +23,7 @@ export default function TextField({
 	multiline,
 	...props
 }: TextFieldProps) {
+	const colors = useThemeColors()
 	const [isSecureTextEntry, setIsSecureTextEntry] = useState(secureTextEntryEnabled)
 
 	const sharedProps = {

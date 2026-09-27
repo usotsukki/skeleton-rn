@@ -1,6 +1,6 @@
 import Checkbox, { CheckboxProps } from 'expo-checkbox'
 import { StyleSheet, View } from 'react-native'
-import { colors } from '@app/theme/colors'
+import { useThemeColors } from '@app/theme/colors'
 import { cn } from '@app/utils'
 import AppText from './AppText'
 
@@ -10,9 +10,10 @@ interface CheckboxInputProps extends CheckboxProps {
 }
 
 export default function CheckboxInput({ containerClassName, label, ...props }: CheckboxInputProps) {
+	const colors = useThemeColors()
 	return (
 		<View className={cn('flex-row items-center gap-2', containerClassName)}>
-			<Checkbox color={colors['accent']} style={styles.checkbox} {...props} />
+			<Checkbox color={colors.accent} style={styles.checkbox} {...props} />
 			{label && (
 				<AppText className="text-text-secondary" variant="ts">
 					{label}

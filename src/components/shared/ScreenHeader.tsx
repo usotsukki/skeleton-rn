@@ -1,7 +1,7 @@
 import { ChevronLeft, X } from 'lucide-react-native'
 import type { ReactNode } from 'react'
 import { Pressable, View } from 'react-native'
-import { colors } from '@app/theme/colors'
+import { useThemeColors } from '@app/theme/colors'
 import AppText from './AppText'
 
 const HIT = 8
@@ -44,6 +44,7 @@ export interface ScreenHeaderProps {
 }
 
 function LeadingControl({ leading }: { leading: ScreenHeaderLeading }) {
+	const colors = useThemeColors()
 	if (leading.kind === 'none') return null
 
 	if (leading.kind === 'close-circle' || leading.kind === 'back-circle') {
@@ -56,7 +57,7 @@ function LeadingControl({ leading }: { leading: ScreenHeaderLeading }) {
 				hitSlop={HIT}
 				onPress={leading.onPress}
 				testID={leading.testID}>
-				{isClose ? <X color={colors['text']} size={22} /> : <ChevronLeft color={colors['text']} size={22} />}
+				{isClose ? <X color={colors.text} size={22} /> : <ChevronLeft color={colors.text} size={22} />}
 			</Pressable>
 		)
 	}
@@ -68,7 +69,7 @@ function LeadingControl({ leading }: { leading: ScreenHeaderLeading }) {
 			hitSlop={HIT}
 			onPress={leading.onPress}
 			testID={leading.testID}>
-			<ChevronLeft color={colors['accent']} size={28} />
+			<ChevronLeft color={colors.accent} size={28} />
 		</Pressable>
 	)
 }

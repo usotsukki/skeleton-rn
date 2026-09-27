@@ -1,7 +1,7 @@
 import { ChevronRight } from 'lucide-react-native'
 import { type ReactNode } from 'react'
 import { Pressable, View } from 'react-native'
-import { colors } from '@app/theme/colors'
+import { useThemeColors } from '@app/theme/colors'
 import { cn } from '@app/utils'
 import AppText from './AppText'
 
@@ -36,6 +36,7 @@ export function ListRow({
 	last = false,
 	testID,
 }: ListRowProps) {
+	const colors = useThemeColors()
 	const Container: typeof Pressable | typeof View = onPress ? Pressable : View
 
 	return (
