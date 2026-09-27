@@ -1,9 +1,11 @@
-# MCP Routing
+# MCP & Tool Routing
 
-Local repo truth first: code > local docs > targeted MCP > web. MCP usage opt-in, task-specific.
+Local truth first: code + `node_modules` > local docs > targeted MCP/CLI > web. MCPs are opt-in and task-specific.
 
-- **Expo MCP**: Expo/EAS config, build, native module, platform behavior
-- **Context7 MCP**: version-sensitive library/framework docs when local context insufficient
-- **Figma MCP**: when a Figma URL is referenced and design fidelity is needed. Dev Mode (`get_design_context`, `get_variable_defs`, `get_code_connect_*`) requires Org/Enterprise — Starter/Pro tiers fail with `plans-access-and-permissions`. Fallback: ask user for screenshot + token names, or use `get_screenshot` only.
-- **Supabase MCP**: live DB inspection (tables, advisors, logs, migrations) when migrations on disk are insufficient.
-- **Agent Device**: live mobile exploration, snapshots, short interactions while authoring features.
+- **Expo MCP** — Expo/EAS config, native modules, platform behavior. **Context7** — version-specific library docs.
+- **Supabase MCP** — live DB (tables, advisors, logs, migrations); scoped via local `.mcp.json` (gitignored; copy `.mcp.example.json` and set `project_ref`). Never apply migrations or write data without an explicit ask.
+- **Sentry MCP** — orgs/projects/DSNs/issues. Token scopes: `sentry-cli info` (prints scopes, not the token).
+- **EAS CLI** — reads env only via `npx dotenv -e .env -- eas …`. Compare EAS vs local values by match/prefix; never print values. `secret` variables can't be read or re-scoped — ask the user.
+- **Figma MCP** — only with a Figma URL; Dev Mode tools need Org/Enterprise (fallback: screenshot + token names).
+- **Device** — iOS simulator tool / `agent-device` skill for exploration, Maestro for durable flows; delegate runs to the `device-check` agent.
+- **Browser (dashboards)** — Google Cloud, Supabase, Firebase, expo.dev: see the `new-app-setup` skill for safe console handling.

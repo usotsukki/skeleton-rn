@@ -1,1 +1,7 @@
 yarn lint-commit ${1}
+
+# No AI attribution in commits (any tool). Human Co-Authored-By trailers are fine.
+if grep -qiE '^(co-authored-by:.*(claude|cursor|anthropic|openai|codex|copilot)|.*generated with \[?(claude|cursor))' "${1}"; then
+  echo "commit-msg: remove AI attribution lines (Co-Authored-By AI / 'Generated with …')." >&2
+  exit 1
+fi

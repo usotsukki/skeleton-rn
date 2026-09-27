@@ -1,35 +1,35 @@
 # Skeleton — Agent Guide
 
-Tool-agnostic entry point for AI coding agents (Codex, Cursor, Claude Code, etc.). Skeleton is an Expo / React Native template — fork into a product repo, then layer product code on top.
+Tool-agnostic entry point for AI coding agents (Codex, Cursor, Claude Code). Skeleton is an Expo / React Native template — fork into a product repo, then layer product code on top.
 
-## Project
+Stack: Expo 55, React Native 0.83, React 19 (React Compiler), Expo Router, NativeWind, Zustand, TanStack React Query, Supabase, Jest + RNTL.
 
-Stack: Expo 55, React Native 0.83, React 19 (React Compiler), Expo Router, NativeWind, Zustand (sync state), TanStack React Query (server state), Supabase (auth + client), Jest + RNTL.
+## Working rules
 
-## Tool-native rule locations (canonical)
+The always-on rules live in [CLAUDE.md](CLAUDE.md) ("Working rules") and apply to every tool: done = exit code, plan for complexity/risk, scope discipline, emitter-first debugging, release check for env/config/native changes, review before relevant commits or handoffs, git only with a grant and never AI attribution, never route around a denied action, secrets via tools only.
 
-`.claude/rules/*.md` is the canonical rulebook. Path-scoped via `paths:` frontmatter (auto-loaded by Claude Code 2.0.64+). Other tools should read these as static markdown.
+## Rules (`.claude/rules/`, canonical)
 
-| Rule                                                                     | When                                                             |
-| ------------------------------------------------------------------------ | ---------------------------------------------------------------- |
-| [.claude/rules/commands.md](.claude/rules/commands.md)                   | Always — yarn command reference                                  |
-| [.claude/rules/core-architecture.md](.claude/rules/core-architecture.md) | Editing `src/**/*.{ts,tsx}`                                      |
-| [.claude/rules/react-components.md](.claude/rules/react-components.md)   | Editing `src/components/**`, `src/screens/**`, `src/features/**` |
-| [.claude/rules/testing.md](.claude/rules/testing.md)                     | Editing tests / setup                                            |
-| [.claude/rules/mcp-routing.md](.claude/rules/mcp-routing.md)             | Always — MCP server selection                                    |
-| [.claude/rules/git-safety.md](.claude/rules/git-safety.md)               | Always — git read-only by default                                |
-| [.claude/rules/docs-sync.md](.claude/rules/docs-sync.md)                 | Editing docs                                                     |
+| Rule | Loaded |
+| --- | --- |
+| [git-safety](.claude/rules/git-safety.md) | Always — grant model, commit/PR style |
+| [commands](.claude/rules/commands.md) | Always — scripts and gotchas |
+| [debugging](.claude/rules/debugging.md) | Always — emitter gate, reframe after 2 failed fixes |
+| [mcp-routing](.claude/rules/mcp-routing.md) | Always — MCP/CLI/dashboard routing |
+| [core-architecture](.claude/rules/core-architecture.md) | Editing `src/**` |
+| [react-components](.claude/rules/react-components.md) | Editing components/screens |
+| [testing](.claude/rules/testing.md) | Editing tests / setup |
+| [docs-sync](.claude/rules/docs-sync.md) | Editing docs / rules / skills / agents |
 
-## Hard constraints
+## Skills and agents
 
-- `.env*` and secret files blocked. Ask user.
-- Git is read-only by default. See `.claude/rules/git-safety.md`.
-- Local sim builds (`yarn ios` / `yarn android` / `:rebuild`) are allowed when native deps or config plugins change. No EAS or `yarn nuke` without explicit user permission.
-- On Yarn 1, `yarn check` is the built-in lockfile validator. For lint + test use **`yarn run check`**.
-- Don't substitute different abstractions than what was requested. If unsure, ask.
+- Skills (`.claude/skills/`): `review-staged` (plan/code/policy review + author triage; automatic Cursor preflight in Claude Code), `release-check` (release build, bundle, cold launch), `new-app-setup` (fork checklist, console safety).
+- Agents (`.claude/agents/`): `pr-audit` (read-only plan/change review), `device-check` (sim/emulator verification).
+- Asked to review as Cursor/Codex? Review directly with the `pr-audit` checklist — no subagents, no `cursor-agent` calls. Distinguish self-review from an independent or cross-model review; review alone does not authorize edits.
 
-## For Claude Code specifically
+## Enforced (not just prose)
 
-[CLAUDE.md](CLAUDE.md) is the Claude Code entry point. Path-scoped rules in `.claude/rules/*` auto-load on file match.
+- `.claude/settings.json`: `.env*` read deny, destructive git deny list, Bash guard hook (AI attribution, hook bypass, `lint-staged --diff`, settings-swapping branch switches), plan status on compact/resume, verify-on-stop.
+- `.husky/commit-msg`: commitlint + AI-attribution rejection for every tool.
 
-Do not duplicate rule content here; update `.claude/rules/*.md` when behavior or layout changes.
+Do not duplicate detailed procedures here; update the owning rule, skill, agent contract, or `CLAUDE.md`.

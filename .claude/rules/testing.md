@@ -9,7 +9,6 @@ paths:
 
 - Jest with `jest-expo`, React Native Testing Library
 - Shared setup: `src/utils/test-utils/setup.ts`
-- Shared mocks: `src/utils/test-utils/mocks.ts` (when present)
 - `yarn test` sets `TZ=UTC`. If running jest directly: `TZ=UTC jest src`.
 
 ## Async Rules
@@ -24,7 +23,7 @@ Mocked hook return values used in dependency arrays must be stable references. U
 
 ## Shared Mock Sources
 
-Before adding a test-local mock, check `setup.ts` and `mocks.ts` in `src/utils/test-utils/`. Add reusable mocks there if multiple tests need them. Do not duplicate global mocks unless the test needs a targeted override.
+Before adding a test-local mock, check `src/utils/test-utils/setup.ts`. Add reusable mocks there if multiple tests need them. Do not duplicate global mocks unless the test needs a targeted override.
 
 ## Parent Tests
 

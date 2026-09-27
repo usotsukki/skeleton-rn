@@ -33,6 +33,11 @@ const getSplash = () => screen.getByTestId('animated-splash', { includeHiddenEle
 const getIcon = () => screen.getByTestId('animated-splash-icon', { includeHiddenElements: true })
 
 describe('AnimatedSplash', () => {
+	afterEach(() => {
+		jest.useRealTimers()
+		mockUseReducedMotion.mockReturnValue(false)
+	})
+
 	it('hides the native splash without its fade once its own first frame is laid out and the icon loaded', () => {
 		render(<AnimatedSplash onHidden={jest.fn()} ready={false} />)
 		// Set on mount so Android's queued options land before hide().
@@ -62,6 +67,27 @@ describe('AnimatedSplash', () => {
 		expect(onHidden).not.toHaveBeenCalled()
 
 		rerender(<AnimatedSplash onHidden={onHidden} ready />)
+		expect(onHidden).toHaveBeenCalledTimes(1)
+	})
+
+	it('hides after a timeout when the fade never reports finishing', () => {
+		jest.useFakeTimers()
+		mockWithTiming.mockImplementationOnce(value => value)
+		const onHidden = jest.fn()
+		render(<AnimatedSplash onHidden={onHidden} ready />)
+		expect(onHidden).not.toHaveBeenCalled()
+
+		jest.advanceTimersByTime(2000)
+		expect(onHidden).toHaveBeenCalledTimes(1)
+	})
+
+	it('reports hidden once when the fade finishes and the parent keeps it mounted past the timeout', () => {
+		jest.useFakeTimers()
+		const onHidden = jest.fn()
+		render(<AnimatedSplash onHidden={onHidden} ready />)
+		expect(onHidden).toHaveBeenCalledTimes(1)
+
+		jest.advanceTimersByTime(2000)
 		expect(onHidden).toHaveBeenCalledTimes(1)
 	})
 

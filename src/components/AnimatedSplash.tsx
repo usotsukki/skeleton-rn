@@ -18,8 +18,12 @@ import { BRAND_GRADIENT, SPLASH_BACKGROUND, SPLASH_ICON_SIZE } from '@app/theme/
 
 const splashIcon = require('../../assets/png/splash-icon.png')
 
-const INTRO_MS = 700
-const OUTRO_MS = 300
+const INTRO_MS = 450
+const OUTRO_MS = 250
+// The fade starts over the slow tail of the ease-out intro, so the two read as one motion.
+const OUTRO_DELAY_MS = 300
+// Safety net: an animation callback that never reports `finished` must not pin the splash over the app.
+const HIDE_TIMEOUT_MS = OUTRO_DELAY_MS + OUTRO_MS + 500
 const GLOW_SIZE = 160
 
 interface AnimatedSplashProps {
@@ -37,6 +41,14 @@ const AnimatedSplash = ({ ready, onHidden }: AnimatedSplashProps) => {
 	const intro = useSharedValue(0)
 	const outro = useSharedValue(0)
 	const painted = useRef({ layout: false, image: false, hidden: false })
+	const reported = useRef(false)
+
+	// Fade callback and fallback timeout can both fire; the parent hears it once.
+	const reportHidden = () => {
+		if (reported.current) return
+		reported.current = true
+		onHidden()
+	}
 
 	const hideNativeSplash = () => {
 		if (painted.current.hidden) return
@@ -82,15 +94,17 @@ const AnimatedSplash = ({ ready, onHidden }: AnimatedSplashProps) => {
 			1,
 			{ duration: OUTRO_MS, easing: Easing.in(Easing.cubic), reduceMotion: ReduceMotion.Never },
 			finished => {
-				if (finished) runOnJS(onHidden)()
+				if (finished) runOnJS(reportHidden)()
 			},
 		)
 		if (reduceMotion) {
 			outro.value = fadeOut
-			return
+		} else {
+			intro.value = withTiming(1, { duration: INTRO_MS, easing: Easing.out(Easing.cubic) })
+			outro.value = withDelay(OUTRO_DELAY_MS, fadeOut)
 		}
-		intro.value = withTiming(1, { duration: INTRO_MS, easing: Easing.out(Easing.cubic) })
-		outro.value = withDelay(INTRO_MS, fadeOut)
+		const hideTimeout = setTimeout(reportHidden, HIDE_TIMEOUT_MS)
+		return () => clearTimeout(hideTimeout)
 	}, [ready, reduceMotion, intro, outro, onHidden])
 
 	return (
