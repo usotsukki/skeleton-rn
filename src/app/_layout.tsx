@@ -9,19 +9,20 @@ import { Stack, useNavigationContainerRef } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
 import { vars } from 'nativewind'
-import { ErrorInfo, useCallback, useEffect } from 'react'
+import { ErrorInfo, useCallback, useEffect, useState } from 'react'
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
 import { LogBox, Platform, useColorScheme as useDeviceScheme, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { KeyboardProvider } from 'react-native-keyboard-controller'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableScreens } from 'react-native-screens'
-import { ErrorFallback, Toast } from '@app/components'
+import { AnimatedSplash, ErrorFallback, Toast } from '@app/components'
 import { SkeletonPulseProvider } from '@app/components/shared/SkeletonPulseProvider'
 import { GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID, IS_PROD, SENTRY_DEBUG, SENTRY_DSN } from '@app/env'
 import { useAuthListener, useAuthStore } from '@app/hooks/useAuth'
 import { useAuthDeepLink } from '@app/hooks/useAuthDeepLink'
 import useNetworkToast from '@app/hooks/useNetworkToast'
+import useSplash from '@app/hooks/useSplash'
 import { useStorageDevTools } from '@app/storage'
 import { useThemeStore } from '@app/store/themeStore'
 import { darkVars, lightVars } from '@app/theme/colors'
@@ -73,6 +74,8 @@ Sentry.init({
 
 enableScreens(true)
 
+const SPLASH_MAX_WAIT_MS = 1500
+
 const queryClient = new QueryClient({
 	defaultOptions: { queries: { retry: 2 } },
 })
@@ -82,6 +85,9 @@ const RootLayout = () => {
 	const themeMode = useThemeStore(s => s.mode)
 	const deviceScheme = useDeviceScheme()
 	const authHydrated = useAuthStore(s => s.hydrated)
+	const [splashReady, setSplashReady] = useState(false)
+	const splashFinished = useSplash(s => s.isSplashFinished)
+	const setSplashFinished = useSplash(s => s.setSplashFinished)
 	const resolvedScheme = themeMode === 'system' ? (deviceScheme ?? 'dark') : themeMode
 	const themeVars = vars(resolvedScheme === 'dark' ? darkVars : lightVars)
 
@@ -106,13 +112,13 @@ const RootLayout = () => {
 		navigationIntegration.registerNavigationContainer(ref)
 	}, [ref])
 
+	// Auth hydration normally finishes first; the timeout keeps a stuck hydration from pinning the splash.
 	useEffect(() => {
-		const hide = () => SplashScreen.hideAsync().catch(() => {})
 		if (authHydrated) {
-			hide()
+			setSplashReady(true)
 			return
 		}
-		const t = setTimeout(hide, 1500)
+		const t = setTimeout(() => setSplashReady(true), SPLASH_MAX_WAIT_MS)
 		return () => clearTimeout(t)
 	}, [authHydrated])
 
@@ -133,25 +139,32 @@ const RootLayout = () => {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<GestureHandlerRootView style={{ flex: 1 }}>
-				<KeyboardProvider navigationBarTranslucent statusBarTranslucent>
+				<KeyboardProvider>
 					<SafeAreaProvider>
 						<StatusBar style={resolvedScheme === 'dark' ? 'light' : 'dark'} />
 						<View className="flex-1 bg-bg" style={themeVars}>
-							<SkeletonPulseProvider>
-								<Toast />
-								<BottomSheetModalProvider>
-									<ErrorBoundary fallbackRender={renderFallback} onError={onBoundaryError} onReset={onReset}>
-										<Stack
-											screenOptions={{
-												headerShown: false,
-												animation: 'fade',
-												animationDuration: 200,
-											}}
-										/>
-									</ErrorBoundary>
-								</BottomSheetModalProvider>
-							</SkeletonPulseProvider>
-							<PortalHost />
+							{/* Keep screen readers off the app while the (opaque, touch-blocking) splash covers it. */}
+							<View
+								accessibilityElementsHidden={!splashFinished}
+								className="flex-1"
+								importantForAccessibility={splashFinished ? 'auto' : 'no-hide-descendants'}>
+								<SkeletonPulseProvider>
+									<Toast />
+									<BottomSheetModalProvider>
+										<ErrorBoundary fallbackRender={renderFallback} onError={onBoundaryError} onReset={onReset}>
+											<Stack
+												screenOptions={{
+													headerShown: false,
+													animation: 'fade',
+													animationDuration: 200,
+												}}
+											/>
+										</ErrorBoundary>
+									</BottomSheetModalProvider>
+								</SkeletonPulseProvider>
+								<PortalHost />
+							</View>
+							{!splashFinished && <AnimatedSplash onHidden={setSplashFinished} ready={splashReady} />}
 						</View>
 					</SafeAreaProvider>
 				</KeyboardProvider>
