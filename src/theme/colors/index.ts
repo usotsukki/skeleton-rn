@@ -58,9 +58,6 @@ export const darkColors = {
 
 export type ThemeColors = typeof darkColors
 
-/** Static fallback — defaults to dark. Prefer `useThemeColors()` in components. */
-export const colors: ThemeColors = darkColors
-
 const toRgbChannels = (color: string): string => {
 	if (color.startsWith('#')) {
 		const hex = color.slice(1)
