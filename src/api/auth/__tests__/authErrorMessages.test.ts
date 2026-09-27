@@ -11,6 +11,17 @@ describe('getAuthErrorMessage', () => {
 		expect(getAuthErrorMessage(new Error('The user canceled the Google sign in. Please try again.'))).toBeNull()
 	})
 
+	it('maps Google Android configuration failures to a dedicated message', () => {
+		const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
+		expect(getAuthErrorMessage(new Error('DEVELOPER_ERROR: Follow troubleshooting instructions'))).toBe(
+			'error.googleSignInMisconfigured',
+		)
+		expect(getAuthErrorMessage(new Error('A non-recoverable sign in failure occurred'))).toBe(
+			'error.googleSignInMisconfigured',
+		)
+		spy.mockRestore()
+	})
+
 	it('uses generic i18n key for unmapped errors; logs details in __DEV__', () => {
 		const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
 
