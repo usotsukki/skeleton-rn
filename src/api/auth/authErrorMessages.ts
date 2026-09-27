@@ -20,6 +20,16 @@ export function getAuthErrorMessage(error: unknown): string | null {
 	if (m.includes('network')) return i18next.t('error.networkError')
 	if (m.includes('provider is not enabled')) return i18next.t('error.providerDisabled')
 	if (m.includes('google') && m.includes('cancel')) return null
+	// Google rejects the app's package + signing SHA-1 (no matching Android OAuth client in the web client's project).
+	if (m.includes('developer_error') || m.includes('non-recoverable sign in failure')) {
+		if (__DEV__) {
+			console.warn(
+				'[getAuthErrorMessage] Google Sign-In is not configured for this build: register its package name and ' +
+					'signing SHA-1 as an Android OAuth client in the same Google Cloud project as the web client id.',
+			)
+		}
+		return i18next.t('error.googleSignInMisconfigured')
+	}
 	if (m.includes('email address') && m.includes('invalid')) return i18next.t('error.invalidEmail')
 	if (m.includes('rate limit') || m.includes('over_email_send_rate_limit')) return i18next.t('error.emailRateLimit')
 
