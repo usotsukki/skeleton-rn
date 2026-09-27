@@ -1,4 +1,4 @@
-import type { AnyFieldApi } from '@tanstack/form-core'
+import type { AnyFieldApi } from '@tanstack/react-form'
 import { useTranslation } from 'react-i18next'
 import { AuthEmailInput, AuthPasswordInput } from '@app/components/shared'
 

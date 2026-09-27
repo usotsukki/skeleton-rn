@@ -12,7 +12,7 @@ const config = {
 	trailingComma: 'all',
 	singleAttributePerLine: false,
 
-	plugins: ['propocd', '@trivago/prettier-plugin-sort-imports', 'prettier-plugin-tailwindcss', 'prettier-plugin-merge'],
+	plugins: ['@trivago/prettier-plugin-sort-imports', 'prettier-plugin-tailwindcss', 'prettier-plugin-merge'],
 	importOrderSortSpecifiers: true,
 	importOrderCaseInsensitive: true,
 	importOrder: ['@assets/*', '@app/*', '^[../*]', '^[./*]'],

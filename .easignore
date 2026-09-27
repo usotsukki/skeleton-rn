@@ -43,16 +43,14 @@ ios
 android
 
 .eslintcache
-# Archives
-build-*.tar.gz
-
-# Firebase 
-GoogleService-Info.plist
-google-services.json
 
 # Archives
 build-*.tar.gz
 build-*.apk
+
+# Google service config files (contain API keys)
+GoogleService-Info.plist
+google-services.json
 
 # Tests
 __tests__/

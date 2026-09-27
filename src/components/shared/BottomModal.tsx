@@ -127,7 +127,7 @@ export const BottomModal = React.forwardRef<BottomSheetModal, BottomModalProps>(
 
 				{isSubmitting ? (
 					<View style={styles.overlay}>
-						<ActivityIndicator color={c['accent']} size="large" />
+						<ActivityIndicator color={c.accent} size="large" />
 					</View>
 				) : null}
 			</View>

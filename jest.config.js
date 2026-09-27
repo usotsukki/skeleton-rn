@@ -1,20 +1,11 @@
-const { pathsToModuleNameMapper } = require('ts-jest')
-const { compilerOptions } = require('./tsconfig')
-
+// `jest-expo` transforms TS via babel-jest and maps tsconfig `paths` (@app/*, @assets/*).
 module.exports = {
 	preset: 'jest-expo',
 	setupFiles: ['./jest.env.js', './node_modules/react-native-gesture-handler/jestSetup.js'],
-	setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect', './src/utils/test-utils/setup.ts'],
+	setupFilesAfterEnv: ['./src/utils/test-utils/setup.ts'],
 	testRegex: '(/__tests__/.*|(\\.|/)(test|spec))(?<!\\.disabled)\\.[jt]sx?$',
-	transform: {
-		'\\.[jt]sx?$': 'babel-jest',
-		'\\.ts$': [
-			'ts-jest',
-			{
-				tsconfig: 'tsconfig.jest.json',
-			},
-		],
-	},
+	testPathIgnorePatterns: ['/node_modules/', '/.claude/worktrees/'],
+	modulePathIgnorePatterns: ['/.claude/worktrees/'],
 	transformIgnorePatterns: [
 		`node_modules/
 			(?!((jest-)?
@@ -34,10 +25,9 @@ module.exports = {
 	],
 	testEnvironment: 'node',
 	testTimeout: 10000,
-	moduleNameMapper: {
-		...pathsToModuleNameMapper(compilerOptions.paths, {
-			prefix: '<rootDir>',
-		}),
-	},
+	clearMocks: true,
+	cacheDirectory: '<rootDir>/node_modules/.cache/jest',
+	collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/**/__tests__/**', '!src/**/*.d.ts'],
+	coverageReporters: ['text-summary', 'json-summary', 'lcov'],
 	moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
 }

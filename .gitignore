@@ -17,6 +17,8 @@ credentials.json
 *.key
 *.mobileprovision
 *.keystore
+# Project debug key (not secret; see scripts/generate-debug-keystore.sh)
+!keystores/debug.keystore
 .idea/
 
 # Metro
@@ -53,7 +55,7 @@ build-*.apk
 application-*.apk
 *.apk
 
-# Firebase 
+# Google service config files (contain API keys; not used since Google Sign-In moved off Firebase)
 GoogleService-Info.plist
 google-services.json
 

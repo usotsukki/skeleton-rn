@@ -4,6 +4,8 @@
 		"strict": true,
 		"skipLibCheck": true,
 		"noEmit": true,
+		"incremental": true,
+		"tsBuildInfoFile": "node_modules/.cache/tsc/tsconfig.tsbuildinfo",
 		"allowJs": false,
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
@@ -16,8 +18,7 @@
 		"baseUrl": "./",
 		"paths": {
 			"@app/*": ["src/*"],
-			"@assets/*": ["assets/*"],
-			"@shared": ["src/components/shared"]
+			"@assets/*": ["assets/*"]
 		}
 	},
 	"exclude": ["node_modules", "ios", "android"],
