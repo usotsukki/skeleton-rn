@@ -2,7 +2,7 @@ import { Minus, Pause, Play, Plus } from 'lucide-react-native'
 import type { ReactNode } from 'react'
 import { Pressable, View } from 'react-native'
 import { AppText } from '@app/components/shared'
-import { colors } from '@app/theme/colors'
+import { useThemeColors } from '@app/theme/colors'
 
 interface SkiaControlsProps {
 	planetLabel: string
@@ -91,6 +91,7 @@ function KnobRow({
 	disabledMinus?: boolean
 	disabledPlus?: boolean
 }) {
+	const colors = useThemeColors()
 	return (
 		<View className="flex-row items-center justify-between">
 			<AppText className="text-text-muted" variant="cap">
@@ -98,13 +99,13 @@ function KnobRow({
 			</AppText>
 			<View className="flex-row items-center gap-3">
 				<KnobButton disabled={disabledMinus} onPress={onMinus}>
-					<Minus color={colors['text']} size={18} />
+					<Minus color={colors.text} size={18} />
 				</KnobButton>
 				<AppText className="w-14 text-center text-text" variant="tmed">
 					{value}
 				</AppText>
 				<KnobButton disabled={disabledPlus} onPress={onPlus}>
-					<Plus color={colors['text']} size={18} />
+					<Plus color={colors.text} size={18} />
 				</KnobButton>
 			</View>
 		</View>

@@ -1,5 +1,5 @@
 import { Text, TextInput } from 'react-native'
-import { colors } from './colors'
+import { darkColors } from './colors'
 
 /** @ts-expect-error default props */
 if (!Text?.defaultProps) {
@@ -16,7 +16,8 @@ if (!TextInput?.defaultProps) {
 Text.defaultProps.allowFontScaling = false
 // @ts-expect-error default props
 TextInput.defaultProps.allowFontScaling = false
+// Module scope can't follow the theme; accent is identical in both palettes.
 // @ts-expect-error default props
-TextInput.defaultProps.selectionColor = colors.accent
+TextInput.defaultProps.selectionColor = darkColors.accent
 // @ts-expect-error default props — Android-only, removes extra ascent/descent padding that offsets text from center
 TextInput.defaultProps.includeFontPadding = false
