@@ -42,6 +42,7 @@
 			"channel": "production",
 			"autoIncrement": true,
 			"env": {
+				"EXPO_PUBLIC_ENABLE_DEV_MODE": "false",
 				"NODE_ENV": "production",
 				"EXPO_PUBLIC_NODE_ENV": "production"
 			}
