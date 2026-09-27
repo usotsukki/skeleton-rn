@@ -2,10 +2,12 @@ import type { ConfigContext, ExpoConfig } from 'expo/config'
 import { z, type ZodError } from 'zod'
 import envRules from './env.rules.json'
 
-const nativeBuildOnlyProductionKeys = new Set([
-	'GOOGLE_MAPS_API_KEY_ANDROID',
-	'GOOGLE_MAPS_API_KEY_IOS',
-	'APPLE_TEAM_ID',
+/** Required only for native builds, and only for the platform that uses them. */
+const nativeBuildOnlyProductionKeys = new Map<string, 'ios' | 'android'>([
+	['GOOGLE_MAPS_API_KEY_ANDROID', 'android'],
+	['GOOGLE_MAPS_API_KEY_IOS', 'ios'],
+	['APPLE_TEAM_ID', 'ios'],
+	['EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID', 'ios'],
 ])
 
 function envKeysRequiredInProduction(map: Readonly<Record<string, boolean>>): string[] {
@@ -40,8 +42,7 @@ const appConfigEnvSchema = z.object({
 	GOOGLE_MAPS_API_KEY_ANDROID: z.preprocess(optionalEnvString, z.string().optional()),
 	GOOGLE_MAPS_API_KEY_IOS: z.preprocess(optionalEnvString, z.string().optional()),
 	APPLE_TEAM_ID: z.preprocess(optionalEnvString, z.string().optional()),
-	GOOGLE_SERVICE_FILE_IOS: z.preprocess(optionalEnvString, z.string().optional()),
-	GOOGLE_SERVICE_FILE_ANDROID: z.preprocess(optionalEnvString, z.string().optional()),
+	EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: z.preprocess(optionalEnvString, z.string().optional()),
 })
 
 type AppConfigEnv = z.infer<typeof appConfigEnvSchema>
@@ -67,10 +68,14 @@ function validateProductionResolvedValues(
 	environment: AppConfigEnv['EXPO_PUBLIC_NODE_ENV'] | 'development',
 	values: Record<string, unknown>,
 	requireNativeBuildOnlyValues: boolean,
+	buildPlatform: string | undefined,
 ): void {
 	if (environment !== 'production') return
 	const missing = appConfigProductionKeys.filter(key => {
-		if (nativeBuildOnlyProductionKeys.has(key) && !requireNativeBuildOnlyValues) return false
+		const keyPlatform = nativeBuildOnlyProductionKeys.get(key)
+		if (keyPlatform && !requireNativeBuildOnlyValues) return false
+		// EAS sets EAS_BUILD_PLATFORM; without it (local native build) require both platforms' keys.
+		if (keyPlatform && buildPlatform && keyPlatform !== buildPlatform) return false
 		return !hasNonEmptyValue(values[key])
 	})
 	if (missing.length > 0) {
@@ -93,6 +98,19 @@ function resolveScheme(
 	if (Array.isArray(s) && s.length > 0) return s
 	if (typeof s === 'string' && s.length > 0) return s
 	return slug
+}
+
+/** `123-abc.apps.googleusercontent.com` → `com.googleusercontent.apps.123-abc` (iOS OAuth redirect scheme). */
+function googleIosUrlScheme(iosClientId: string | undefined): string | undefined {
+	if (!iosClientId) return undefined
+	const suffix = '.apps.googleusercontent.com'
+	// The same value is passed to GoogleSignin.configure({ iosClientId }), so the reversed scheme is not accepted.
+	if (!iosClientId.endsWith(suffix)) {
+		throw new Error(
+			`EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID must be the iOS OAuth client id (…${suffix}), not the reversed URL scheme.`,
+		)
+	}
+	return `com.googleusercontent.apps.${iosClientId.slice(0, -suffix.length)}`
 }
 
 function requireNonEmpty(label: string, value: string | undefined): string {
@@ -180,21 +198,30 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 			GOOGLE_MAPS_API_KEY_ANDROID: androidMapsKey,
 			GOOGLE_MAPS_API_KEY_IOS: iosMapsKey,
 			APPLE_TEAM_ID: appleTeamId,
+			EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
 		},
 		requireNativeBuildOnlyValues,
+		process.env.EAS_BUILD_PLATFORM,
 	)
 
-	const plugins = (initConfig.plugins ?? []).map(p => {
+	const googleUrlScheme = googleIosUrlScheme(env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID)
+
+	const plugins = (initConfig.plugins ?? []).flatMap((p): NonNullable<ExpoConfig['plugins']> => {
 		const pluginName = Array.isArray(p) ? p[0] : p
 		if (pluginName === 'react-native-maps') {
-			return ['react-native-maps', { androidGoogleMapsApiKey: androidMapsKey, iosGoogleMapsApiKey: iosMapsKey }]
+			return [['react-native-maps', { androidGoogleMapsApiKey: androidMapsKey, iosGoogleMapsApiKey: iosMapsKey }]]
 		}
-		return p
+		// Options select the plugin's non-Firebase mode (iOS URL scheme only). Without a client id
+		// there is nothing to register, so skip it rather than fall back to Firebase config files.
+		if (pluginName === '@react-native-google-signin/google-signin') {
+			return googleUrlScheme ? [[pluginName, { iosUrlScheme: googleUrlScheme }]] : []
+		}
+		return [p]
 	})
 
 	const result: ExpoConfig = {
 		...initConfig,
-		plugins: plugins as ExpoConfig['plugins'],
+		plugins,
 		name,
 		slug,
 		scheme,
@@ -205,7 +232,6 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 			usesAppleSignIn: true,
 			requireFullScreen: true,
 			appleTeamId,
-			googleServicesFile: env.GOOGLE_SERVICE_FILE_IOS || './GoogleService-Info.plist',
 			config: {
 				googleMapsApiKey: env.GOOGLE_MAPS_API_KEY_IOS,
 				usesNonExemptEncryption: false,
@@ -218,7 +244,6 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 		android: {
 			...initConfig.android,
 			package: androidPackage,
-			googleServicesFile: env.GOOGLE_SERVICE_FILE_ANDROID || './google-services.json',
 			config: {
 				googleMaps: { apiKey: env.GOOGLE_MAPS_API_KEY_ANDROID },
 			},

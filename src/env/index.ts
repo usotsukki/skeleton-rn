@@ -1,18 +1,28 @@
 import { Platform } from 'react-native'
 import { clientEnvSchema } from './clientEnvSchema'
 
-const clientEnv = clientEnvSchema.parse(process.env)
+// Expo inlines only static `process.env.EXPO_PUBLIC_*` member reads at build time. Passing `process.env`
+// itself works in dev (runtime polyfill) but is empty in release bundles, so every key is listed here.
+const clientEnv = clientEnvSchema.parse({
+	EXPO_PUBLIC_NODE_ENV: process.env.EXPO_PUBLIC_NODE_ENV,
+	EXPO_PUBLIC_ENABLE_DEV_MODE: process.env.EXPO_PUBLIC_ENABLE_DEV_MODE,
+	EXPO_PUBLIC_LOG_DEBUG: process.env.EXPO_PUBLIC_LOG_DEBUG,
+	EXPO_PUBLIC_LOG_LEVEL: process.env.EXPO_PUBLIC_LOG_LEVEL,
+	EXPO_PUBLIC_SENTRY_DSN: process.env.EXPO_PUBLIC_SENTRY_DSN,
+	EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+	EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
+	EXPO_PUBLIC_EAS_PROJECT_ID: process.env.EXPO_PUBLIC_EAS_PROJECT_ID,
+	EXPO_PUBLIC_EAS_OWNER: process.env.EXPO_PUBLIC_EAS_OWNER,
+	EXPO_PUBLIC_BASE_API_URL: process.env.EXPO_PUBLIC_BASE_API_URL,
+	EXPO_PUBLIC_SUPABASE_URL: process.env.EXPO_PUBLIC_SUPABASE_URL,
+	EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+})
 
 const ENABLE_DEV_MODE = clientEnv.EXPO_PUBLIC_ENABLE_DEV_MODE === 'true'
 
-export const android = Platform.OS === 'android'
-export const IS_ANDROID = android
-
-export const ios = Platform.OS === 'ios'
-export const IS_IOS = ios
-
-export const web = Platform.OS === 'web'
-export const IS_WEB = web
+export const IS_ANDROID = Platform.OS === 'android'
+export const IS_IOS = Platform.OS === 'ios'
+export const IS_WEB = Platform.OS === 'web'
 
 export const IS_DEV = (typeof __DEV__ === 'boolean' && __DEV__) || !!Number(ENABLE_DEV_MODE)
 export const IS_TEST = clientEnv.EXPO_PUBLIC_NODE_ENV === 'testing'

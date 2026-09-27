@@ -1,8 +1,14 @@
+import { Platform } from 'react-native'
 import { z } from 'zod'
 import envRules from '../../env.rules.json'
 import { envKeysRequiredInProduction, optionalEnvString } from './envZod'
 
 const clientEnvProductionKeys = envKeysRequiredInProduction(envRules.clientEnvProductionRequired)
+
+/** Production-required keys that only matter on one platform (a missing iOS client id must not crash Android). */
+const platformOnlyKeys: Partial<Record<string, typeof Platform.OS>> = {
+	EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: 'ios',
+}
 
 const nodeEnv = z.enum(['development', 'production', 'testing'])
 
@@ -26,6 +32,8 @@ export const clientEnvSchema = z
 	.superRefine((data, ctx) => {
 		if (data.EXPO_PUBLIC_NODE_ENV !== 'production') return
 		for (const key of clientEnvProductionKeys) {
+			const onlyOn = platformOnlyKeys[key]
+			if (onlyOn && onlyOn !== Platform.OS) continue
 			const v = data[key as keyof typeof data]
 			if (v === undefined || v === null || (typeof v === 'string' && v.trim() === '')) {
 				ctx.addIssue({
