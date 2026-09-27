@@ -103,6 +103,7 @@
 		"networkError": "Network error. Please check your connection.",
 		"providerDisabled": "This sign-in provider is not enabled.",
 		"genericAuth": "Authentication failed. Please try again.",
+		"googleSignInMisconfigured": "Google Sign-In is not available in this build of the app.",
 		"invalidEmail": "Please enter a valid email address.",
 		"emailRateLimit": "Too many email requests. Please wait a few minutes and try again.",
 		"repo": {

@@ -103,6 +103,7 @@
 		"networkError": "Error de red. Por favor, comprueba tu conexión.",
 		"providerDisabled": "Este proveedor de inicio de sesión no está habilitado.",
 		"genericAuth": "Falló la autenticación. Por favor, inténtelo de nuevo.",
+		"googleSignInMisconfigured": "El inicio de sesión con Google no está disponible en esta versión de la aplicación.",
 		"invalidEmail": "Por favor, introduzca una dirección de correo electrónico válida.",
 		"emailRateLimit": "Demasiadas solicitudes de correo. Espera unos minutos e inténtalo de nuevo.",
 		"repo": {
