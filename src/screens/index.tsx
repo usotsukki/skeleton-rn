@@ -1,5 +1,6 @@
 export { default as ForgotPassword } from './ForgotPassword'
 export { default as Home } from './Home'
+export { default as ListDemo } from './ListDemo'
 export { default as Map } from './Map'
 export { default as ResetPassword } from './ResetPassword'
 export { default as Settings } from './Settings'

@@ -42,7 +42,11 @@ Move out when:
 ## Accessibility
 
 - Icon-only pressables need `accessibilityLabel` (i18n `a11y.*`) and `accessibilityRole="button"`; prefer `AppButton` (it derives the label from string children only). Disabled controls set `accessibilityState={{ disabled }}`.
-- Touch targets ≥ 44pt: pad small visuals with `hitSlop`.
+- Touch targets ≥ 44pt (48dp Android): pad small visuals with `hitSlop`, and size the control itself with explicit pixels (`min-h-[48px]`). NativeWind's `inlineRem` is 14, so spacing units are 3.5px (`min-h-12` = 42px).
 - Never set `allowFontScaling={false}`. System text size is on and capped at 1.4× in `src/theme/textShim.ts`; give text-bearing controls `min-h-*`, not fixed heights, so larger text doesn't clip.
 - Colors come from theme tokens; text pairs meet WCAG AA 4.5:1 (`text`, `text-secondary`, `text-muted`, `accent` on `bg`/`bg-elevated`/`bg-grouped`; `text-on-accent` on `accent`; `text-on-success` / `text-on-danger` on their fills; `danger` as text on every surface). A new pairing needs a contrast check.
 - Motion: Reanimated animations follow the system Reduce Motion setting by default (`ReduceMotion.System`); override only with a reason (see `AnimatedSplash`). Non-Reanimated animation checks `useReducedMotion()`.
+
+## Server-data lists
+
+Render query-backed lists with `CachedList` (`src/components/shared/CachedList.tsx`): pass the `useQuery` result as `query`. It owns the loading skeleton, offline and blocking-error states, the empty state, pull-to-refresh, and the "couldn't refresh" notice over cached rows. Map errors for users with `requestErrorMessage`, never `err.message`. Demo: Home → "Open list states demo" (`src/screens/ListDemo.tsx`).

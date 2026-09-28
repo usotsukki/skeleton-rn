@@ -48,6 +48,18 @@ jest.mock('react-native-mmkv', () => {
 // Resets every zustand store after each test; see __mocks__/zustand.ts.
 jest.mock('zustand')
 
+// FlashList 2 renders rows only after measuring its container, which Jest can't do. Same values as
+// the package's jestSetup.js, whose other mock (FlashList → RecyclerView) is broken in 2.0.2.
+jest.mock('@shopify/flash-list/dist/recyclerview/utils/measureLayout', () => {
+	const size = (width: number, height: number) => jest.fn(() => ({ x: 0, y: 0, width, height }))
+	return {
+		...jest.requireActual('@shopify/flash-list/dist/recyclerview/utils/measureLayout'),
+		measureParentSize: size(400, 900),
+		measureFirstChildLayout: size(400, 900),
+		measureItemLayout: size(100, 100),
+	}
+})
+
 // RN's StatusBar keeps a static setImmediate handle (StatusBar.js `_updateImmediate`). One created
 // under fake timers and cleared with the real clearImmediate at unmount blocks the event loop, so
 // RNTL's cleanup never returns. Tests don't assert on the status bar; render nothing.

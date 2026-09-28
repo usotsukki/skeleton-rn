@@ -84,14 +84,15 @@
 		"resume": "Resume"
 	},
 	"a11y": {
+		"back": "Back",
 		"decrease": "Decrease {{label}}",
-		"increase": "Increase {{label}}",
-		"showPassword": "Show password",
-		"hidePassword": "Hide password",
 		"dismiss": "Dismiss",
+		"hidePassword": "Hide password",
+		"increase": "Increase {{label}}",
+		"openMenu": "Open navigation menu",
+		"showPassword": "Show password",
 		"signInWithApple": "Sign in with Apple",
-		"signInWithGoogle": "Sign in with Google",
-		"openMenu": "Open navigation menu"
+		"signInWithGoogle": "Sign in with Google"
 	},
 	"info": {
 		"offline": "You are offline"
@@ -122,5 +123,23 @@
 			"upstream": "Server error. Please try again.",
 			"timeout": "The request timed out. Please try again."
 		}
+	},
+	"cachedList": {
+		"offlineTitle": "You're offline",
+		"offlineMessage": "This loads when you're back online.",
+		"retry": "Retry",
+		"loading": "Loading",
+		"emptyMessage": "Pull down to check again.",
+		"refreshFailed": "Couldn't refresh. {{message}}"
+	},
+	"listDemo": {
+		"title": "List states",
+		"open": "Open list states demo",
+		"normal": "Normal",
+		"failFirst": "Fail first load",
+		"failRefresh": "Fail refresh",
+		"empty": "Empty",
+		"errorTitle": "Couldn't load items",
+		"emptyTitle": "No items yet"
 	}
 }
