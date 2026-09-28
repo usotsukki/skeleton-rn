@@ -6,7 +6,8 @@ import AppText from './AppText'
 
 interface AuthOAuthFooterProps {
 	onApple: () => void
-	onGoogle: () => void
+	/** Omit to hide the Google button (e.g. the build has no Google client id). */
+	onGoogle?: () => void
 	promptText: string
 	actionLabel: string
 	onAction: () => void
@@ -42,15 +43,17 @@ export function AuthOAuthFooter({
 						variant="secondary">
 						<AppleIcon />
 					</AppButton>
-					<AppButton
-						accessibilityLabel={t('a11y.signInWithGoogle')}
-						disabled={disabled && loadingProvider !== 'google'}
-						loading={loadingProvider === 'google'}
-						className="h-[50px] w-[64px] rounded-2xl border border-border bg-bg-elevated px-0"
-						onPress={onGoogle}
-						variant="secondary">
-						<GoogleIcon />
-					</AppButton>
+					{onGoogle ? (
+						<AppButton
+							accessibilityLabel={t('a11y.signInWithGoogle')}
+							disabled={disabled && loadingProvider !== 'google'}
+							loading={loadingProvider === 'google'}
+							className="h-[50px] w-[64px] rounded-2xl border border-border bg-bg-elevated px-0"
+							onPress={onGoogle}
+							variant="secondary">
+							<GoogleIcon />
+						</AppButton>
+					) : null}
 				</View>
 				<View className="flex-row items-center justify-center gap-1">
 					<AppText className="text-text-secondary" variant="ts">

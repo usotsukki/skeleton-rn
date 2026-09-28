@@ -15,7 +15,9 @@ Required for: `src/env/**`, `app.config.ts`, `app.json` plugins, `plugins/**`, n
 
 ```bash
 export LANG=en_US.UTF-8 JAVA_HOME=$(/usr/libexec/java_home -v 17) ANDROID_HOME=$HOME/Library/Android/sdk
-# SENTRY_DISABLE_AUTO_UPLOAD=true  # only if Sentry creds aren't set up; otherwise leave upload on to test it
+# No SENTRY_AUTH_TOKEN → the upload is skipped by app.config.ts; with the token it runs, so test it.
+# Local backend running (.env.local)? The bundle fails by design: yarn backend:stop first, or
+# ALLOW_LOCAL_BACKEND_IN_RELEASE=true to test the release build against the local stack.
 npx expo run:android --variant release --no-bundler --device <AVD name>   # run in background
 ```
 
@@ -30,6 +32,8 @@ grep -a -c '<a known EXPO_PUBLIC value prefix>' android/app/build/generated/asse
 ```
 
 0 → env not inlined (check `src/env/index.ts` reads each key statically).
+
+A release bundle must not point at this machine: `grep -a -c -E '127\.0\.0\.1:54321|10\.0\.2\.2:54321' <bundle>` → expect 0 (unless built with `ALLOW_LOCAL_BACKEND_IN_RELEASE=true`).
 
 ## 3. Cold launch + crash check
 

@@ -79,10 +79,11 @@ case "${1:-}" in
 start)
 	ensure_docker
 	export_auth_urls
+	# stdout is the status block with every key of the stack; progress goes to stderr.
 	if [[ "${2:-}" == "--full" ]]; then
-		yarn supabase start
+		yarn supabase start >/dev/null
 	else
-		yarn supabase start -x "$MINIMAL_EXCLUDES"
+		yarn supabase start -x "$MINIMAL_EXCLUDES" >/dev/null
 	fi
 	write_override
 	ensure_e2e_env

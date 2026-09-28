@@ -121,7 +121,19 @@ function requireNonEmpty(label: string, value: string | undefined): string {
 	return v
 }
 
+/**
+ * Sentry's build scripts upload source maps on every build (iOS also in Debug) and fail it without
+ * credentials. Expo CLI evaluates this file after loading env files and before it starts xcodebuild or
+ * gradle, which inherit this process's env, so a build without a token skips the upload. Builds with
+ * `SENTRY_AUTH_TOKEN` (local or EAS) are unchanged.
+ */
+function skipSentryUploadWithoutToken(): void {
+	if (process.env.SENTRY_AUTH_TOKEN?.trim()) return
+	process.env.SENTRY_DISABLE_AUTO_UPLOAD ??= 'true'
+}
+
 export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
+	skipSentryUploadWithoutToken()
 	let env: AppConfigEnv
 	try {
 		env = parseAppConfigEnv(process.env)

@@ -4,6 +4,7 @@ import { type TextInput, View } from 'react-native'
 import { getAuthFormError } from '@app/api/auth'
 import { focusFirstInvalid, setSubmitError, submitForm, useAppForm } from '@app/components/form'
 import { AppText, AuthOAuthFooter, CheckboxInput } from '@app/components/shared'
+import { IS_GOOGLE_SIGN_IN_CONFIGURED } from '@app/env'
 import { useAuthStore } from '@app/hooks/useAuth'
 import { authCredentialsFormOpts, authCredentialsSchema } from '@app/utils/validators'
 
@@ -135,7 +136,7 @@ export function AuthCredentialsForm({
 					loadingProvider={oauthLoading}
 					onAction={onActionPress}
 					onApple={onApple}
-					onGoogle={onGoogle}
+					onGoogle={IS_GOOGLE_SIGN_IN_CONFIGURED ? onGoogle : undefined}
 					promptText={promptText}
 				/>
 			</View>

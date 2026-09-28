@@ -27,7 +27,14 @@ import {
 } from '@app/api/query'
 import { AnimatedSplash, AppAlert, ErrorFallback, Toast } from '@app/components'
 import { SkeletonPulseProvider } from '@app/components/shared/SkeletonPulseProvider'
-import { GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID, IS_PROD, SENTRY_DEBUG, SENTRY_DSN } from '@app/env'
+import {
+	GOOGLE_IOS_CLIENT_ID,
+	GOOGLE_WEB_CLIENT_ID,
+	IS_GOOGLE_SIGN_IN_CONFIGURED,
+	IS_PROD,
+	SENTRY_DEBUG,
+	SENTRY_DSN,
+} from '@app/env'
 import useAlert from '@app/hooks/useAlert'
 import { useAuthListener, useAuthStore } from '@app/hooks/useAuth'
 import { useAuthAutoRefresh } from '@app/hooks/useAuthAutoRefresh'
@@ -62,10 +69,13 @@ const AUTOCAPTURE = { captureScreens: false, captureTouches: false } as const
 
 LogBox.ignoreLogs(['Invalid Refresh Token'])
 
-GoogleSignin.configure({
-	webClientId: GOOGLE_WEB_CLIENT_ID,
-	iosClientId: GOOGLE_IOS_CLIENT_ID,
-})
+// iOS rejects configure() without a client id (red box at launch); the auth screens hide the button then.
+if (IS_GOOGLE_SIGN_IN_CONFIGURED) {
+	GoogleSignin.configure({
+		webClientId: GOOGLE_WEB_CLIENT_ID,
+		iosClientId: GOOGLE_IOS_CLIENT_ID,
+	})
+}
 
 if (Platform.OS === 'android') {
 	GoogleSignin.hasPlayServices().catch(error => {

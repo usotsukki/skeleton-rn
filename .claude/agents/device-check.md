@@ -20,10 +20,12 @@ You verify one described behavior on a device and report. The parent gives: plat
 
 ## Techniques
 
-- iOS: simulator tool `screenshot`/`tap`; dev build: `xcrun simctl openurl <udid> "<scheme>://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081"`; release build: `xcrun simctl terminate <udid> <bundle-id>; xcrun simctl launch <udid> <bundle-id>`. Cold-launch video (no `timeout` on stock macOS): `xcrun simctl io <udid> recordVideo --codec=h264 --force out.mp4 & P=$!`, launch, wait ~10s, `kill -INT $P; wait $P`.
-- Android: `adb reverse tcp:8081 tcp:8081`; `adb shell screenrecord --time-limit 10 /sdcard/x.mp4` + `adb pull`; tap targets from `adb shell uiautomator dump` bounds; launcher start: `adb shell monkey -p <package> -c android.intent.category.LAUNCHER 1`.
+- iOS: simulator tool `screenshot`/`tap`; dev build: `xcrun simctl openurl <udid> "<scheme>://expo-development-client/?url=http%3A%2F%2Flocalhost%3A<port>"` with `<port>` from `yarn dev:port` (8081 may be another app's Metro); release build: `xcrun simctl terminate <udid> <bundle-id>; xcrun simctl launch <udid> <bundle-id>`. Cold-launch video (no `timeout` on stock macOS): `xcrun simctl io <udid> recordVideo --codec=h264 --force out.mp4 & P=$!`, launch, wait ~10s, `kill -INT $P; wait $P`.
+- Android: `adb reverse tcp:<port> tcp:<port>` (same `yarn dev:port`); `adb shell screenrecord --time-limit 10 /sdcard/x.mp4` + `adb pull`; tap targets from `adb shell uiautomator dump` bounds; launcher start: `adb shell monkey -p <package> -c android.intent.category.LAUNCHER 1`.
 - Frames: `ffmpeg -i out.mp4 -vf "fps=10,scale=120:-1,tile=14x6" -frames:v 1 sheet.png`; pixel checks via `ffmpeg … crop=1:1:x:y,format=rgb24 -f rawvideo - | xxd -p`.
 - Logs: Metro log (count `WARN`/`ERROR`), `adb logcat -d --pid=$(adb shell pidof <package>)`, crashes `adb logcat -d -b crash`.
+
+- Input: pace typed text (type, wait ~1 s, then Return) or use Maestro `inputText`; machine-speed typing drops characters in controlled inputs. After sign-in iOS may show "Save Password?": dismiss it ("Not Now") before the next tap. A screenshot can lag input by a frame: wait ~1 s before judging that an action failed.
 
 ## Report (≤200 words)
 

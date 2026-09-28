@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Maestro sign-in with the .env.e2e test user (maestro/flows/sign-in.yaml). No-op when already signed in.
 # Usage: yarn e2e:sign-in [--android] [--hosted]
-#   (MAESTRO_DEVICE=<udid|serial> when several devices run; APP_ID overrides)
+#   (MAESTRO_DEVICE=<udid|serial> when several devices run; APP_ID overrides; E2E_TIMEOUT seconds, default 300)
 # Targets the local stack (yarn backend:start). --hosted allows a hosted Supabase project: the credentials go
 # to that project, so use a test user you created there.
 set -euo pipefail
@@ -47,7 +47,36 @@ if [[ -z "$APP_ID" ]]; then
 	exit 1
 fi
 
-exec maestro ${MAESTRO_DEVICE:+--device "$MAESTRO_DEVICE"} test \
+# Maestro drives iOS through port 7001 and has no flag to change it. Another Maestro CLI (often a
+# `maestro mcp` left by another project's session) holding it makes `maestro test` hang without output.
+if [[ "$platform" == ios ]]; then
+	# lsof exits 1 when nothing listens
+	owner="$(lsof -nP -iTCP:7001 -sTCP:LISTEN 2>/dev/null | awk 'NR==2 {print $1, $2}' || true)"
+	if [[ "$owner" == java\ * ]]; then
+		pid="${owner#java }"
+		echo "e2e:sign-in: port 7001 (Maestro iOS driver) is held by another Maestro process, pid ${pid}:" >&2
+		echo "  $(ps -o command= -p "$pid" | cut -c1-160)" >&2
+		echo "e2e:sign-in: stop that process, then run this again." >&2
+		exit 1
+	fi
+fi
+
+timeout_s="${E2E_TIMEOUT:-300}"
+maestro ${MAESTRO_DEVICE:+--device "$MAESTRO_DEVICE"} test \
 	-e APP_ID="$APP_ID" -e E2E_EMAIL="$E2E_EMAIL" -e E2E_PASSWORD="$E2E_PASSWORD" \
 	-e LOCAL_ONLY="$([[ "$hosted" == true ]] && echo false || echo true)" \
-	maestro/flows/sign-in.yaml
+	maestro/flows/sign-in.yaml &
+maestro_pid=$!
+(
+	sleep "$timeout_s"
+	echo "e2e:sign-in: no result after ${timeout_s}s, stopping Maestro (pid ${maestro_pid})" >&2
+	pkill -P "$maestro_pid" 2>/dev/null || true
+	kill "$maestro_pid" 2>/dev/null || true
+) &
+watchdog_pid=$!
+status=0
+wait "$maestro_pid" || status=$?
+kill "$watchdog_pid" 2>/dev/null || true
+# Stopped by the watchdog (signal status): report a plain failure.
+[[ "$status" -gt 128 ]] && status=1
+exit "$status"
