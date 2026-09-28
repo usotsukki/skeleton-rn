@@ -1,5 +1,6 @@
 import * as Haptics from 'expo-haptics'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Pressable, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
@@ -40,10 +41,10 @@ const C = {
 
 const LAYOUT = LinearTransition.duration(C.layout)
 
-const VARIANTS: Record<ToastStyle, string> = {
-	success: 'bg-success border-success',
-	error: 'bg-danger border-danger',
-	info: 'bg-accent border-accent',
+const VARIANTS: Record<ToastStyle, { container: string; text: string }> = {
+	success: { container: 'bg-success border-success', text: 'text-text-on-success' },
+	error: { container: 'bg-danger border-danger', text: 'text-text-on-danger' },
+	info: { container: 'bg-accent border-accent', text: 'text-text-on-accent' },
 }
 
 const BASE_CLASSES = 'flex-row items-center justify-between rounded-2xl border p-4 shadow-lg'
@@ -99,6 +100,8 @@ function ToastItem({
 	const swipeFromY = useSharedValue(0)
 	const isSwipeExiting = useSharedValue(false)
 	const dismissViaClose = useSharedValue(0)
+	const variant = VARIANTS[toast.style ?? 'success']
+	const { t } = useTranslation()
 
 	const handleDismiss = useCallback(() => onDismiss(toast.id), [toast.id, onDismiss])
 	const onClose = useCallback(() => {
@@ -147,27 +150,31 @@ function ToastItem({
 
 	useEffect(() => {
 		if (toast.duration > 0) {
-			const t = setTimeout(() => onDismiss(toast.id), C.enter + toast.duration)
-			return () => clearTimeout(t)
+			const timer = setTimeout(() => onDismiss(toast.id), C.enter + toast.duration)
+			return () => clearTimeout(timer)
 		}
 	}, [toast.id, toast.duration, onDismiss])
 
 	return (
 		<GestureDetector gesture={gesture}>
 			<Animated.View
-				className={cn(BASE_CLASSES, VARIANTS[toast.style ?? 'success'])}
+				className={cn(BASE_CLASSES, variant.container)}
 				entering={SlideInUp.duration(C.enter)}
 				exiting={exiting}
 				layout={LAYOUT}
 				style={style}>
 				<View className="flex-1 pr-2">
-					<AppText className="text-text-on-accent" variant="tmed">
+					<AppText className={variant.text} variant="tmed">
 						{toast.message}
 					</AppText>
 				</View>
 				{toast.isDismissable !== false && (
-					<Pressable hitSlop={C.hitSlop} onPress={onClose}>
-						<AppText className="text-text-on-accent" variant="btn">
+					<Pressable
+						accessibilityLabel={t('a11y.dismiss')}
+						accessibilityRole="button"
+						hitSlop={C.hitSlop}
+						onPress={onClose}>
+						<AppText className={variant.text} variant="btn">
 							{CLOSE_LABEL}
 						</AppText>
 					</Pressable>

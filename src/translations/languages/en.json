@@ -84,6 +84,13 @@
 		"resume": "Resume"
 	},
 	"a11y": {
+		"decrease": "Decrease {{label}}",
+		"increase": "Increase {{label}}",
+		"showPassword": "Show password",
+		"hidePassword": "Hide password",
+		"dismiss": "Dismiss",
+		"signInWithApple": "Sign in with Apple",
+		"signInWithGoogle": "Sign in with Google",
 		"openMenu": "Open navigation menu"
 	},
 	"info": {
