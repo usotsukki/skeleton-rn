@@ -50,21 +50,21 @@ describe('SignUp screen', () => {
 		jest.clearAllMocks()
 	})
 
-	it('renders email + password fields + submit', () => {
-		render(<SignUp />)
+	it('renders email + password fields + submit', async () => {
+		await render(<SignUp />)
 		expect(screen.getByLabelText(EMAIL_LABEL)).toBeTruthy()
 		expect(screen.getByLabelText(PASSWORD_LABEL)).toBeTruthy()
 		expect(screen.getByLabelText(SUBMIT_LABEL)).toBeTruthy()
 	})
 
-	it('disables submit when fields empty', () => {
-		render(<SignUp />)
+	it('disables submit when fields empty', async () => {
+		await render(<SignUp />)
 		expect(screen.getByLabelText(SUBMIT_LABEL).props.accessibilityState?.disabled).toBe(true)
 	})
 
-	it('does not call createUser when fields empty', () => {
-		render(<SignUp />)
-		fireEvent.press(screen.getByLabelText(SUBMIT_LABEL))
+	it('does not call createUser when fields empty', async () => {
+		await render(<SignUp />)
+		await fireEvent.press(screen.getByLabelText(SUBMIT_LABEL))
 		expect(mockCreateUser).not.toHaveBeenCalled()
 	})
 })

@@ -7,11 +7,10 @@
  * the validation. Factories below stay JSX-free — return `children` directly.
  */
 
-// Wrap React Query notifications in act() so React state updates are always inside act()
-// boundaries, eliminating "not wrapped in act(...)" console warnings in hook tests.
-const { notifyManager } = require('@tanstack/react-query')
-const { act } = require('@testing-library/react-native')
-notifyManager.setNotifyFunction((fn: () => void) => act(fn))
+// No notifyManager act() wrapper: with RNTL 14, render/findBy*/waitFor already run inside act, and a
+// wrapper fires late notifications outside the act environment ("not configured to support act").
+const { focusManager, onlineManager } = require('@tanstack/react-query')
+const { destroyTestQueryClients } = require('./queryClient')
 
 jest.mock('react-native-mmkv', () => {
 	const stores = new Map<string, Map<string, string>>()
@@ -41,8 +40,23 @@ jest.mock('react-native-mmkv', () => {
 				recrypt: jest.fn(),
 			}
 		}),
+		/** Test-only: empties every MMKV instance (called afterEach below). */
+		__clearAllStores: () => stores.forEach(store => store.clear()),
 	}
 })
+
+// Resets every zustand store after each test; see __mocks__/zustand.ts.
+jest.mock('zustand')
+
+// RN's StatusBar keeps a static setImmediate handle (StatusBar.js `_updateImmediate`). One created
+// under fake timers and cleared with the real clearImmediate at unmount blocks the event loop, so
+// RNTL's cleanup never returns. Tests don't assert on the status bar; render nothing.
+jest.mock('expo-status-bar', () => ({
+	StatusBar: () => null,
+	setStatusBarStyle: jest.fn(),
+	setStatusBarHidden: jest.fn(),
+	setStatusBarBackgroundColor: jest.fn(),
+}))
 
 jest.mock('expo-router', () => {
 	const passthrough = ({ children }: { children: unknown }) => children
@@ -239,3 +253,26 @@ jest.mock('@sentry/react-native', () => ({
 	wrap: <T>(Component: T) => Component,
 	reactNavigationIntegration: () => ({ registerNavigationContainer: jest.fn() }),
 }))
+
+// Tests never reach the network. A test that needs `fetch` mocks it itself (after this beforeEach).
+beforeEach(() => {
+	jest
+		.spyOn(globalThis, 'fetch')
+		.mockImplementation(input =>
+			Promise.reject(
+				new Error(`Unexpected network request in a test: ${input instanceof Request ? input.url : String(input)}`),
+			),
+		)
+})
+
+afterEach(() => {
+	jest.useRealTimers()
+	destroyTestQueryClients()
+	// Undo bindQueryManagers() and any setOnline/setFocused a test left behind.
+	onlineManager.setEventListener(() => undefined)
+	onlineManager.setOnline(true)
+	focusManager.setEventListener(() => undefined)
+	focusManager.setFocused(undefined)
+	jest.requireMock<{ __clearAllStores: () => void }>('react-native-mmkv').__clearAllStores()
+	jest.restoreAllMocks()
+})

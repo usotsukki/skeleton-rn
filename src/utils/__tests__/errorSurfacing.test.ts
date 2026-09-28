@@ -4,11 +4,6 @@ import { RepoError } from '@app/api/db/errors'
 import { repoErrorMessage } from '../repoErrorMessage'
 import { showOperationErrorAlert } from '../showOperationErrorAlert'
 
-jest.mock('@sentry/react-native', () => ({
-	captureException: jest.fn(),
-	withScope: jest.fn((cb: (scope: object) => void) => cb({ setTag: jest.fn(), setContext: jest.fn() })),
-}))
-
 const t = ((key: string) => key) as never
 
 describe('repoErrorMessage', () => {

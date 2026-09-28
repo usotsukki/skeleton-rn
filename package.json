@@ -143,12 +143,11 @@
 		"@commitlint/format": "^19.5.0",
 		"@react-native/eslint-config": "^0.86.3",
 		"@react-native/jest-preset": "0.86.3",
-		"@testing-library/react-native": "^13.2.0",
+		"@testing-library/react-native": "^14.0.1",
 		"@trivago/prettier-plugin-sort-imports": "^4.3.0",
 		"@types/jest": "^29.5.13",
 		"@types/luxon": "^3.7.1",
 		"@types/react": "~19.2.10",
-		"@types/react-test-renderer": "^19.1.0",
 		"@typescript-eslint/eslint-plugin": "^8.70.1",
 		"@typescript-eslint/parser": "^8.70.1",
 		"conventional-changelog-atom": "^5.0.0",
@@ -174,7 +173,7 @@
 		"prettier": "3.3.3",
 		"prettier-plugin-merge": "^0.7.1",
 		"prettier-plugin-tailwindcss": "^0.6.12",
-		"react-test-renderer": "19.2.3",
+		"test-renderer": "~1.2.0",
 		"typescript": "~6.0.3"
 	}
 }

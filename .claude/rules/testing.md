@@ -11,8 +11,15 @@ paths:
 - Shared setup: `src/utils/test-utils/setup.ts`
 - `yarn test` sets `TZ=UTC`. If running jest directly: `TZ=UTC jest src`.
 
-## Async Rules
+## Harness (automatic, `setup.ts`)
 
+- Real network is blocked: any `fetch` rejects with `Unexpected network request in a test: <url>`. Mock what the test needs.
+- After each test: real timers, zustand stores back to their initial (pre-hydration) state (`__mocks__/zustand.ts`), MMKV mock emptied, TanStack online/focus managers reset, test query clients destroyed, spies restored.
+- Render screens with `renderWithAppProviders` (`src/utils/test-utils/render.tsx`); build clients with `createTestQueryClient`.
+
+## Async Rules (RNTL 14)
+
+- `render`, `renderHook`, `fireEvent`, `act`, `rerender`, `unmount` are async: always `await` them (lint enforces `fireEvent`).
 - Do not wrap `fireEvent` in `act()`.
 - Use `waitFor` for async assertions. One assertion per `waitFor`.
 - Prefer `findBy*` for elements that appear asynchronously.

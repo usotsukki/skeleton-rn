@@ -2,8 +2,6 @@ import NetInfo from '@react-native-community/netinfo'
 import * as Sentry from '@sentry/react-native'
 import { __resetRequestTimeoutTelemetryForTests, reportRequestTimeout } from '../requestTimeoutTelemetry'
 
-jest.mock('@sentry/react-native', () => ({ addBreadcrumb: jest.fn(), captureMessage: jest.fn() }))
-
 jest.mock('@react-native-community/netinfo', () => ({
 	__esModule: true,
 	default: {

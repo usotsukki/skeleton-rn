@@ -38,71 +38,71 @@ describe('AnimatedSplash', () => {
 		mockUseReducedMotion.mockReturnValue(false)
 	})
 
-	it('hides the native splash without its fade once its own first frame is laid out and the icon loaded', () => {
-		render(<AnimatedSplash onHidden={jest.fn()} ready={false} />)
+	it('hides the native splash without its fade once its own first frame is laid out and the icon loaded', async () => {
+		await render(<AnimatedSplash onHidden={jest.fn()} ready={false} />)
 		// Set on mount so Android's queued options land before hide().
 		expect(SplashScreen.setOptions).toHaveBeenCalledWith({ duration: 0, fade: false })
 
-		fireEvent(getSplash(), 'layout')
+		await fireEvent(getSplash(), 'layout')
 		expect(SplashScreen.hide).not.toHaveBeenCalled()
 
-		fireEvent(getIcon(), 'loadEnd')
+		await fireEvent(getIcon(), 'loadEnd')
 		expect(SplashScreen.hide).toHaveBeenCalledTimes(1)
 
-		fireEvent(getSplash(), 'layout')
+		await fireEvent(getSplash(), 'layout')
 		expect(SplashScreen.hide).toHaveBeenCalledTimes(1)
 	})
 
-	it('hides the native splash when ready even if the icon never reported loading', () => {
-		const { rerender } = render(<AnimatedSplash onHidden={jest.fn()} ready={false} />)
+	it('hides the native splash when ready even if the icon never reported loading', async () => {
+		const { rerender } = await render(<AnimatedSplash onHidden={jest.fn()} ready={false} />)
 		expect(SplashScreen.hide).not.toHaveBeenCalled()
 
-		rerender(<AnimatedSplash onHidden={jest.fn()} ready />)
+		await rerender(<AnimatedSplash onHidden={jest.fn()} ready />)
 		expect(SplashScreen.hide).toHaveBeenCalledTimes(1)
 	})
 
-	it('waits for ready before playing the outro', () => {
+	it('waits for ready before playing the outro', async () => {
 		const onHidden = jest.fn()
-		const { rerender } = render(<AnimatedSplash onHidden={onHidden} ready={false} />)
+		const { rerender } = await render(<AnimatedSplash onHidden={onHidden} ready={false} />)
 		expect(onHidden).not.toHaveBeenCalled()
 
-		rerender(<AnimatedSplash onHidden={onHidden} ready />)
+		await rerender(<AnimatedSplash onHidden={onHidden} ready />)
 		expect(onHidden).toHaveBeenCalledTimes(1)
 	})
 
-	it('hides after a timeout when the fade never reports finishing', () => {
+	it('hides after a timeout when the fade never reports finishing', async () => {
 		jest.useFakeTimers()
 		mockWithTiming.mockImplementationOnce(value => value)
 		const onHidden = jest.fn()
-		render(<AnimatedSplash onHidden={onHidden} ready />)
+		await render(<AnimatedSplash onHidden={onHidden} ready />)
 		expect(onHidden).not.toHaveBeenCalled()
 
 		jest.advanceTimersByTime(2000)
 		expect(onHidden).toHaveBeenCalledTimes(1)
 	})
 
-	it('reports hidden once when the fade finishes and the parent keeps it mounted past the timeout', () => {
+	it('reports hidden once when the fade finishes and the parent keeps it mounted past the timeout', async () => {
 		jest.useFakeTimers()
 		const onHidden = jest.fn()
-		render(<AnimatedSplash onHidden={onHidden} ready />)
+		await render(<AnimatedSplash onHidden={onHidden} ready />)
 		expect(onHidden).toHaveBeenCalledTimes(1)
 
 		jest.advanceTimersByTime(2000)
 		expect(onHidden).toHaveBeenCalledTimes(1)
 	})
 
-	it('still fades out under reduced motion instead of letting Reanimated skip the fade', () => {
+	it('still fades out under reduced motion instead of letting Reanimated skip the fade', async () => {
 		mockUseReducedMotion.mockReturnValue(true)
 		const onHidden = jest.fn()
-		render(<AnimatedSplash onHidden={onHidden} ready />)
+		await render(<AnimatedSplash onHidden={onHidden} ready />)
 
 		expect(mockWithTiming).toHaveBeenCalledTimes(1)
 		expect(mockWithTiming.mock.calls[0][1]).toEqual(expect.objectContaining({ reduceMotion: 'never' }))
 		expect(onHidden).toHaveBeenCalledTimes(1)
 	})
 
-	it('is hidden from screen readers', () => {
-		render(<AnimatedSplash onHidden={jest.fn()} ready={false} />)
+	it('is hidden from screen readers', async () => {
+		await render(<AnimatedSplash onHidden={jest.fn()} ready={false} />)
 		expect(getSplash()).toHaveProp('accessibilityElementsHidden', true)
 		expect(getSplash()).toHaveProp('importantForAccessibility', 'no-hide-descendants')
 	})
