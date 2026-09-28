@@ -41,6 +41,8 @@ export const SENTRY_DSN = clientEnv.EXPO_PUBLIC_SENTRY_DSN
 
 export const GOOGLE_WEB_CLIENT_ID = clientEnv.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID
 export const GOOGLE_IOS_CLIENT_ID = clientEnv.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID
+/** iOS can't configure or run Google Sign-In without its client id (red box at launch, generic failure on tap). */
+export const IS_GOOGLE_SIGN_IN_CONFIGURED = Platform.OS !== 'ios' || !!GOOGLE_IOS_CLIENT_ID
 
 export const EAS_PROJECT_ID = clientEnv.EXPO_PUBLIC_EAS_PROJECT_ID
 

@@ -49,13 +49,14 @@ Prerequisites:
 - Docker (Docker Desktop on macOS) for the local backend
 - Optional: a local `.env` (copy `.env.example`) for app identity, a hosted Supabase project, OAuth, maps, EAS, and Sentry
 
-Install dependencies, start the local backend, then Metro:
+Install dependencies and run the app:
 
 ```bash
 yarn
-yarn backend:start
-yarn start
+yarn dev          # iOS simulator; `yarn dev android` for the emulator
 ```
+
+`yarn dev` starts the local backend, Metro (on the next free port when another app holds 8081; a Metro of this project that is already running is restarted) and the native dev build. `yarn dev:stop` stops Metro and the backend. The steps also work one by one: `yarn backend:start`, `yarn start`, `yarn ios`.
 
 `yarn backend:start` runs Supabase in Docker (first run downloads images, a few minutes), points the app at it through `.env.local`, and seeds a dev user you can sign in with: the credentials are in `.env.e2e.example`. No cloud account is needed. `yarn backend:stop` stops it and switches the app back to the Supabase project in `.env`, if any.
 
@@ -121,7 +122,7 @@ Development uses a local Supabase stack (`supabase/`, Docker):
 | `yarn backend:types` | Regenerates `src/api/supabase/database.types.ts` |
 
 - Schema lives in `supabase/migrations`. The `notes` table is a sample of a user-owned table with row level security; replace it with your own.
-- `.env.local` outranks `.env`, also in local release builds. Run `yarn backend:stop` before building a release.
+- `.env.local` outranks `.env`, also in local release builds. A production bundle that points at a local backend fails with a message; run `yarn backend:stop` before building a release.
 - The stack listens on all network interfaces with well-known local credentials. Stop it on untrusted networks.
 - Physical devices can't reach `127.0.0.1` on your machine; use a simulator or emulator. On an Android emulator the dev app swaps `127.0.0.1` for `10.0.2.2` (the emulator's name for your machine) by itself.
 

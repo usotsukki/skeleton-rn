@@ -2,9 +2,12 @@
 
 Agent-runnable scripts. EAS and destructive utilities are user-only and not listed here.
 
-## Start metro
+## Run the app
 
-- `yarn start`
+- `yarn dev [ios|android]` — local backend + Metro on a free port + native dev build, in one command (multi-minute on the first build; run in background). Restarts this project's Metro when one is already running (it inlined the env it started with); picks the next free port when another app holds 8081.
+- `yarn dev:stop` — stops this project's Metro and the local backend. Run it when the task ends, or report what is still running.
+- `yarn dev:port` — port of this project's running Metro (exit 1 when none).
+- `yarn start` — Metro only (port 8081 or `RCT_METRO_PORT`).
 
 ## Verify (after edits)
 
@@ -18,7 +21,7 @@ Agent-runnable scripts. EAS and destructive utilities are user-only and not list
 - `TZ=UTC jest src/path` — single file / pattern
 - `yarn check` — `lint && test`. Merge gate; read-only.
 - `yarn duplication:check` — jscpd duplication report
-- `yarn e2e:sign-in` — Maestro sign-in with the `.env.e2e` test user (`maestro/flows/sign-in.yaml`; no-op when signed in; `--android` for the Android package; `MAESTRO_DEVICE=<udid|serial>` with several devices). Agent-runnable against the local stack; it exits 1 when the Supabase host isn't local, and the flow asserts the app's `backend-local` marker before typing. `--hosted` sends the credentials to the hosted project: user-run.
+- `yarn e2e:sign-in` — Maestro sign-in with the `.env.e2e` test user (`maestro/flows/sign-in.yaml`; no-op when signed in; `--android` for the Android package; `MAESTRO_DEVICE=<udid|serial>` with several devices). Agent-runnable against the local stack; it exits 1 when the Supabase host isn't local, and the flow asserts the app's `backend-local` marker before typing. Fails fast (exit 1, names the pid) when another Maestro process holds the iOS driver port 7001, and stops after `E2E_TIMEOUT` seconds (default 300). `--hosted` sends the credentials to the hosted project: user-run.
 
 ## Local backend (Supabase in Docker)
 
@@ -34,5 +37,7 @@ Agent-runnable scripts. EAS and destructive utilities are user-only and not list
 - `yarn ios` / `yarn android` / `:rebuild` / `expo prebuild` are allowed (multi-minute; run in background). Only rebuild when native deps or config plugins changed; JS-only changes just need Metro (`yarn start`). `expo prebuild` recreates `ios/`/`android/` by default (SDK 57); `--no-clean` keeps them.
 - Native builds on macOS: Xcode 26.4+ (older fails in `expo-modules-jsi` headers), `LANG=en_US.UTF-8` (CocoaPods), JDK 17 for Android (`JAVA_HOME=$(/usr/libexec/java_home -v 17)`); `expo run:android --device` takes the AVD name.
 - The Bash tool's shell may be zsh: quote globs (`--include='*.ts'`) and run array-heavy scripts with `bash -c`.
-- `.env.local` outranks `.env` in Expo CLI (every mode except `test`), including local release builds: run `yarn backend:stop` before a release build, or it ships a localhost Supabase URL.
+- `.env.local` outranks `.env` in Expo CLI (every mode except `test`), including local release builds. A production bundle with a local or private Supabase host fails (`src/metro/releaseEnvGuard.js`; `yarn iosr` checks first): run `yarn backend:stop`, or set `ALLOW_LOCAL_BACKEND_IN_RELEASE=true` to test a release build against the local stack.
+- Builds without `SENTRY_AUTH_TOKEN` skip the Sentry upload (`app.config.ts`); with the token they upload as before.
+- `yarn ios` uses `--no-bundler` and always opens the app on port 8081. With another app's Metro there, use `yarn dev`.
 - `yarn nuke` is destructive (clears node_modules, pods, Xcode caches). User-only.

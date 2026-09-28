@@ -43,7 +43,7 @@ Reuse a completed review when the artifact, base, and requirements are unchanged
 **Claude Code author preflight:** Cursor CLI is the default for relevant plans and changes. Invoke it without another user prompt when this workflow applies. Use a fresh invocation in read-only ask mode, not a resumed author conversation:
 
 ```bash
-cursor-agent -p --trust --mode ask --model "${REVIEW_MODEL:-grok-4.7-high}" --output-format json \
+cursor-agent -p --trust --mode ask --model "${REVIEW_MODEL:-grok-4.7-high-fast}" --output-format json \
   "Read $REVIEW_SCRATCH/request.md and review its pinned artifact using .claude/agents/pr-audit.md. Read-only: no edits, Git mutations, builds, or subagents. Use the plan checklist for plans and the code checklist for changes. Report evidence-backed defects, verification gaps, and open questions separately." \
   > "$REVIEW_SCRATCH/cursor-review.json"
 ```
