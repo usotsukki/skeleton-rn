@@ -28,6 +28,8 @@ export const clientEnvSchema = z
 		EXPO_PUBLIC_BASE_API_URL: optionalUrl,
 		EXPO_PUBLIC_SUPABASE_URL: optionalUrl,
 		EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.preprocess(optionalEnvString, z.string().optional()),
+		EXPO_PUBLIC_POSTHOG_PROJECT_TOKEN: z.preprocess(optionalEnvString, z.string().optional()),
+		EXPO_PUBLIC_POSTHOG_HOST: optionalUrl,
 	})
 	.superRefine((data, ctx) => {
 		if (data.EXPO_PUBLIC_NODE_ENV !== 'production') return

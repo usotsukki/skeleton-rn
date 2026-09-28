@@ -19,7 +19,7 @@ interface ListRowProps {
 	testID?: string
 }
 
-const ROW_BASE = 'flex-row items-center bg-bg-elevated px-4 min-h-[52px]'
+const ROW_BASE = 'flex-row items-center bg-bg-elevated px-4 py-3 min-h-[52px]'
 
 /** iOS-style settings row with leading icon, title/subtitle, optional trailing value + chevron.
  * Use `first`/`last` flags inside a Card-grouped list to control corner radius + separator. */

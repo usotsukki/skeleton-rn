@@ -86,7 +86,13 @@
 		"confirmDelete": "Confirm delete",
 		"deleteTitle": "Delete item",
 		"demoItemName": "Demo item",
-		"deleted": "Deleted"
+		"deleted": "Deleted",
+		"featureFlag": "Feature flag",
+		"flagState": {
+			"loading": "loading",
+			"on": "on",
+			"off": "off"
+		}
 	},
 	"settingsScreen": {
 		"preferences": "Preferences",
@@ -95,7 +101,10 @@
 			"system": "System",
 			"light": "Light",
 			"dark": "Dark"
-		}
+		},
+		"privacy": "Privacy",
+		"shareAnalytics": "Share usage analytics",
+		"shareAnalyticsHint": "Sends how you use the app, linked to your account ID (not your name or email), so we can improve it. When off, no usage is sent, but feature settings still load and those requests include your account ID."
 	},
 	"skiaScreen": {
 		"planets": "Planets",

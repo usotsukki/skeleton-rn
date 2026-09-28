@@ -21,3 +21,6 @@ export const authStorage = createMMKV({ id: 'auth' })
 
 /** TanStack Query cache snapshot. Owned by `src/api/query/queryPersister.ts`; don't write to it directly. */
 export const queryCacheStorage = createMMKV({ id: 'tanstack-query' })
+
+/** PostHog's persisted state (ids, queue, opt-out). Owned by `src/api/analytics/client.ts`. */
+export const analyticsStorage = createMMKV({ id: 'analytics' })

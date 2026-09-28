@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useEffect, useRef } from 'react'
 import { create } from 'zustand'
 import { createJSONStorage, persist, PersistOptions, StateStorage } from 'zustand/middleware'
+import { trackEvent } from '@app/api/analytics'
 import {
 	createUser as authCreateUser,
 	sendPasswordResetEmail as authSendPasswordResetEmail,
@@ -162,19 +163,24 @@ const useAuth = () => {
 	// Email/password requests: the form shows their errors inline (getAuthFormError), so no toast here.
 	const { mutateAsync: createUserAsync, isPending: isCreateUserPending } = useMutation({
 		mutationFn: ({ email, password }: { email: string; password: string }) => authCreateUser(email, password),
+		onSuccess: () => trackEvent('sign_up_submitted'),
 	})
 
 	const { mutateAsync: signInAsync, isPending: isSignInPending } = useMutation({
 		mutationFn: ({ email, password }: { email: string; password: string }) => authSignIn(email, password),
+		onSuccess: () => trackEvent('signed_in', { method: 'email' }),
 	})
 
+	// OAuth has no separate sign-up signal: a first Google/Apple sign-in creates the account.
 	const { mutate: signInWithGoogle, isPending: isSignInWithGooglePending } = useMutation({
 		mutationFn: () => authSignInWithGoogle(),
+		onSuccess: () => trackEvent('signed_in', { method: 'google' }),
 		onError,
 	})
 
 	const { mutate: signInWithApple, isPending: isSignInWithApplePending } = useMutation({
 		mutationFn: () => authSignInWithApple(),
+		onSuccess: () => trackEvent('signed_in', { method: 'apple' }),
 		onError,
 	})
 

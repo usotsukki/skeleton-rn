@@ -16,6 +16,8 @@ const clientEnv = clientEnvSchema.parse({
 	EXPO_PUBLIC_BASE_API_URL: process.env.EXPO_PUBLIC_BASE_API_URL,
 	EXPO_PUBLIC_SUPABASE_URL: process.env.EXPO_PUBLIC_SUPABASE_URL,
 	EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+	EXPO_PUBLIC_POSTHOG_PROJECT_TOKEN: process.env.EXPO_PUBLIC_POSTHOG_PROJECT_TOKEN,
+	EXPO_PUBLIC_POSTHOG_HOST: process.env.EXPO_PUBLIC_POSTHOG_HOST,
 })
 
 const ENABLE_DEV_MODE = clientEnv.EXPO_PUBLIC_ENABLE_DEV_MODE === 'true'
@@ -44,5 +46,9 @@ export const BASE_API_URL = clientEnv.EXPO_PUBLIC_BASE_API_URL
 
 export const SUPABASE_URL = clientEnv.EXPO_PUBLIC_SUPABASE_URL
 export const SUPABASE_PUBLISHABLE_KEY = clientEnv.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+
+/** PostHog project token (public, ships in the app). Unset = analytics and feature flags disabled. */
+export const POSTHOG_PROJECT_TOKEN = clientEnv.EXPO_PUBLIC_POSTHOG_PROJECT_TOKEN
+export const POSTHOG_HOST = clientEnv.EXPO_PUBLIC_POSTHOG_HOST ?? 'https://eu.i.posthog.com'
 
 export type { ClientEnv } from './clientEnvSchema'

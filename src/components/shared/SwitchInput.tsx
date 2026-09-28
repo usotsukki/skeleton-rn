@@ -4,6 +4,8 @@ import { useThemeColors } from '@app/theme/colors'
 import { cn } from '@app/utils'
 import AppText from './AppText'
 
+const TOGGLE_HIT_SLOP = { top: 9, bottom: 9, left: 4, right: 4 } as const
+
 interface SwitchInputProps {
 	label: string
 	value: boolean
@@ -14,22 +16,43 @@ interface SwitchInputProps {
 }
 
 export function SwitchInput({ label, value, onValueChange, disabled, containerClassName, testID }: SwitchInputProps) {
-	const colors = useThemeColors()
 	return (
 		<View
 			className={cn('h-[56px] flex-row items-center justify-between', disabled && 'opacity-50', containerClassName)}>
 			<AppText className="text-text" variant="tmed">
 				{label}
 			</AppText>
-			<Switch.Root
-				checked={value}
+			<Toggle
+				accessibilityLabel={label}
 				disabled={disabled}
-				onCheckedChange={onValueChange}
-				style={[styles.track, { backgroundColor: value ? colors.accent : colors.border }]}
-				testID={testID}>
-				<Switch.Thumb style={[styles.thumb, { transform: [{ translateX: value ? 22 : 2 }] }]} />
-			</Switch.Root>
+				onValueChange={onValueChange}
+				testID={testID}
+				value={value}
+			/>
 		</View>
+	)
+}
+
+interface ToggleProps extends Omit<SwitchInputProps, 'label' | 'containerClassName'> {
+	/** The visible label it sits next to (e.g. a `ListRow` title). */
+	accessibilityLabel: string
+}
+
+/** The bare switch, for rows that render their own label (`<ListRow trailing={<Toggle … />} />`). */
+export function Toggle({ accessibilityLabel, value, onValueChange, disabled, testID }: ToggleProps) {
+	const colors = useThemeColors()
+	return (
+		<Switch.Root
+			accessibilityLabel={accessibilityLabel}
+			checked={value}
+			disabled={disabled}
+			// 31pt track: the slop brings the target to 49pt (>= 44pt / 48dp).
+			hitSlop={TOGGLE_HIT_SLOP}
+			onCheckedChange={onValueChange}
+			style={[styles.track, { backgroundColor: value ? colors.accent : colors.border }]}
+			testID={testID}>
+			<Switch.Thumb style={[styles.thumb, { transform: [{ translateX: value ? 22 : 2 }] }]} />
+		</Switch.Root>
 	)
 }
 

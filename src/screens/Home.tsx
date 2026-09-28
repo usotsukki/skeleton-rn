@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
+import { FEATURE_FLAGS, isAnalyticsConfigured } from '@app/api/analytics'
 import {
 	AppButton,
 	AppText,
@@ -21,6 +22,7 @@ import {
 import useAlert from '@app/hooks/useAlert'
 import { useAndroidStableTabBar } from '@app/hooks/useAndroidStableTabBar'
 import { useAuthStore } from '@app/hooks/useAuth'
+import { useFeatureGateState, useFeaturePayload } from '@app/hooks/useFeatureFlag'
 import { useTabScreenInsets } from '@app/hooks/useTabScreenInsets'
 import useToast from '@app/hooks/useToast'
 import { showDeleteConfirmation } from '@app/utils/alerts'
@@ -177,6 +179,8 @@ export default function Home() {
 						{t('homeScreen.confirmDelete')}
 					</AppButton>
 				</View>
+
+				{isAnalyticsConfigured ? <FeatureFlagDemo /> : null}
 			</KeyboardScrollView>
 
 			<BottomModal
@@ -230,5 +234,31 @@ export default function Home() {
 				</BottomSheetKeyboardAwareScrollView>
 			</BottomModal>
 		</View>
+	)
+}
+
+/** Live state of the `template-demo` PostHog flag: toggle it (or edit its payload) in PostHog and reopen the app. */
+function FeatureFlagDemo() {
+	const { t } = useTranslation()
+	const state = useFeatureGateState(FEATURE_FLAGS.templateDemo)
+	const [, payload] = useFeaturePayload(FEATURE_FLAGS.templateDemo)
+	return (
+		<>
+			<SectionHeader title={t('homeScreen.featureFlag')} />
+			<View className="px-5">
+				<Card>
+					<View accessible className="gap-1 p-4" testID="feature-flag-demo">
+						<AppText className="text-text" variant="tmed">
+							{`${FEATURE_FLAGS.templateDemo}: ${t(`homeScreen.flagState.${state}`)}`}
+						</AppText>
+						{payload !== undefined ? (
+							<AppText className="text-text-secondary" variant="ts">
+								{JSON.stringify(payload)}
+							</AppText>
+						) : null}
+					</View>
+				</Card>
+			</View>
+		</>
 	)
 }

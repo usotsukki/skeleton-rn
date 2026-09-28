@@ -9,6 +9,7 @@ import { Stack, useNavigationContainerRef } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
 import { vars } from 'nativewind'
+import { PostHogProvider } from 'posthog-react-native'
 import { ErrorInfo, useCallback, useEffect, useState } from 'react'
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary'
 import { LogBox, Platform, useColorScheme as useDeviceScheme, View } from 'react-native'
@@ -16,6 +17,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { KeyboardProvider } from 'react-native-keyboard-controller'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableScreens } from 'react-native-screens'
+import { posthog, syncAnalyticsUser } from '@app/api/analytics'
 import {
 	bindQueryManagers,
 	createAppQueryClient,
@@ -31,6 +33,7 @@ import { useAuthListener, useAuthStore } from '@app/hooks/useAuth'
 import { useAuthAutoRefresh } from '@app/hooks/useAuthAutoRefresh'
 import { useAuthDeepLink } from '@app/hooks/useAuthDeepLink'
 import useNetworkToast from '@app/hooks/useNetworkToast'
+import { useScreenTracking } from '@app/hooks/useScreenTracking'
 import useSplash from '@app/hooks/useSplash'
 import { useSyncNativeAppearance } from '@app/hooks/useSyncNativeAppearance'
 import { useStorageDevTools } from '@app/storage'
@@ -54,6 +57,8 @@ if (__DEV__) {
 }
 
 SplashScreen.preventAutoHideAsync()
+
+const AUTOCAPTURE = { captureScreens: false, captureTouches: false } as const
 
 LogBox.ignoreLogs(['Invalid Refresh Token'])
 
@@ -148,7 +153,9 @@ const RootLayout = () => {
 	useSyncNativeAppearance()
 
 	useNetworkToast()
+	useScreenTracking()
 	useAuthListener((userData, event) => {
+		syncAnalyticsUser(userData?.uid ?? null, event)
 		if (event === 'SIGNED_OUT') {
 			cacheOwnership.onSignedOut()
 		}
@@ -163,44 +170,47 @@ const RootLayout = () => {
 	return (
 		<PersistQueryClientProvider client={queryClient} onSuccess={onQueryCacheRestored} persistOptions={persistOptions}>
 			<GestureHandlerRootView style={{ flex: 1 }}>
-				<KeyboardProvider>
-					<SafeAreaProvider>
-						<StatusBar style={resolvedScheme === 'dark' ? 'light' : 'dark'} />
-						<View className="flex-1 bg-bg" style={themeVars}>
-							{/* Keep screen readers off the app while the (opaque, touch-blocking) splash covers it. */}
-							<View
-								accessibilityElementsHidden={!splashFinished}
-								className="flex-1"
-								importantForAccessibility={splashFinished ? 'auto' : 'no-hide-descendants'}>
-								{/* While an alert is open only it is reachable by screen readers (accessibilityViewIsModal
-								    is iOS-only). The alert renders into PortalHost, outside this wrapper. */}
+				{/* Screens are tracked by useScreenTracking (expo-router); touches aren't autocaptured: events are explicit (trackEvent). */}
+				<PostHogProvider autocapture={AUTOCAPTURE} client={posthog} debug={__DEV__}>
+					<KeyboardProvider>
+						<SafeAreaProvider>
+							<StatusBar style={resolvedScheme === 'dark' ? 'light' : 'dark'} />
+							<View className="flex-1 bg-bg" style={themeVars}>
+								{/* Keep screen readers off the app while the (opaque, touch-blocking) splash covers it. */}
 								<View
-									accessibilityElementsHidden={alertVisible}
+									accessibilityElementsHidden={!splashFinished}
 									className="flex-1"
-									importantForAccessibility={alertVisible ? 'no-hide-descendants' : 'auto'}>
-									<SkeletonPulseProvider>
-										<Toast />
-										<BottomSheetModalProvider>
-											<ErrorBoundary fallbackRender={renderFallback} onError={onBoundaryError} onReset={onReset}>
-												<Stack
-													screenOptions={{
-														headerShown: false,
-														animation: 'fade',
-														animationDuration: 200,
-													}}
-												/>
-											</ErrorBoundary>
-											{/* Inside the sheet provider so alerts can open over bottom sheets; renders into PortalHost. */}
-											<AppAlert />
-										</BottomSheetModalProvider>
-									</SkeletonPulseProvider>
+									importantForAccessibility={splashFinished ? 'auto' : 'no-hide-descendants'}>
+									{/* While an alert is open only it is reachable by screen readers (accessibilityViewIsModal
+								    is iOS-only). The alert renders into PortalHost, outside this wrapper. */}
+									<View
+										accessibilityElementsHidden={alertVisible}
+										className="flex-1"
+										importantForAccessibility={alertVisible ? 'no-hide-descendants' : 'auto'}>
+										<SkeletonPulseProvider>
+											<Toast />
+											<BottomSheetModalProvider>
+												<ErrorBoundary fallbackRender={renderFallback} onError={onBoundaryError} onReset={onReset}>
+													<Stack
+														screenOptions={{
+															headerShown: false,
+															animation: 'fade',
+															animationDuration: 200,
+														}}
+													/>
+												</ErrorBoundary>
+												{/* Inside the sheet provider so alerts can open over bottom sheets; renders into PortalHost. */}
+												<AppAlert />
+											</BottomSheetModalProvider>
+										</SkeletonPulseProvider>
+									</View>
+									<PortalHost />
 								</View>
-								<PortalHost />
+								{!splashFinished && <AnimatedSplash onHidden={setSplashFinished} ready={splashReady} />}
 							</View>
-							{!splashFinished && <AnimatedSplash onHidden={setSplashFinished} ready={splashReady} />}
-						</View>
-					</SafeAreaProvider>
-				</KeyboardProvider>
+						</SafeAreaProvider>
+					</KeyboardProvider>
+				</PostHogProvider>
 			</GestureHandlerRootView>
 		</PersistQueryClientProvider>
 	)

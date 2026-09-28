@@ -51,6 +51,11 @@ Move out when:
 
 Render query-backed lists with `CachedList` (`src/components/shared/CachedList.tsx`): pass the `useQuery` result as `query`. It owns the loading skeleton, offline and blocking-error states, the empty state, pull-to-refresh, and the "couldn't refresh" notice over cached rows. Map errors for users with `requestErrorMessage`, never `err.message`. Demo: Home → "Open list states demo" (`src/screens/ListDemo.tsx`).
 
+## Feature flags and analytics
+
+- Gate new behavior with `useFeatureGate(FEATURE_FLAGS.x)` and keep the current experience as the fallback (flags read off until loaded, and always without a PostHog token). Where the fallback is itself visible, use `useFeatureGateState` and render nothing for `loading`.
+- Product events go through `trackEvent` with a name registered in `src/api/analytics/events.ts`. Never send names, emails or free text as properties.
+
 ## Forms and confirmations
 
 - New forms use `useAppForm` (`src/components/form`): `<form.AppField name>{f => <f.TextField />}</form.AppField>` and `<form.AppForm><form.SubmitButton /></form.AppForm>`. Add input adapters to `fields.tsx` and register them in `useAppForm.ts`; validators return i18n keys.
