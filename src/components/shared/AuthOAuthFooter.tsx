@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import { AppleIcon, GoogleIcon, Spacer } from '@app/components/svg'
 import AppButton from './AppButton'
@@ -20,18 +21,21 @@ export function AuthOAuthFooter({
 	onAction,
 	actionTestID,
 }: AuthOAuthFooterProps) {
+	const { t } = useTranslation()
 	return (
 		<>
 			<Spacer label="OR" />
 			<View className="gap-6">
 				<View className="flex-row items-center justify-center gap-3">
 					<AppButton
+						accessibilityLabel={t('a11y.signInWithApple')}
 						className="h-[50px] w-[64px] rounded-2xl border border-border bg-bg-elevated px-0"
 						onPress={onApple}
 						variant="secondary">
 						<AppleIcon />
 					</AppButton>
 					<AppButton
+						accessibilityLabel={t('a11y.signInWithGoogle')}
 						className="h-[50px] w-[64px] rounded-2xl border border-border bg-bg-elevated px-0"
 						onPress={onGoogle}
 						variant="secondary">

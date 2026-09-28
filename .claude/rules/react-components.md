@@ -38,3 +38,11 @@ Move out when:
 - reused
 - carry meaningful domain behavior deserving a named utility
 - component becomes harder to scan with them inline
+
+## Accessibility
+
+- Icon-only pressables need `accessibilityLabel` (i18n `a11y.*`) and `accessibilityRole="button"`; prefer `AppButton` (it derives the label from string children only). Disabled controls set `accessibilityState={{ disabled }}`.
+- Touch targets ≥ 44pt: pad small visuals with `hitSlop`.
+- Never set `allowFontScaling={false}`. System text size is on and capped at 1.4× in `src/theme/textShim.ts`; give text-bearing controls `min-h-*`, not fixed heights, so larger text doesn't clip.
+- Colors come from theme tokens; text pairs meet WCAG AA 4.5:1 (`text`, `text-secondary`, `text-muted`, `accent` on `bg`/`bg-elevated`/`bg-grouped`; `text-on-accent` on `accent`; `text-on-success` / `text-on-danger` on their fills; `danger` as text on every surface). A new pairing needs a contrast check.
+- Motion: Reanimated animations follow the system Reduce Motion setting by default (`ReduceMotion.System`); override only with a reason (see `AnimatedSplash`). Non-Reanimated animation checks `useReducedMotion()`.

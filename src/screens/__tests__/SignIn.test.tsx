@@ -52,21 +52,27 @@ describe('SignIn screen', () => {
 		jest.clearAllMocks()
 	})
 
-	it('renders email + password fields + submit button', () => {
-		render(<SignIn />)
+	it('renders email + password fields + submit button', async () => {
+		await render(<SignIn />)
 		expect(screen.getByLabelText(EMAIL_LABEL)).toBeTruthy()
 		expect(screen.getByLabelText(PASSWORD_LABEL)).toBeTruthy()
 		expect(screen.getByLabelText(SUBMIT_LABEL)).toBeTruthy()
 	})
 
-	it('disables submit when fields empty', () => {
-		render(<SignIn />)
+	it('labels the icon-only Apple and Google buttons for screen readers', async () => {
+		await render(<SignIn />)
+		expect(screen.getByLabelText('a11y.signInWithApple')).toBeTruthy()
+		expect(screen.getByLabelText('a11y.signInWithGoogle')).toBeTruthy()
+	})
+
+	it('disables submit when fields empty', async () => {
+		await render(<SignIn />)
 		expect(screen.getByLabelText(SUBMIT_LABEL).props.accessibilityState?.disabled).toBe(true)
 	})
 
-	it('does not call signIn when fields empty', () => {
-		render(<SignIn />)
-		fireEvent.press(screen.getByLabelText(SUBMIT_LABEL))
+	it('does not call signIn when fields empty', async () => {
+		await render(<SignIn />)
+		await fireEvent.press(screen.getByLabelText(SUBMIT_LABEL))
 		expect(mockSignIn).not.toHaveBeenCalled()
 	})
 })

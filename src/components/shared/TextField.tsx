@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Pressable, TextInput, TextInputProps, View } from 'react-native'
 import { useThemeColors } from '@app/theme/colors'
 import { cn } from '@app/utils'
@@ -24,6 +25,7 @@ export default function TextField({
 	...props
 }: TextFieldProps) {
 	const colors = useThemeColors()
+	const { t } = useTranslation()
 	const [isSecureTextEntry, setIsSecureTextEntry] = useState(secureTextEntryEnabled)
 
 	const sharedProps = {
@@ -36,6 +38,7 @@ export default function TextField({
 			extraClassName,
 		),
 		multiline,
+		selectionColor: colors.accent,
 		numberOfLines: multiline ? 4 : undefined,
 		placeholderTextColor: colors['text-muted'],
 		secureTextEntry: isSecureTextEntry,
@@ -48,6 +51,8 @@ export default function TextField({
 			<FormFieldLabel errorMessage={errorMessage} label={label} />
 			{secureTextEntryEnabled && (
 				<Pressable
+					accessibilityLabel={t(isSecureTextEntry ? 'a11y.showPassword' : 'a11y.hidePassword')}
+					accessibilityRole="button"
 					className="absolute bottom-[14px] right-4 z-10"
 					hitSlop={8}
 					onPress={() => setIsSecureTextEntry(s => !s)}>
