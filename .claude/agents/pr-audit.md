@@ -38,7 +38,7 @@ Reference plan sections, not invented code lines. Missing implementation or a bu
 3. Tests: new logic without a test, weakened assertions, timer/teardown leaks, mocks that hide the behavior under test.
 4. Architecture / rules violations (`.claude/rules/`), doc drift (readme, rules, AGENTS.md). For skills/rules: triggers, scope, permission boundaries, conflicting instructions, unavailable-tool fallbacks, and steps that block routine work or skip required checks.
 5. CI/tooling semantics: GitHub Actions expressions (falsy `0`), hook exit codes, lint-staged behavior.
-6. Verification gap: the change needed `yarn run check` / a device or release check and there's no evidence it ran.
+6. Verification gap: the change needed `yarn check` / a device or release check and there's no evidence it ran.
 
 Every confirmed defect needs a concrete failure scenario and evidence from the artifact or a reproduction. Keep untested hypotheses in open questions; missing build/device/test evidence belongs in verification gaps. Do not equate absent evidence with a proven runtime failure.
 

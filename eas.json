@@ -7,9 +7,8 @@
 		"base": {
 			"environment": "development",
 			"node": "22.14.0",
-			"yarn": "1.22.1",
 			"cache": {
-				"key": "v2"
+				"key": "v3"
 			},
 			"ios": {
 				"image": "latest"

@@ -1,6 +1,6 @@
-import { DrawerContentComponentProps, DrawerContentScrollView } from '@react-navigation/drawer'
-import { DrawerActions } from '@react-navigation/native'
 import { useRouter } from 'expo-router'
+import { DrawerContentComponentProps, DrawerContentScrollView } from 'expo-router/drawer'
+import { DrawerActions } from 'expo-router/react-navigation'
 import { useTranslation } from 'react-i18next'
 import { Pressable, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'

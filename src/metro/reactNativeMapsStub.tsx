@@ -5,7 +5,7 @@
 import React, { forwardRef } from 'react'
 import { View } from 'react-native'
 
-const StubMapView = forwardRef(function StubMapView(props: Record<string, unknown>, _ref: unknown) {
+const StubMapView = forwardRef(function StubMapViewRender(props: Record<string, unknown>, _ref: unknown) {
 	return <View testID="MapView" {...props} />
 })
 

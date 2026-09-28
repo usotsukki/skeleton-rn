@@ -22,7 +22,7 @@ interface BottomModalProps {
 	children: ReactNode
 }
 
-export const BottomModal = React.forwardRef<BottomSheetModal, BottomModalProps>(function BottomModal(
+export const BottomModal = React.forwardRef<BottomSheetModal, BottomModalProps>(function BottomModalRender(
 	{
 		snapPoints,
 		title,
@@ -50,7 +50,7 @@ export const BottomModal = React.forwardRef<BottomSheetModal, BottomModalProps>(
 					overflow: 'hidden',
 				},
 				overlay: {
-					...StyleSheet.absoluteFillObject,
+					...StyleSheet.absoluteFill,
 					alignItems: 'center',
 					justifyContent: 'center',
 					backgroundColor: c['bg-elevated'],
@@ -134,3 +134,4 @@ export const BottomModal = React.forwardRef<BottomSheetModal, BottomModalProps>(
 		</BottomSheetModal>
 	)
 })
+BottomModal.displayName = 'BottomModal'

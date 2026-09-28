@@ -22,6 +22,20 @@ describe('getAuthErrorMessage', () => {
 		spy.mockRestore()
 	})
 
+	it('maps Supabase rate limits by error code (the message has no "rate limit")', () => {
+		const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
+		const rateLimited = (code: string) =>
+			Object.assign(new Error('For security purposes, you can only request this after 14 seconds.'), {
+				code,
+				status: 429,
+			})
+
+		expect(getAuthErrorMessage(rateLimited('over_email_send_rate_limit'))).toBe('error.emailRateLimit')
+		expect(getAuthErrorMessage(rateLimited('over_request_rate_limit'))).toBe('error.tooManyRequests')
+		expect(spy).not.toHaveBeenCalled()
+		spy.mockRestore()
+	})
+
 	it('uses generic i18n key for unmapped errors; logs details in __DEV__', () => {
 		const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
 

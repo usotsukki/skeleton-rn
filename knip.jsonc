@@ -21,7 +21,7 @@
 	],
 	"ignoreDependencies": [
 		// Starter extras: shipped with the template for new apps, not used by the demo.
-		"@react-native-community/datetimepicker",
+		"@expo/ui",
 		"@rn-primitives/popover",
 		"@tanstack/query-persist-client-core",
 		"es-toolkit",
@@ -30,25 +30,19 @@
 		"expo-clipboard",
 		"expo-device",
 		"expo-document-picker",
-		"expo-font",
 		"expo-image-manipulator",
 		"expo-image-picker",
 		"expo-location",
 		"luxon",
 		"@types/luxon",
-		// Peer of @react-navigation/elements.
+		// Optional native dep of expo-router's header elements (MaskedViewNative).
 		"@react-native-masked-view/masked-view",
-		// Yarn 1: re-runs root postinstall (patch-package) after `yarn add/remove`.
-		"postinstall-postinstall",
 		// Plugins of @react-native/eslint-config; legacy eslintrc resolves them from the project root.
 		"eslint-plugin-eslint-comments",
 		"eslint-plugin-ft-flow",
 		"eslint-plugin-jest",
 		// Installed ad hoc for scripts/generate-brand-assets.cjs (see its header).
 		"sharp",
-		// TODO(sdk-57): expo-router codemod replaces these imports.
-		"@react-navigation/elements",
-		"@react-navigation/native-stack",
 	],
 	"ignoreBinaries": ["eas", "pod"],
 	"rules": {

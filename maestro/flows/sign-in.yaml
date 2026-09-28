@@ -1,0 +1,30 @@
+# Signs in with the email/password test user from .env.e2e (see .env.e2e.example).
+# Run: yarn e2e:sign-in [--android]   (see scripts/e2e-sign-in.sh)
+# No-op when the app is already signed in.
+appId: ${APP_ID}
+---
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: 'welcome-sign-in|home-screen'
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: 'welcome-sign-in'
+    commands:
+      - tapOn:
+          id: 'welcome-sign-in'
+      - tapOn:
+          id: 'auth-email'
+      - inputText: ${E2E_EMAIL}
+      - tapOn:
+          id: 'auth-password'
+      - inputText: ${E2E_PASSWORD}
+      - hideKeyboard
+      - tapOn:
+          id: 'auth-submit'
+- extendedWaitUntil:
+    visible:
+      id: 'home-screen'
+    timeout: 30000

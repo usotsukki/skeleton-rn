@@ -7,7 +7,7 @@ paths:
 
 ## Stack
 
-Expo 55, React Native 0.83, React 19 (React Compiler enabled), Expo Router, NativeWind, Supabase (auth + client), Zustand (sync state), TanStack React Query (server state), Jest + RNTL.
+Expo 57, React Native 0.86, React 19 (React Compiler enabled), Expo Router, NativeWind, Supabase (auth + client), Zustand (sync state), TanStack React Query (server state), Jest + RNTL.
 
 ## Source Layout & Ownership
 

@@ -6,7 +6,7 @@ import { getErrorData } from '@app/utils'
  * intentionally dismissed a flow (no toast). Pure — safe to test without a Supabase client.
  */
 export function getAuthErrorMessage(error: unknown): string | null {
-	const { message } = getErrorData(error)
+	const { code, message } = getErrorData(error)
 	const m = message.toLowerCase()
 
 	if (m.includes('invalid login credentials') || m.includes('email not confirmed') || m.includes('invalid grant')) {
@@ -31,7 +31,17 @@ export function getAuthErrorMessage(error: unknown): string | null {
 		return i18next.t('error.googleSignInMisconfigured')
 	}
 	if (m.includes('email address') && m.includes('invalid')) return i18next.t('error.invalidEmail')
-	if (m.includes('rate limit') || m.includes('over_email_send_rate_limit')) return i18next.t('error.emailRateLimit')
+	// Supabase 429s often say only "For security purposes, you can only request this after N seconds."; the code tells them apart.
+	if (
+		code === 'over_email_send_rate_limit' ||
+		m.includes('email rate limit') ||
+		m.includes('over_email_send_rate_limit')
+	) {
+		return i18next.t('error.emailRateLimit')
+	}
+	if (code.startsWith('over_') || m.includes('rate limit') || m.includes('for security purposes')) {
+		return i18next.t('error.tooManyRequests')
+	}
 
 	if (__DEV__) {
 		// Unmapped: keep the original for inspectability; avoid re-wrapping and losing the stack.

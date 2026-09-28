@@ -24,7 +24,7 @@ export default function Welcome() {
 				<AppButton fullWidth onPress={() => router.push('/SignUp')}>
 					{t('signUp')}
 				</AppButton>
-				<AppButton fullWidth onPress={() => router.push('/SignIn')} variant="secondary">
+				<AppButton fullWidth onPress={() => router.push('/SignIn')} testID="welcome-sign-in" variant="secondary">
 					{t('signIn')}
 				</AppButton>
 			</View>

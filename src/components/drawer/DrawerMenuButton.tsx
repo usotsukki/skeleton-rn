@@ -1,4 +1,4 @@
-import { DrawerActions, useNavigation } from '@react-navigation/native'
+import { DrawerActions, useNavigation } from 'expo-router/react-navigation'
 import { Menu } from 'lucide-react-native'
 import { useTranslation } from 'react-i18next'
 import { Pressable } from 'react-native'

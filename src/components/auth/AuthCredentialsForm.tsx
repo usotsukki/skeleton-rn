@@ -84,6 +84,7 @@ export function AuthCredentialsForm({
 								// Invalid submit: validators already set field errors.
 							})
 						}}
+						submitTestID="auth-submit"
 					/>
 				)}
 			</form.Subscribe>

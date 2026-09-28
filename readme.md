@@ -2,7 +2,7 @@
 
 Production-shaped Expo starter kit for shipping real mobile apps without spending the first week wiring auth, routing, storage, themes, forms, tests, and build plumbing.
 
-Skeleton is an opinionated Expo 55 / React Native 0.83 template with the boring-but-critical app infrastructure already in place: Supabase auth, Expo Router app shells, NativeWind UI primitives, React Query, Zustand + MMKV persistence, Sentry, i18n, maps, Skia demos, CI, EAS profiles, and a small component playground you can fork into a product.
+Skeleton is an opinionated Expo 57 / React Native 0.86 template with the boring-but-critical app infrastructure already in place: Supabase auth, Expo Router app shells, NativeWind UI primitives, React Query, Zustand + MMKV persistence, Sentry, i18n, maps, Skia demos, CI, EAS profiles, and a small component playground you can fork into a product.
 
 <p>
   <img alt="Skeleton home screen" src="assets/png/screenshots/home.PNG" width="175" />
@@ -27,7 +27,7 @@ Skeleton is an opinionated Expo 55 / React Native 0.83 template with the boring-
 
 ## Tech Stack
 
-- **Expo 55**, **React Native 0.83**, **React 19**, **TypeScript**
+- **Expo 57**, **React Native 0.86**, **React 19**, **TypeScript**
 - **Expo Router** for file-based native navigation
 - **NativeWind** + Tailwind tokens for styling
 - **Supabase** for auth and session lifecycle
@@ -43,9 +43,9 @@ Skeleton is an opinionated Expo 55 / React Native 0.83 template with the boring-
 
 Prerequisites:
 
-- Node.js LTS
-- Yarn Classic v1 (`packageManager` is `yarn@1.22.1`)
-- Xcode and/or Android Studio for native dev-client runs
+- Node.js 22.13+ (`.nvmrc`)
+- Yarn 4 via Corepack (`corepack enable`; version pinned in `packageManager`)
+- Xcode 26.4+ (SDK 57) and/or Android Studio (JDK 17) for native dev-client runs
 - A local `.env` file for app identity, Supabase, OAuth, maps, EAS, and Sentry values
 
 Install dependencies and start Metro:
@@ -140,7 +140,7 @@ Skeleton does not ship a backend. Create your own Supabase project, add OAuth pr
 | Command | Use |
 | --- | --- |
 | `yarn start` | Start Expo dev server for a dev client |
-| `yarn run check` | Project gate: all `lint:*` checks, then Jest (read-only, never rewrites files) |
+| `yarn check` | Project gate: all `lint:*` checks, then Jest (read-only, never rewrites files) |
 | `yarn lint:ts` | TypeScript check |
 | `yarn lint:js` | ESLint, fails on any warning |
 | `yarn lint:format` | Prettier check |
@@ -156,8 +156,6 @@ Skeleton does not ship a backend. Create your own Supabase project, add OAuth pr
 | `yarn eas-update:prod` | Production EAS update |
 | `yarn eas-deploy:preview` / `yarn eas-deploy:prod` | EAS web deploy commands |
 | `yarn nuke` | Destructive deep clean for dependencies/native artifacts |
-
-Important Yarn 1 footnote: `yarn check` is Yarn's built-in lockfile/node_modules validator. For this template's lint + test gate, use `yarn run check`.
 
 ## Testing And CI
 
@@ -179,7 +177,7 @@ Useful defaults:
 - Keep Supabase-specific logic behind `src/api/auth` and `src/api/supabase`.
 - Use React Query for async/server state and Zustand for local synchronous state.
 - Add i18n keys in every language file when user-visible copy changes.
-- Run `yarn run check` before merging or tagging.
+- Run `yarn check` before merging or tagging.
 
 ## Fork Checklist
 

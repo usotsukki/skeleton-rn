@@ -13,7 +13,7 @@ const DEFAULT_BOTTOM_OFFSET = 40
 export const SCREEN_BOTTOM_PADDING = 24
 
 const KeyboardScrollView = forwardRef<KeyboardAwareScrollViewRef, KeyboardAwareScrollViewProps>(
-	function KeyboardScrollView(
+	function KeyboardScrollViewRender(
 		{
 			bottomOffset = DEFAULT_BOTTOM_OFFSET,
 			keyboardShouldPersistTaps = 'handled',
@@ -35,5 +35,6 @@ const KeyboardScrollView = forwardRef<KeyboardAwareScrollViewRef, KeyboardAwareS
 		)
 	},
 )
+KeyboardScrollView.displayName = 'KeyboardScrollView'
 
 export default KeyboardScrollView

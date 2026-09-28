@@ -106,6 +106,7 @@
 		"googleSignInMisconfigured": "Google Sign-In is not available in this build of the app.",
 		"invalidEmail": "Please enter a valid email address.",
 		"emailRateLimit": "Too many email requests. Please wait a few minutes and try again.",
+		"tooManyRequests": "Too many attempts. Please wait a moment and try again.",
 		"repo": {
 			"notFound": "Not found",
 			"forbidden": "You do not have permission to do this",

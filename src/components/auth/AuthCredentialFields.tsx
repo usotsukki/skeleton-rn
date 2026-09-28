@@ -30,6 +30,7 @@ export function AuthFormEmailField({ field, label }: EmailFieldProps) {
 			errorMessage={getDisplayedError(field.state.meta, t)}
 			label={label}
 			onChangeText={field.handleChange}
+			testID="auth-email"
 			value={String(field.state.value ?? '')}
 		/>
 	)
@@ -47,6 +48,7 @@ export function AuthFormPasswordField({ field, label }: PasswordFieldProps) {
 			errorMessage={getDisplayedError(field.state.meta, t)}
 			label={label}
 			onChangeText={field.handleChange}
+			testID="auth-password"
 			value={String(field.state.value ?? '')}
 		/>
 	)
