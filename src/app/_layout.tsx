@@ -2,7 +2,7 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { GoogleSignin } from '@react-native-google-signin/google-signin'
 import { PortalHost } from '@rn-primitives/portal'
 import * as Sentry from '@sentry/react-native'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { isRunningInExpoGo, requireOptionalNativeModule } from 'expo'
 import 'expo-dev-client'
 import { Stack, useNavigationContainerRef } from 'expo-router'
@@ -16,10 +16,18 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { KeyboardProvider } from 'react-native-keyboard-controller'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableScreens } from 'react-native-screens'
+import {
+	bindQueryManagers,
+	createAppQueryClient,
+	createQueryCacheOwnership,
+	createQueryPersistOptions,
+	startSlowQueryWatchdog,
+} from '@app/api/query'
 import { AnimatedSplash, ErrorFallback, Toast } from '@app/components'
 import { SkeletonPulseProvider } from '@app/components/shared/SkeletonPulseProvider'
 import { GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID, IS_PROD, SENTRY_DEBUG, SENTRY_DSN } from '@app/env'
 import { useAuthListener, useAuthStore } from '@app/hooks/useAuth'
+import { useAuthAutoRefresh } from '@app/hooks/useAuthAutoRefresh'
 import { useAuthDeepLink } from '@app/hooks/useAuthDeepLink'
 import useNetworkToast from '@app/hooks/useNetworkToast'
 import useSplash from '@app/hooks/useSplash'
@@ -76,9 +84,7 @@ enableScreens(true)
 
 const SPLASH_MAX_WAIT_MS = 1500
 
-const queryClient = new QueryClient({
-	defaultOptions: { queries: { retry: 2 } },
-})
+const queryClient = createAppQueryClient()
 
 const RootLayout = () => {
 	const ref = useNavigationContainerRef()
@@ -90,6 +96,14 @@ const RootLayout = () => {
 	const setSplashFinished = useSplash(s => s.setSplashFinished)
 	const resolvedScheme = themeMode === 'system' ? (deviceScheme ?? 'dark') : themeMode
 	const themeVars = vars(resolvedScheme === 'dark' ? darkVars : lightVars)
+	// Fixed for the app's lifetime: the persisted cache belongs to whoever was signed in at launch.
+	const [launchUid] = useState(() => useAuthStore.getState().user?.uid ?? null)
+	const [persistOptions] = useState(() => createQueryPersistOptions(launchUid))
+	const [cacheOwnership] = useState(() => createQueryCacheOwnership(queryClient, launchUid))
+
+	const onQueryCacheRestored = useCallback(() => {
+		cacheOwnership.onRestored(useAuthStore.getState().user?.uid ?? null)
+	}, [cacheOwnership])
 
 	const onReset = useCallback(() => {
 		if (ref.isReady()) {
@@ -112,6 +126,10 @@ const RootLayout = () => {
 		navigationIntegration.registerNavigationContainer(ref)
 	}, [ref])
 
+	useEffect(() => bindQueryManagers(), [])
+
+	useEffect(() => startSlowQueryWatchdog(queryClient), [])
+
 	// Auth hydration normally finishes first; the timeout keeps a stuck hydration from pinning the splash.
 	useEffect(() => {
 		if (authHydrated) {
@@ -123,13 +141,15 @@ const RootLayout = () => {
 	}, [authHydrated])
 
 	useAuthDeepLink()
+	useAuthAutoRefresh()
 
 	useNetworkToast()
-	useAuthListener((_userData, event) => {
+	useAuthListener((userData, event) => {
 		if (event === 'SIGNED_OUT') {
-			queryClient.clear()
+			cacheOwnership.onSignedOut()
 		}
 		if (event === 'SIGNED_IN') {
+			if (userData) cacheOwnership.onSignedIn(userData.uid)
 			queryClient.invalidateQueries()
 		}
 	})
@@ -137,7 +157,7 @@ const RootLayout = () => {
 	useStorageDevTools()
 
 	return (
-		<QueryClientProvider client={queryClient}>
+		<PersistQueryClientProvider client={queryClient} onSuccess={onQueryCacheRestored} persistOptions={persistOptions}>
 			<GestureHandlerRootView style={{ flex: 1 }}>
 				<KeyboardProvider>
 					<SafeAreaProvider>
@@ -169,7 +189,7 @@ const RootLayout = () => {
 					</SafeAreaProvider>
 				</KeyboardProvider>
 			</GestureHandlerRootView>
-		</QueryClientProvider>
+		</PersistQueryClientProvider>
 	)
 }
 

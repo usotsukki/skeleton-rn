@@ -1,6 +1,7 @@
 export { useAndroidStableTabBar } from './useAndroidStableTabBar'
 export { useAppStateChange, type AppStateChangeHandler } from './useAppStateChange'
 export { default as useAuth, useAuthListener, useAuthStore, useCurrentUid } from './useAuth'
+export { useAuthAutoRefresh } from './useAuthAutoRefresh'
 export { useAuthDeepLink } from './useAuthDeepLink'
 export { default as useHaptics } from './useHaptics'
 export { default as useNetworkToast } from './useNetworkToast'

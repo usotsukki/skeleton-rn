@@ -5,6 +5,8 @@ import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from '@app/env'
 import { authStorage } from '@app/storage'
 import { logSupabaseHttpRequest } from '@app/utils/apiLog'
 import { logDevInspectorEvent } from '@app/utils/devInspector'
+import { createFetchWithTimeout, describeRequest } from './fetchWithTimeout'
+import { reportRequestTimeout } from './requestTimeoutTelemetry'
 
 const SUPABASE_STORAGE_PREFIX = 'supabase:'
 
@@ -77,28 +79,20 @@ if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
 
 const supabaseOrigin = new URL(SUPABASE_URL).origin
 const nativeFetch: typeof fetch = globalThis.fetch.bind(globalThis)
+// Every Supabase sub-client (PostgREST, Auth, Storage, Functions) goes through this one fetch,
+// so the request timeout lives here. See fetchWithTimeout.ts.
+const fetchWithTimeout = createFetchWithTimeout(nativeFetch, { onTimeout: reportRequestTimeout })
 
 function instrumentSupabaseFetch(input: RequestInfo | URL, init?: RequestInit): ReturnType<typeof fetch> {
-	let urlStr: string
-	let method: string
-	if (typeof input === 'string') {
-		urlStr = input
-		method = (init?.method ?? 'GET').toUpperCase()
-	} else if (input instanceof URL) {
-		urlStr = input.href
-		method = (init?.method ?? 'GET').toUpperCase()
-	} else {
-		urlStr = input.url
-		method = (init?.method ?? input.method ?? 'GET').toUpperCase()
-	}
+	const { method, url } = describeRequest(input, init)
 	try {
-		if (new URL(urlStr).origin === supabaseOrigin) {
-			logSupabaseHttpRequest(method, urlStr)
+		if (new URL(url).origin === supabaseOrigin) {
+			logSupabaseHttpRequest(method, url)
 		}
 	} catch {
 		// non-URL input; skip logging
 	}
-	return nativeFetch(input as RequestInfo, init)
+	return fetchWithTimeout(input, init)
 }
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {

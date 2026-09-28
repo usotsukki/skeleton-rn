@@ -3,6 +3,7 @@ import {
 	createSupabaseUser,
 	getCurrentSupabaseAuthUser,
 	sendSupabasePasswordResetEmail,
+	setSupabaseAutoRefresh,
 	signInWithSupabase,
 	signInWithSupabaseApple,
 	signInWithSupabaseGoogle,
@@ -18,6 +19,9 @@ export { getAuthErrorMessage }
 
 export const subscribeToAuthChanges = async (cb: (user: AuthUser | null, event: string) => void) =>
 	subscribeToSupabaseAuthChanges(cb)
+
+/** Pause token auto-refresh in the background and resume it in the foreground (see useAuthAutoRefresh). */
+export const setAuthAutoRefresh = (active: boolean) => setSupabaseAutoRefresh(active)
 
 export const getCurrentAuthUser = async () => getCurrentSupabaseAuthUser()
 

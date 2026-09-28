@@ -112,7 +112,8 @@
 			"forbidden": "You do not have permission to do this",
 			"conflict": "This change conflicts with the current state",
 			"validation": "Some fields are invalid",
-			"upstream": "Server error. Please try again."
+			"upstream": "Server error. Please try again.",
+			"timeout": "The request timed out. Please try again."
 		}
 	}
 }

@@ -7,6 +7,15 @@ describe('getAuthErrorMessage', () => {
 		expect(getAuthErrorMessage(new Error('Network request failed'))).toBe('error.networkError')
 	})
 
+	it('maps a failed or timed-out auth fetch to the network message', () => {
+		const failedFetch = (message: string) =>
+			Object.assign(new Error(message), { name: 'AuthRetryableFetchError', status: 0 })
+		expect(getAuthErrorMessage(failedFetch('The operation was aborted.'))).toBe('error.networkError')
+		expect(getAuthErrorMessage(failedFetch('REQUEST_TIMEOUT: POST /auth/v1/token exceeded 15000ms'))).toBe(
+			'error.networkError',
+		)
+	})
+
 	it('returns null for Google user-cancel flows', () => {
 		expect(getAuthErrorMessage(new Error('The user canceled the Google sign in. Please try again.'))).toBeNull()
 	})

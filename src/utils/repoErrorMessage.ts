@@ -7,12 +7,14 @@ const codeToI18nKey: Record<RepoErrorCode, string> = {
 	conflict: 'error.repo.conflict',
 	validation: 'error.repo.validation',
 	upstream: 'error.repo.upstream',
+	timeout: 'error.repo.timeout',
 }
 
 export function repoErrorMessage(err: unknown, t: TFunction, fallback: string): string {
 	if (isRepoError(err)) {
 		return t(codeToI18nKey[err.code])
 	}
-	if (err instanceof Error) return err.message
+	// Never surface raw Error.message: it leaks internals ("Network request failed", Postgres
+	// constraint names). Diagnostics belong in Sentry via captureRepoError.
 	return fallback
 }

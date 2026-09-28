@@ -11,10 +11,8 @@
 	],
 	"ignore": [
 		// Template helpers not wired into the demo app yet.
-		"src/hooks/useAppStateChange.ts",
 		"src/hooks/useUpdates.ts",
 		"src/store/persistStorage.ts",
-		"src/utils/sentry/captureRepoError.ts",
 		// Barrels kept for consumers; routes import screens/hooks directly.
 		"src/hooks/index.ts",
 		"src/screens/index.tsx",
@@ -23,9 +21,7 @@
 		// Starter extras: shipped with the template for new apps, not used by the demo.
 		"@expo/ui",
 		"@rn-primitives/popover",
-		"@tanstack/query-persist-client-core",
 		"es-toolkit",
-		"expo-application",
 		"expo-blur",
 		"expo-clipboard",
 		"expo-device",

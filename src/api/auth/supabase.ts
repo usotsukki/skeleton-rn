@@ -87,3 +87,13 @@ export async function updateSupabasePassword(password: string): Promise<void> {
 	const { error } = await supabase.auth.updateUser({ password })
 	if (error) throw error
 }
+
+/**
+ * React Native contract (auth-js `startAutoRefresh` docs): the OS suspends JS timers in the
+ * background, so token auto-refresh must stop there and restart on foreground. Otherwise the client
+ * can resume holding an expired access token and requests fail until the next refresh tick.
+ */
+export function setSupabaseAutoRefresh(active: boolean): void {
+	const toggle = active ? supabase.auth.startAutoRefresh() : supabase.auth.stopAutoRefresh()
+	toggle.catch(err => console.warn('[auth] auto-refresh toggle failed', err))
+}
