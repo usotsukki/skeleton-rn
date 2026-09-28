@@ -31,6 +31,7 @@ import { useAuthAutoRefresh } from '@app/hooks/useAuthAutoRefresh'
 import { useAuthDeepLink } from '@app/hooks/useAuthDeepLink'
 import useNetworkToast from '@app/hooks/useNetworkToast'
 import useSplash from '@app/hooks/useSplash'
+import { useSyncNativeAppearance } from '@app/hooks/useSyncNativeAppearance'
 import { useStorageDevTools } from '@app/storage'
 import { useThemeStore } from '@app/store/themeStore'
 import { darkVars, lightVars } from '@app/theme/colors'
@@ -142,6 +143,7 @@ const RootLayout = () => {
 
 	useAuthDeepLink()
 	useAuthAutoRefresh()
+	useSyncNativeAppearance()
 
 	useNetworkToast()
 	useAuthListener((userData, event) => {
