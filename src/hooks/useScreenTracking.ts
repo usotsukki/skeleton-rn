@@ -1,6 +1,6 @@
 import { usePathname, useSegments } from 'expo-router'
 import { useEffect } from 'react'
-import { posthog } from '@app/api/analytics'
+import { isAnalyticsConfigured, logUnsentAnalytics, posthog } from '@app/api/analytics'
 
 /**
  * Sends a PostHog screen view per route change (the SDK's screen autocapture doesn't cover
@@ -12,6 +12,7 @@ export function useScreenTracking() {
 	const screenName = useSegments().join('/') || pathname
 	useEffect(() => {
 		if (!pathname) return
+		if (!isAnalyticsConfigured) return logUnsentAnalytics('screen', screenName, { pathname })
 		posthog.screen(screenName, { pathname }).catch(() => undefined)
 	}, [pathname, screenName])
 }

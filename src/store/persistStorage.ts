@@ -1,10 +1,13 @@
-import { createJSONStorage, StateStorage } from 'zustand/middleware'
+import type { MMKV } from 'react-native-mmkv'
+import { createJSONStorage, type StateStorage } from 'zustand/middleware'
 import { zustandStorage } from '@app/storage'
 
-const persistStorage: StateStorage = {
-	setItem: (name, value) => zustandStorage.set(name, value),
-	getItem: name => zustandStorage.getString(name) || null,
-	removeItem: name => zustandStorage.remove(name),
+/** Zustand `persist` storage on an MMKV instance. Pass a dedicated instance to keep a store's data apart. */
+export function createPersistStorage<S>(storage: MMKV = zustandStorage) {
+	const stateStorage: StateStorage = {
+		setItem: (name, value) => storage.set(name, value),
+		getItem: name => storage.getString(name) || null,
+		removeItem: name => storage.remove(name),
+	}
+	return createJSONStorage<S>(() => stateStorage)
 }
-
-export const zustandPersistStorage = createJSONStorage(() => persistStorage)

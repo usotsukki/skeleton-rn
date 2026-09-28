@@ -1,4 +1,4 @@
-import { posthog } from './client'
+import { isAnalyticsConfigured, logUnsentAnalytics, posthog } from './client'
 
 export type SignInMethod = 'email' | 'google' | 'apple'
 
@@ -22,5 +22,6 @@ export function trackEvent<E extends AnalyticsEvent>(
 		? [event: E]
 		: [event: E, properties: AnalyticsEvents[E]]
 ) {
+	if (!isAnalyticsConfigured) return logUnsentAnalytics('event', event, properties)
 	posthog.capture(event, properties)
 }

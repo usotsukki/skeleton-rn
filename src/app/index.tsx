@@ -1,5 +1,6 @@
 import { Redirect } from 'expo-router'
 import { useAuthStore } from '@app/hooks/useAuth'
+import { HOME_ROUTE } from '@app/utils/navigation'
 
 /**
  * Root index. Picks a starting route before nested layouts run.
@@ -11,7 +12,7 @@ export default function Index() {
 	const user = useAuthStore(s => s.user)
 	const passwordRecoveryUserId = useAuthStore(s => s.passwordRecoveryUserId)
 
-	if (user && !passwordRecoveryUserId) return <Redirect href="/Home" />
+	if (user && !passwordRecoveryUserId) return <Redirect href={HOME_ROUTE} />
 	if (passwordRecoveryUserId) return <Redirect href="/ResetPassword" />
 	return <Redirect href="/Welcome" />
 }

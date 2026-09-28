@@ -57,6 +57,7 @@
 		"e2e:sign-in": "dotenv -e .env.local -e .env -e .env.e2e --no-expand -- ./scripts/e2e-sign-in.sh",
 		"eas-build-pre-install": "corepack enable && corepack prepare yarn@4.14.1 --activate",
 		"prepare": "husky",
+		"rename": "node scripts/rename.cjs",
 		"start": "expo start --dev-client",
 		"switch-env": "./scripts/switch-env.sh",
 		"test": "TZ=UTC jest src",

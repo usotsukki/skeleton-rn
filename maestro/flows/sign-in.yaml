@@ -7,7 +7,7 @@ appId: ${APP_ID}
 - launchApp
 - extendedWaitUntil:
     visible:
-      id: 'welcome-sign-in|home-screen'
+      id: 'welcome-sign-in|landing-screen'
     timeout: 30000
 - runFlow:
     when:
@@ -33,5 +33,5 @@ appId: ${APP_ID}
           id: 'auth-submit'
 - extendedWaitUntil:
     visible:
-      id: 'home-screen'
+      id: 'landing-screen'
     timeout: 30000

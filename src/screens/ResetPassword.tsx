@@ -8,6 +8,7 @@ import { focusFirstInvalid, setSubmitError, submitForm, useAppForm } from '@app/
 import { AppText } from '@app/components/shared'
 import useAuth, { useAuthStore } from '@app/hooks/useAuth'
 import useToast from '@app/hooks/useToast'
+import { HOME_ROUTE } from '@app/utils/navigation'
 import { resetPasswordFormOpts } from '@app/utils/validators'
 
 export default function ResetPassword() {
@@ -38,7 +39,7 @@ export default function ResetPassword() {
 			}
 			setPasswordRecoveryUserId(null)
 			showToast(t('modules.auth.resetPasswordComplete'), 'success')
-			router.replace('/Home')
+			router.replace(HOME_ROUTE)
 		},
 		onSubmitInvalid: ({ formApi }) => focusFirstInvalid(formApi, fieldRefs),
 	})

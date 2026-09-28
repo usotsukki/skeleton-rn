@@ -1,3 +1,8 @@
+/** Where a signed-in user lands. Change it here when another screen becomes the app's first screen. */
+export const HOME_ROUTE = '/Home'
+/** testID of the landing screen's root view; `maestro/flows/sign-in.yaml` waits for it. */
+export const LANDING_SCREEN_TEST_ID = 'landing-screen'
+
 const TABS_GROUP = '(tabs)'
 
 /**

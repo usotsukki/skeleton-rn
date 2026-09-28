@@ -26,6 +26,7 @@ import { useFeatureGateState, useFeaturePayload } from '@app/hooks/useFeatureFla
 import { useTabScreenInsets } from '@app/hooks/useTabScreenInsets'
 import useToast from '@app/hooks/useToast'
 import { showDeleteConfirmation } from '@app/utils/alerts'
+import { LANDING_SCREEN_TEST_ID } from '@app/utils/navigation'
 
 const SHEET_SNAP: (string | number)[] = ['50%']
 // Demo only: stands in for an async delete request.
@@ -71,7 +72,7 @@ export default function Home() {
 	}
 
 	return (
-		<View style={{ flex: 1 }} testID="home-screen">
+		<View style={{ flex: 1 }} testID={LANDING_SCREEN_TEST_ID}>
 			<KeyboardScrollView className="bg-bg-grouped" contentContainerStyle={{ paddingTop, paddingBottom }}>
 				<View className="px-4 pt-2">
 					<Card className="bg-bg-elevated">

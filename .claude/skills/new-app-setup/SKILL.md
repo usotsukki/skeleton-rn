@@ -5,11 +5,11 @@ description: Checklist for turning a fork of this template into a new app — id
 
 # New app setup
 
-Work top to bottom; verify each step before the next. Never read `.env*` directly — use values via `npx dotenv -e .env.local -e .env -- …` (first file wins, like Expo; `-e .env` alone for the hosted values) and print only matches/prefixes.
+The fork's folder must be the session root (its rules, hooks, agents and scripts don't load from a parent directory). Work top to bottom; verify each step before the next. Never read `.env*` directly — use values via `npx dotenv -e .env.local -e .env -- …` (first file wins, like Expo; `-e .env` alone for the hosted values) and print only matches/prefixes.
 
 ## 1. Identity
 
-- `app.json` / env: name, slug, scheme, `EXPO_PUBLIC_IOS_BUNDLE_ID`, `EXPO_PUBLIC_ANDROID_PACKAGE` (unique package — `com.<org>.<app>`), `package.json` name.
+- `yarn rename "<Name>" <slug> <scheme> <bundle-id>` sets `package.json` name, `app.json` (name, slug, scheme, bundle id, package — unique, `com.<org>.<app>`) and the local Supabase `project_id`. Env overrides win over `app.json`: `EXPO_PUBLIC_APP_*`, `EXPO_PUBLIC_IOS_BUNDLE_ID`, `EXPO_PUBLIC_ANDROID_PACKAGE`.
 - EAS: `eas init`, then `EXPO_PUBLIC_EAS_PROJECT_ID` / `EXPO_PUBLIC_EAS_OWNER`.
 
 ## 2. Brand
