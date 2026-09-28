@@ -23,14 +23,16 @@ if (!/^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+$/.test(bundleId)) {
 	fail(`bundle id "${bundleId}" must look like com.company.app (lowercase letters, digits, underscores)`)
 }
 
+// Every file is read, checked and changed in memory first, so a bad file can't leave a half-renamed tree.
+const writes = []
+
 function updateJson(file, change) {
 	const filePath = path.join(root, file)
 	const source = fs.readFileSync(filePath, 'utf8')
 	const json = JSON.parse(source)
 	change(json)
 	const indent = source.match(/^(\s+)"/m)?.[1] ?? '\t'
-	fs.writeFileSync(filePath, `${JSON.stringify(json, null, indent)}\n`)
-	console.log(`rename: updated ${file}`)
+	writes.push([file, `${JSON.stringify(json, null, indent)}\n`])
 }
 
 updateJson('package.json', json => {
@@ -39,6 +41,7 @@ updateJson('package.json', json => {
 
 updateJson('app.json', json => {
 	const { expo } = json
+	if (!expo) fail('no "expo" object in app.json')
 	expo.name = name
 	expo.slug = slug
 	expo.scheme = scheme
@@ -48,11 +51,14 @@ updateJson('app.json', json => {
 
 // One Docker project per app. Two forks still share the default ports: to run both local backends at
 // once, change the ports in one supabase/config.toml.
-const configPath = path.join(root, 'supabase/config.toml')
-const config = fs.readFileSync(configPath, 'utf8')
+const config = fs.readFileSync(path.join(root, 'supabase/config.toml'), 'utf8')
 if (!/^project_id = ".*"$/m.test(config)) fail('no project_id in supabase/config.toml')
-fs.writeFileSync(configPath, config.replace(/^project_id = ".*"$/m, `project_id = "${slug}"`))
-console.log('rename: updated supabase/config.toml')
+writes.push(['supabase/config.toml', config.replace(/^project_id = ".*"$/m, `project_id = "${slug}"`)])
+
+for (const [file, content] of writes) {
+	fs.writeFileSync(path.join(root, file), content)
+	console.log(`rename: updated ${file}`)
+}
 
 console.log('rename: done. Next: check .env for EXPO_PUBLIC_APP_* overrides, then rebuild the native app')
 console.log('rename: (yarn ios:rebuild / yarn android:rebuild, or yarn dev).')
