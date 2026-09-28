@@ -17,6 +17,7 @@ import {
 import { useAnalyticsOptOut } from '@app/hooks/useAnalyticsOptOut'
 import useAuth, { useAuthStore } from '@app/hooks/useAuth'
 import { type ThemeMode, useThemeStore } from '@app/store/themeStore'
+import { HOME_ROUTE } from '@app/utils/navigation'
 
 const SCROLL_STYLE = { paddingBottom: 32 } as const
 
@@ -32,7 +33,7 @@ export default function Settings() {
 	const router = useRouter()
 	const user = useAuthStore(s => s.user)
 	const { signOut, loading } = useAuth()
-	const goBack = () => (router.canGoBack() ? router.back() : router.replace('/Home'))
+	const goBack = () => (router.canGoBack() ? router.back() : router.replace(HOME_ROUTE))
 	const displayName = user ? user.displayName : null
 	const email = user ? user.email : null
 	const profileTitle = displayName ?? t('homeScreen.defaultUser')

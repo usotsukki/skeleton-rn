@@ -17,6 +17,11 @@ const IS_SERVER =
  */
 export const isAnalyticsConfigured = !!POSTHOG_PROJECT_TOKEN
 
+/** No PostHog project (the default for a fresh fork): in dev, print what would have been sent. */
+export function logUnsentAnalytics(kind: 'event' | 'screen', name: string, properties?: object) {
+	if (__DEV__) console.log(`[analytics] ${kind} ${name}`, properties ?? {})
+}
+
 /**
  * The app's PostHog client. Rendered through `PostHogProvider` in the root layout; outside React,
  * import it from here. The token is required by the constructor even when disabled.

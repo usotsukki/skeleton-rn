@@ -1,5 +1,6 @@
 import { Redirect, Stack } from 'expo-router'
 import { useAuthStore } from '@app/hooks/useAuth'
+import { HOME_ROUTE } from '@app/utils/navigation'
 
 /**
  * Unauthenticated stack. Redirects to (app) when a session exists,
@@ -10,7 +11,7 @@ export default function AuthLayout() {
 	const recoveryUid = useAuthStore(s => s.passwordRecoveryUserId)
 
 	if (user && !recoveryUid) {
-		return <Redirect href="/Home" />
+		return <Redirect href={HOME_ROUTE} />
 	}
 
 	return (

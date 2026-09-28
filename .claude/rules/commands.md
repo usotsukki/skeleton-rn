@@ -23,6 +23,10 @@ Agent-runnable scripts. EAS and destructive utilities are user-only and not list
 - `yarn duplication:check` — jscpd duplication report
 - `yarn e2e:sign-in` — Maestro sign-in with the `.env.e2e` test user (`maestro/flows/sign-in.yaml`; no-op when signed in; `--android` for the Android package; `MAESTRO_DEVICE=<udid|serial>` with several devices). Agent-runnable against the local stack; it exits 1 when the Supabase host isn't local, and the flow asserts the app's `backend-local` marker before typing. Fails fast (exit 1, names the pid) when another Maestro process holds the iOS driver port 7001, and stops after `E2E_TIMEOUT` seconds (default 300). `--hosted` sends the credentials to the hosted project: user-run.
 
+## Fork setup
+
+- `yarn rename "<Name>" <slug> <scheme> <bundle-id>` — app identity in `package.json`, `app.json`, `supabase/config.toml`. Rewrites tracked files: run it only when the user asks.
+
 ## Local backend (Supabase in Docker)
 
 - `yarn backend:start` — starts Docker if needed, runs the minimal stack (auth, database, REST, email catcher; `--full` adds Studio, storage, realtime), writes the Supabase URL and publishable key to `.env.local`, creates `.env.e2e` when missing. Cold start pulls images (minutes); warm starts take seconds. Restart Metro afterwards.

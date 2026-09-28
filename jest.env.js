@@ -7,3 +7,5 @@ process.env.EXPO_PUBLIC_ENABLE_DEV_MODE = process.env.EXPO_PUBLIC_ENABLE_DEV_MOD
 // Without it the auth screens hide the Google button on iOS (the Jest platform).
 process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID =
 	process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID || 'jest-ios.apps.googleusercontent.com'
+// Tests run as a configured app (the SDK is mocked in setup.ts); unconfigured behaviour is tested explicitly.
+process.env.EXPO_PUBLIC_POSTHOG_PROJECT_TOKEN = process.env.EXPO_PUBLIC_POSTHOG_PROJECT_TOKEN || 'phc_jest'

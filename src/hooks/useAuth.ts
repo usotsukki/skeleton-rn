@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { useEffect, useRef } from 'react'
 import { create } from 'zustand'
-import { createJSONStorage, persist, PersistOptions, StateStorage } from 'zustand/middleware'
+import { persist, PersistOptions } from 'zustand/middleware'
 import { trackEvent } from '@app/api/analytics'
 import {
 	createUser as authCreateUser,
@@ -16,6 +16,7 @@ import {
 	subscribeToAuthChanges,
 } from '@app/api/auth'
 import { authStorage } from '@app/storage'
+import { createPersistStorage } from '@app/store/persistStorage'
 import useToast from './useToast'
 
 /** Set in the auth store before recovery `setSession` runs so navigation does not jump to the app shell first. */
@@ -37,15 +38,9 @@ interface AuthStore extends AuthState {
 	setHydrated: (hydrated: boolean) => void
 }
 
-const persistStorage: StateStorage = {
-	setItem: (name, value) => authStorage.set(name, value),
-	getItem: name => authStorage.getString(name) || null,
-	removeItem: name => authStorage.remove(name),
-}
-
 const persistConfig: PersistOptions<AuthStore> = {
 	name: 'auth',
-	storage: createJSONStorage(() => persistStorage),
+	storage: createPersistStorage<AuthStore>(authStorage),
 	partialize: state =>
 		({
 			user: state.user,

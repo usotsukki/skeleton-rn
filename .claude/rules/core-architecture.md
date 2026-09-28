@@ -25,7 +25,7 @@ Expo 57, React Native 0.86, React 19 (React Compiler enabled), Expo Router, Nati
 - `src/api/analytics` — PostHog boundary: the client (`posthog`, disabled without a token), typed events (`trackEvent`; add names to `events.ts`, never raw strings), the feature-flag registry (`FEATURE_FLAGS`), and `syncAnalyticsUser` (identify by user id only; sign-out reset keeps the opt-out). Flag hooks live in `src/hooks/useFeatureFlag.ts`.
 - `src/theme` — design tokens: `colors` (use `useThemeColors()` in components — no static palette), `brand.ts` (from `assets/brand/brand.json`).
 - `src/env` — client env: every `EXPO_PUBLIC_*` read statically (release inlining); schema in `clientEnvSchema.ts`.
-- `src/store` — shared Zustand stores (`themeStore`, `persistStorage`).
+- `src/store` — shared Zustand stores (`themeStore`) and `createPersistStorage` (MMKV-backed `persist` storage; use it for every persisted store).
 - `src/components/auth`, `src/components/svg` — auth form building blocks, SVG icons.
 - `src/translations` — i18n resources and app-side translation wiring.
 - `src/metro` — bundler-only files (e.g. native-module stubs for web/CI), not app runtime.
