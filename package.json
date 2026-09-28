@@ -19,6 +19,10 @@
 		"android": "expo run:android",
 		"android:prebuild": "expo prebuild -p android",
 		"android:rebuild": "run-s android:prebuild android",
+		"backend:reset": "./scripts/backend.sh reset",
+		"backend:start": "./scripts/backend.sh start",
+		"backend:stop": "./scripts/backend.sh stop",
+		"backend:types": "./scripts/backend.sh types",
 		"check": "yarn lint && yarn test",
 		"duplication:check": "jscpd --config jscpd.json",
 		"duplication:view": "jscpd --config jscpd.json && open ./cpd/html/index.html",
@@ -47,7 +51,7 @@
 		"lint:unused": "knip",
 		"nuke": "./scripts/nuke.sh",
 		"postinstall": "patch-package",
-		"e2e:sign-in": "dotenv -e .env -e .env.e2e --no-expand -- ./scripts/e2e-sign-in.sh",
+		"e2e:sign-in": "dotenv -e .env.local -e .env -e .env.e2e --no-expand -- ./scripts/e2e-sign-in.sh",
 		"eas-build-pre-install": "corepack enable && corepack prepare yarn@4.14.1 --activate",
 		"prepare": "husky",
 		"start": "expo start --dev-client",
@@ -174,6 +178,7 @@
 		"prettier": "3.3.3",
 		"prettier-plugin-merge": "^0.7.1",
 		"prettier-plugin-tailwindcss": "^0.6.12",
+		"supabase": "2.118.0",
 		"test-renderer": "~1.2.0",
 		"typescript": "~6.0.3"
 	}

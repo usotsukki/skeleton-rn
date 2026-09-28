@@ -18,7 +18,14 @@ Agent-runnable scripts. EAS and destructive utilities are user-only and not list
 - `TZ=UTC jest src/path` — single file / pattern
 - `yarn check` — `lint && test`. Merge gate; read-only.
 - `yarn duplication:check` — jscpd duplication report
-- `yarn e2e:sign-in` — Maestro sign-in with the `.env.e2e` test user (`maestro/flows/sign-in.yaml`; no-op when signed in; `--android` for the Android package; `MAESTRO_DEVICE=<udid|serial>` with several devices). User-run: it sends credentials to the hosted Supabase project.
+- `yarn e2e:sign-in` — Maestro sign-in with the `.env.e2e` test user (`maestro/flows/sign-in.yaml`; no-op when signed in; `--android` for the Android package; `MAESTRO_DEVICE=<udid|serial>` with several devices). Agent-runnable against the local stack; it exits 1 when the Supabase host isn't local, and the flow asserts the app's `backend-local` marker before typing. `--hosted` sends the credentials to the hosted project: user-run.
+
+## Local backend (Supabase in Docker)
+
+- `yarn backend:start` — starts Docker if needed, runs the minimal stack (auth, database, REST, email catcher; `--full` adds Studio, storage, realtime), writes the Supabase URL and publishable key to `.env.local`, creates `.env.e2e` when missing. Cold start pulls images (minutes); warm starts take seconds. Restart Metro afterwards.
+- `yarn backend:stop` — stops the stack and removes the `.env.local` override, so `.env` applies again.
+- `yarn backend:reset` — re-applies `supabase/migrations` and `supabase/seed.sql` (drops local data).
+- `yarn backend:types` — regenerates `src/api/supabase/database.types.ts` after a migration.
 
 ## Gotchas
 
@@ -27,4 +34,5 @@ Agent-runnable scripts. EAS and destructive utilities are user-only and not list
 - `yarn ios` / `yarn android` / `:rebuild` / `expo prebuild` are allowed (multi-minute; run in background). Only rebuild when native deps or config plugins changed; JS-only changes just need Metro (`yarn start`). `expo prebuild` recreates `ios/`/`android/` by default (SDK 57); `--no-clean` keeps them.
 - Native builds on macOS: Xcode 26.4+ (older fails in `expo-modules-jsi` headers), `LANG=en_US.UTF-8` (CocoaPods), JDK 17 for Android (`JAVA_HOME=$(/usr/libexec/java_home -v 17)`); `expo run:android --device` takes the AVD name.
 - The Bash tool's shell may be zsh: quote globs (`--include='*.ts'`) and run array-heavy scripts with `bash -c`.
+- `.env.local` outranks `.env` in Expo CLI (every mode except `test`), including local release builds: run `yarn backend:stop` before a release build, or it ships a localhost Supabase URL.
 - `yarn nuke` is destructive (clears node_modules, pods, Xcode caches). User-only.

@@ -1,4 +1,6 @@
+import * as Device from 'expo-device'
 import { Platform } from 'react-native'
+import { isLoopbackUrl, toAndroidEmulatorHostUrl } from '@app/utils/isLoopbackUrl'
 import { clientEnvSchema } from './clientEnvSchema'
 
 // Expo inlines only static `process.env.EXPO_PUBLIC_*` member reads at build time. Passing `process.env`
@@ -44,8 +46,15 @@ export const EAS_PROJECT_ID = clientEnv.EXPO_PUBLIC_EAS_PROJECT_ID
 
 export const BASE_API_URL = clientEnv.EXPO_PUBLIC_BASE_API_URL
 
-export const SUPABASE_URL = clientEnv.EXPO_PUBLIC_SUPABASE_URL
+// An Android emulator's own 127.0.0.1 is the emulator; 10.0.2.2 is the machine running the local stack.
+const IS_ANDROID_EMULATOR_DEV = typeof __DEV__ === 'boolean' && __DEV__ && Platform.OS === 'android' && !Device.isDevice
+
+export const SUPABASE_URL = IS_ANDROID_EMULATOR_DEV
+	? toAndroidEmulatorHostUrl(clientEnv.EXPO_PUBLIC_SUPABASE_URL)
+	: clientEnv.EXPO_PUBLIC_SUPABASE_URL
 export const SUPABASE_PUBLISHABLE_KEY = clientEnv.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+/** The bundle talks to the local stack (`yarn backend:start`), as inlined when Metro built it. */
+export const IS_LOCAL_BACKEND = isLoopbackUrl(clientEnv.EXPO_PUBLIC_SUPABASE_URL)
 
 /** PostHog project token (public, ships in the app). Unset = analytics and feature flags disabled. */
 export const POSTHOG_PROJECT_TOKEN = clientEnv.EXPO_PUBLIC_POSTHOG_PROJECT_TOKEN

@@ -5,6 +5,7 @@ import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from '@app/env'
 import { authStorage } from '@app/storage'
 import { logSupabaseHttpRequest } from '@app/utils/apiLog'
 import { logDevInspectorEvent } from '@app/utils/devInspector'
+import type { Database } from './database.types'
 import { createFetchWithTimeout, describeRequest } from './fetchWithTimeout'
 import { reportRequestTimeout } from './requestTimeoutTelemetry'
 
@@ -95,7 +96,7 @@ function instrumentSupabaseFetch(input: RequestInfo | URL, init?: RequestInit): 
 	return fetchWithTimeout(input, init)
 }
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
 	global: {
 		fetch: instrumentSupabaseFetch,
 	},

@@ -46,14 +46,18 @@ Prerequisites:
 - Node.js 22.13+ (`.nvmrc`)
 - Yarn 4 via Corepack (`corepack enable`; version pinned in `packageManager`)
 - Xcode 26.4+ (SDK 57) and/or Android Studio (JDK 17) for native dev-client runs
-- A local `.env` file for app identity, Supabase, OAuth, maps, EAS, and Sentry values
+- Docker (Docker Desktop on macOS) for the local backend
+- Optional: a local `.env` (copy `.env.example`) for app identity, a hosted Supabase project, OAuth, maps, EAS, and Sentry
 
-Install dependencies and start Metro:
+Install dependencies, start the local backend, then Metro:
 
 ```bash
 yarn
+yarn backend:start
 yarn start
 ```
+
+`yarn backend:start` runs Supabase in Docker (first run downloads images, a few minutes), points the app at it through `.env.local`, and seeds a dev user you can sign in with: the credentials are in `.env.e2e.example`. No cloud account is needed. `yarn backend:stop` stops it and switches the app back to the Supabase project in `.env`, if any.
 
 Run a native dev client in another terminal after native projects exist:
 
@@ -105,7 +109,23 @@ Core variables:
 | `EXPO_PUBLIC_NODE_ENV` | `development`, `testing`, or `production` |
 | `EXPO_PUBLIC_ENABLE_DEV_MODE` | Enables dev-mode behavior |
 
-Skeleton does not ship a backend. Create your own Supabase project, add OAuth providers, and configure redirect URLs to match your app scheme and production domains.
+### Backend
+
+Development uses a local Supabase stack (`supabase/`, Docker):
+
+| Command | What it does |
+| --- | --- |
+| `yarn backend:start` | Starts auth, database, REST and an email catcher (`http://127.0.0.1:54324`); `--full` adds Studio, storage and realtime. Writes the URL and publishable key to `.env.local` |
+| `yarn backend:stop` | Stops the stack and removes the `.env.local` override |
+| `yarn backend:reset` | Re-applies `supabase/migrations` and `supabase/seed.sql` (drops local data) |
+| `yarn backend:types` | Regenerates `src/api/supabase/database.types.ts` |
+
+- Schema lives in `supabase/migrations`. The `notes` table is a sample of a user-owned table with row level security; replace it with your own.
+- `.env.local` outranks `.env`, also in local release builds. Run `yarn backend:stop` before building a release.
+- The stack listens on all network interfaces with well-known local credentials. Stop it on untrusted networks.
+- Physical devices can't reach `127.0.0.1` on your machine; use a simulator or emulator. On an Android emulator the dev app swaps `127.0.0.1` for `10.0.2.2` (the emulator's name for your machine) by itself.
+
+For production, create your own Supabase project, push the migrations (`yarn supabase db push`), add OAuth providers, and configure redirect URLs to match your app scheme and production domains.
 
 ## Project Map
 
