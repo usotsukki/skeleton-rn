@@ -5,7 +5,7 @@ description: Checklist for turning a fork of this template into a new app — id
 
 # New app setup
 
-Work top to bottom; verify each step before the next. Never read `.env*` directly — use values via `npx dotenv -e .env -- …` and print only matches/prefixes.
+Work top to bottom; verify each step before the next. Never read `.env*` directly — use values via `npx dotenv -e .env.local -e .env -- …` (first file wins, like Expo; `-e .env` alone for the hosted values) and print only matches/prefixes.
 
 ## 1. Identity
 
@@ -24,7 +24,7 @@ Edit `assets/brand/skull.svg` (any 24×24 stroke icon) + `assets/brand/brand.jso
 
 ## 4. Supabase
 
-URL + publishable key in `.env` and EAS. Auth → URL Configuration: `<scheme>://**`. Google provider Client IDs: web + iOS only. Copy `.mcp.example.json` → `.mcp.json` (gitignored) with the new `project_ref`.
+Development runs on the local stack with no project (`yarn backend:start`; schema in `supabase/migrations`, types via `yarn backend:types`). For the hosted project: URL + publishable key in `.env` and EAS. Auth → URL Configuration: `<scheme>://**`. Google provider Client IDs: web + iOS only. Copy `.mcp.example.json` → `.mcp.json` (gitignored) with the new `project_ref`.
 
 ## 5. EAS env & Sentry
 

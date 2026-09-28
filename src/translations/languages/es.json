@@ -29,6 +29,7 @@
 		"auth": {
 			"welcomeSubtitle": "Una plantilla moderna de Expo + Supabase.",
 			"getStarted": "Empezar",
+			"localBackend": "Backend local",
 			"signInTitle": "Bienvenido de nuevo",
 			"signInSubtitle": "Inicia sesión para continuar.",
 			"signUpTitle": "Crea tu cuenta",

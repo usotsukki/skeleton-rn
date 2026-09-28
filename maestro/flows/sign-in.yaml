@@ -1,5 +1,6 @@
 # Signs in with the email/password test user from .env.e2e (see .env.e2e.example).
-# Run: yarn e2e:sign-in [--android]   (see scripts/e2e-sign-in.sh)
+# Run: yarn e2e:sign-in [--android] [--hosted]   (see scripts/e2e-sign-in.sh)
+# Without --hosted the flow stops before typing unless the running bundle shows the local-backend marker.
 # No-op when the app is already signed in.
 appId: ${APP_ID}
 ---
@@ -15,6 +16,12 @@ appId: ${APP_ID}
     commands:
       - tapOn:
           id: 'welcome-sign-in'
+      - runFlow:
+          when:
+            true: ${LOCAL_ONLY == 'true'}
+          commands:
+            - assertVisible:
+                id: 'backend-local'
       - tapOn:
           id: 'auth-email'
       - inputText: ${E2E_EMAIL}
