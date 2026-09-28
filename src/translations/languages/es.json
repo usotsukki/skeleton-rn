@@ -112,7 +112,8 @@
 			"forbidden": "No tienes permiso para hacer esto",
 			"conflict": "Este cambio entra en conflicto con el estado actual",
 			"validation": "Algunos campos son inválidos",
-			"upstream": "Error del servidor. Por favor, inténtelo de nuevo."
+			"upstream": "Error del servidor. Por favor, inténtelo de nuevo.",
+			"timeout": "La solicitud tardó demasiado. Por favor, inténtelo de nuevo."
 		}
 	}
 }

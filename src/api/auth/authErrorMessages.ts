@@ -1,4 +1,5 @@
 import i18next from 'i18next'
+import { isRequestTimeoutMessage } from '@app/api/supabase/fetchWithTimeout'
 import { getErrorData } from '@app/utils'
 
 /**
@@ -17,6 +18,8 @@ export function getAuthErrorMessage(error: unknown): string | null {
 	if (m.includes('email link is invalid') || (m.includes('link is invalid') && m.includes('expired'))) {
 		return i18next.t('error.passwordResetLinkInvalid')
 	}
+	// auth-js wraps a rejected fetch (offline, or our client-side timeout) as AuthRetryableFetchError with status 0.
+	if (isRequestTimeoutMessage(message) || isFailedAuthFetch(error)) return i18next.t('error.networkError')
 	if (m.includes('network')) return i18next.t('error.networkError')
 	if (m.includes('provider is not enabled')) return i18next.t('error.providerDisabled')
 	if (m.includes('google') && m.includes('cancel')) return null
@@ -48,4 +51,10 @@ export function getAuthErrorMessage(error: unknown): string | null {
 		console.error('[getAuthErrorMessage] unmapped error', error)
 	}
 	return i18next.t('error.genericAuth')
+}
+
+function isFailedAuthFetch(error: unknown): boolean {
+	return (
+		error instanceof Error && error.name === 'AuthRetryableFetchError' && (error as { status?: unknown }).status === 0
+	)
 }

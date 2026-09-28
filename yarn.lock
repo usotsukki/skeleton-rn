@@ -4015,6 +4015,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/query-sync-storage-persister@npm:5.104.0":
+  version: 5.104.0
+  resolution: "@tanstack/query-sync-storage-persister@npm:5.104.0"
+  dependencies:
+    "@tanstack/query-core": "npm:5.104.0"
+    "@tanstack/query-persist-client-core": "npm:5.104.0"
+  checksum: 10c0/282d308dabe6dbce2b098574babd4eee33b38aa5200bd10a6b5f970ca5d1a9da294b3f2545615d30013dbbaec3ec6f73649dbc9193a9b7fa6588291d363756b7
+  languageName: node
+  linkType: hard
+
 "@tanstack/react-form@npm:^1.28.6":
   version: 1.29.1
   resolution: "@tanstack/react-form@npm:1.29.1"
@@ -4027,6 +4037,18 @@ __metadata:
     "@tanstack/react-start":
       optional: true
   checksum: 10c0/3ca29c2f569cf99fa817c52e43303df3ade9b409f32550eee70dd6ca25e50a3a3b8bb31ce3b96e7767e388e7667e16291700181b48dacc52b673f059d80dbdc5
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query-persist-client@npm:5.104.0":
+  version: 5.104.0
+  resolution: "@tanstack/react-query-persist-client@npm:5.104.0"
+  dependencies:
+    "@tanstack/query-persist-client-core": "npm:5.104.0"
+  peerDependencies:
+    "@tanstack/react-query": ^5.104.0
+    react: ^18 || ^19
+  checksum: 10c0/730fa07be8fa7ca801721a43eef30e31a03060d2c5539016f78e71de965c5745a6b24a0acb9a834f42c4bb95ac3b096ac39f7173b415b723942066d9e2968a0c
   languageName: node
   linkType: hard
 
@@ -7402,9 +7424,10 @@ __metadata:
     "@shopify/flash-list": "npm:2.0.2"
     "@shopify/react-native-skia": "npm:^2.6.2"
     "@supabase/supabase-js": "npm:^2.117.2"
-    "@tanstack/query-persist-client-core": "npm:5.104.0"
+    "@tanstack/query-sync-storage-persister": "npm:5.104.0"
     "@tanstack/react-form": "npm:^1.28.6"
     "@tanstack/react-query": "npm:5.104.0"
+    "@tanstack/react-query-persist-client": "npm:5.104.0"
     "@testing-library/react-native": "npm:^13.2.0"
     "@trivago/prettier-plugin-sort-imports": "npm:^4.3.0"
     "@types/jest": "npm:^29.5.13"

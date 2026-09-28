@@ -1,6 +1,8 @@
 import * as Sentry from '@sentry/react-native'
 import { isRepoError, type RepoErrorCode } from '@app/api/db/errors'
 
+// `timeout` is deliberately absent: `requestTimeoutTelemetry.ts` already reports one
+// `request-timeout` per path per session, and every retry would add a duplicate exception.
 const CAPTURE_CODES: ReadonlySet<RepoErrorCode> = new Set(['upstream', 'conflict', 'forbidden'])
 
 export function captureRepoError(err: unknown): void {

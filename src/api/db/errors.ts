@@ -1,4 +1,4 @@
-export type RepoErrorCode = 'not_found' | 'forbidden' | 'conflict' | 'validation' | 'upstream'
+export type RepoErrorCode = 'not_found' | 'forbidden' | 'conflict' | 'validation' | 'upstream' | 'timeout'
 
 export type RepoErrorData = Record<string, unknown>
 
@@ -45,6 +45,11 @@ export class RepoError extends Error {
 
 	static Upstream(scope: string, cause: unknown, message?: string, data?: RepoErrorData): RepoError {
 		return new RepoError('upstream', scope, cause, message ?? extractCauseMessage(scope, cause), data)
+	}
+
+	/** The request got no answer inside the client-side timeout (see `fetchWithTimeout.ts`). */
+	static Timeout(scope: string, cause?: unknown, data?: RepoErrorData): RepoError {
+		return new RepoError('timeout', scope, cause, `[${scope}] request timed out`, data)
 	}
 }
 
