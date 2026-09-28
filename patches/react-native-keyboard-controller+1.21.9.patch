@@ -1,0 +1,22 @@
+diff --git a/node_modules/react-native-keyboard-controller/android/src/main/java/com/reactnativekeyboardcontroller/modules/statusbar/StatusBarManagerCompatModuleImpl.kt b/node_modules/react-native-keyboard-controller/android/src/main/java/com/reactnativekeyboardcontroller/modules/statusbar/StatusBarManagerCompatModuleImpl.kt
+--- a/node_modules/react-native-keyboard-controller/android/src/main/java/com/reactnativekeyboardcontroller/modules/statusbar/StatusBarManagerCompatModuleImpl.kt
++++ b/node_modules/react-native-keyboard-controller/android/src/main/java/com/reactnativekeyboardcontroller/modules/statusbar/StatusBarManagerCompatModuleImpl.kt
+@@ -97,13 +97,11 @@ class StatusBarManagerCompatModuleImpl(
+   }
+ 
+   fun setStyle(style: String) {
+-    if (!isEnabled()) {
+-      return original.setStyle(style)
+-    }
+-
+-    UiThreadUtil.runOnUiThread {
+-      getController()?.isAppearanceLightStatusBars = style == "dark-content"
+-    }
++    // Patched: always delegate to React Native. On API 30+ RN writes the WindowInsetsController
++    // appearance; WindowInsetsControllerCompat(window, decorView) (androidx.core 1.18 Impl30) only
++    // toggles the legacy SYSTEM_UI_FLAG_LIGHT_STATUS_BAR, which Android ignores once RN's
++    // edge-to-edge setup has made the window appearance controlled, so dark icons were dropped.
++    original.setStyle(style)
+   }
+ 
+   fun getConstants(): MutableMap<String, Any>? = original.getConstants()
