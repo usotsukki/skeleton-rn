@@ -21,7 +21,7 @@ Skeleton is an opinionated Expo 57 / React Native 0.86 template with the boring-
 | UI kit | NativeWind components for buttons, text fields, auth fields, cards, avatars, list rows, skeleton pulse, toasts, bottom sheets, keyboard-aware layouts |
 | State | TanStack React Query for server state, Zustand for client state, MMKV-backed persistence |
 | Platform | React Native Maps, Shopify Skia demo, haptics, network status toasts, safe areas, gesture handler, keyboard controller |
-| Product basics | Dark/light/system theme switching, i18next language wiring, Sentry error boundary + navigation integration |
+| Product basics | Dark/light/system theme switching, i18next language wiring, Sentry error boundary + navigation integration, PostHog analytics (screens, typed events, Settings opt-out) and feature flags |
 | Quality | TypeScript, ESLint, Prettier, Jest, React Native Testing Library, duplication checks, GitHub Actions |
 | Delivery | EAS development/production profiles, runtime version policy, update URL wiring, app identity resolved from env |
 
@@ -35,7 +35,7 @@ Skeleton is an opinionated Expo 57 / React Native 0.86 template with the boring-
 - **Zustand** + **react-native-mmkv** for local state and persistence
 - **@gorhom/bottom-sheet**, **React Native Gesture Handler**, **Reanimated**, **Keyboard Controller**
 - **React Native Maps**, **Shopify React Native Skia**
-- **Sentry**, **i18next**, **Zod**
+- **Sentry**, **PostHog**, **i18next**, **Zod**
 - **Jest** + **React Native Testing Library**
 - **EAS Build / Update**, GitHub Actions, Knip, lint-staged pre-commit
 
@@ -97,6 +97,8 @@ Core variables:
 | `GOOGLE_MAPS_API_KEY_ANDROID` | Android maps key |
 | `GOOGLE_MAPS_API_KEY_IOS` | iOS maps key |
 | `EXPO_PUBLIC_SENTRY_DSN` | Optional Sentry DSN |
+| `EXPO_PUBLIC_POSTHOG_PROJECT_TOKEN` | Optional PostHog project token (`phc_…`, public). Unset = analytics and feature flags disabled |
+| `EXPO_PUBLIC_POSTHOG_HOST` | Optional PostHog ingestion host; defaults to `https://eu.i.posthog.com` (use `https://us.i.posthog.com` for US cloud) |
 | `EXPO_PUBLIC_EAS_PROJECT_ID` | EAS project id and Updates URL |
 | `EXPO_PUBLIC_EAS_OWNER` | Expo account owner |
 | `APPLE_TEAM_ID` | Apple Developer Team ID |
@@ -117,6 +119,7 @@ Skeleton does not ship a backend. Create your own Supabase project, add OAuth pr
 | `src/api/auth` | Auth facade over Supabase and OAuth helpers |
 | `src/api/supabase` | Supabase client and deep-link helpers |
 | `src/api/db` | Data/repository error boundaries |
+| `src/api/analytics` | PostHog client, typed events (`trackEvent`), feature-flag registry |
 | `src/hooks` | Auth, splash, toasts, haptics, network, app-state, and navigation hooks |
 | `src/store` | Zustand stores and persisted theme state |
 | `src/storage` | MMKV instances and typed storage wrapper |
@@ -184,7 +187,8 @@ Useful defaults:
 After cloning or forking, replace the template identity with your product identity:
 
 - Update `app.json` placeholders: app name, slug, scheme, iOS bundle id, Android package.
-- Set `.env` values for Supabase, OAuth, maps, EAS, Apple team, Sentry, and production env requirements.
+- Set `.env` values for Supabase, OAuth, maps, EAS, Apple team, Sentry, PostHog, and production env requirements.
+- Analytics: create a PostHog project, set `EXPO_PUBLIC_POSTHOG_PROJECT_TOKEN` (and the host for US cloud) locally and in EAS env. Add events to `src/api/analytics/events.ts` and flags to `featureFlags.ts` (then gate with `useFeatureGate`); delete the `template-demo` flag and the Home demo row. Analytics are on by default with a Settings opt-out; if you need opt-in consent (e.g. EU users), start the client opted out (`defaultOptIn: false`).
 - Tune `env.rules.json` so production fails fast when required product config is missing.
 - Confirm redirect URLs in Supabase for email recovery and OAuth callbacks.
 - Rebrand icon and splash: edit `assets/brand/skull.svg` (any 24×24 stroke icon, e.g. from Lucide) and `assets/brand/brand.json` (gradient, splash color, icon size), regenerate with `scripts/generate-brand-assets.cjs` (see its header), then mirror `splashBackground` / `splashIconSize` in the `expo-splash-screen` entry of `app.json` (a test fails if they drift). Native rebuild required.

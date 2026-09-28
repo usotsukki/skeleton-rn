@@ -86,7 +86,13 @@
 		"confirmDelete": "Confirmar eliminación",
 		"deleteTitle": "Eliminar elemento",
 		"demoItemName": "Elemento de demo",
-		"deleted": "Eliminado"
+		"deleted": "Eliminado",
+		"featureFlag": "Indicador de función",
+		"flagState": {
+			"loading": "cargando",
+			"on": "activado",
+			"off": "desactivado"
+		}
 	},
 	"settingsScreen": {
 		"preferences": "Preferencias",
@@ -95,7 +101,10 @@
 			"system": "Sistema",
 			"light": "Claro",
 			"dark": "Oscuro"
-		}
+		},
+		"privacy": "Privacidad",
+		"shareAnalytics": "Compartir datos de uso",
+		"shareAnalyticsHint": "Envía cómo usas la app, vinculado al ID de tu cuenta (no a tu nombre ni correo), para mejorarla. Si está desactivado no se envía el uso, pero la configuración de funciones se sigue cargando y esas solicitudes incluyen el ID de tu cuenta."
 	},
 	"skiaScreen": {
 		"planets": "Planetas",

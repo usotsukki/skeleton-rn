@@ -21,6 +21,7 @@ Expo 57, React Native 0.86, React 19 (React Compiler enabled), Expo Router, Nati
 - `src/api/auth` — auth boundary. `index.ts` is the public facade. `authErrorMessages.ts` maps API errors to i18n (no side effects, test in isolation from `supabase.ts`).
 - `src/api/supabase` — Supabase client, session-adjacent helpers (e.g. deep links for auth recovery).
 - `src/api/db` — repository and storage boundaries.
+- `src/api/analytics` — PostHog boundary: the client (`posthog`, disabled without a token), typed events (`trackEvent`; add names to `events.ts`, never raw strings), the feature-flag registry (`FEATURE_FLAGS`), and `syncAnalyticsUser` (identify by user id only; sign-out reset keeps the opt-out). Flag hooks live in `src/hooks/useFeatureFlag.ts`.
 - `src/theme` — design tokens: `colors` (use `useThemeColors()` in components — no static palette), `brand.ts` (from `assets/brand/brand.json`).
 - `src/env` — client env: every `EXPO_PUBLIC_*` read statically (release inlining); schema in `clientEnvSchema.ts`.
 - `src/store` — shared Zustand stores (`themeStore`, `persistStorage`).

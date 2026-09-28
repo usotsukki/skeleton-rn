@@ -266,6 +266,60 @@ jest.mock('@sentry/react-native', () => ({
 	reactNavigationIntegration: () => ({ registerNavigationContainer: jest.fn() }),
 }))
 
+// One shared PostHog client: `new PostHog()` (src/api/analytics/client.ts) and `usePostHog()` return
+// the same jest.fns. Flag hooks return "not loaded" by default; a test overrides them with
+// `jest.mocked(useFeatureFlag).mockReturnValue(…)`. Everything is reset after each test.
+jest.mock('posthog-react-native', () => {
+	const client = {
+		capture: jest.fn(),
+		identify: jest.fn(),
+		reset: jest.fn(),
+		screen: jest.fn(() => Promise.resolve()),
+		register: jest.fn(() => Promise.resolve()),
+		debug: jest.fn(),
+		optIn: jest.fn(() => Promise.resolve()),
+		optOut: jest.fn(() => Promise.resolve()),
+		optedOut: false,
+		getFeatureFlag: jest.fn(),
+		getFeatureFlags: jest.fn(),
+		getFeatureFlagPayload: jest.fn(),
+		onFeatureFlags: jest.fn(() => () => undefined),
+		reloadFeatureFlagsAsync: jest.fn(() => Promise.resolve()),
+		flush: jest.fn(() => Promise.resolve()),
+	}
+	const hooks = {
+		useFeatureFlag: jest.fn(() => undefined),
+		useFeatureFlags: jest.fn(() => undefined),
+		useFeatureFlagWithPayload: jest.fn(() => [undefined, undefined]),
+	}
+	const PostHog = jest.fn(() => client)
+	// The keys resetAnalytics() keeps (values from @posthog/core's PostHogPersistedProperty enum).
+	const PostHogPersistedProperty = {
+		OptedOut: 'opted_out',
+		InstalledAppBuild: 'installed_app_build',
+		InstalledAppVersion: 'installed_app_version',
+		DeviceId: 'device_id',
+	}
+	return {
+		__esModule: true,
+		default: PostHog,
+		PostHog,
+		PostHogPersistedProperty,
+		PostHogProvider: ({ children }: { children: unknown }) => children,
+		usePostHog: () => client,
+		...hooks,
+		/** Test-only: the shared client, and a reset run after each test. */
+		__client: client,
+		__reset: () => {
+			for (const fn of Object.values(client)) if (jest.isMockFunction(fn)) fn.mockClear()
+			client.optedOut = false
+			hooks.useFeatureFlag.mockReset().mockReturnValue(undefined)
+			hooks.useFeatureFlags.mockReset().mockReturnValue(undefined)
+			hooks.useFeatureFlagWithPayload.mockReset().mockReturnValue([undefined, undefined])
+		},
+	}
+})
+
 // Tests never reach the network. A test that needs `fetch` mocks it itself (after this beforeEach).
 beforeEach(() => {
 	jest
@@ -286,5 +340,6 @@ afterEach(() => {
 	focusManager.setEventListener(() => undefined)
 	focusManager.setFocused(undefined)
 	jest.requireMock<{ __clearAllStores: () => void }>('react-native-mmkv').__clearAllStores()
+	jest.requireMock<{ __reset: () => void }>('posthog-react-native').__reset()
 	jest.restoreAllMocks()
 })

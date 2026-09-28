@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { Alert, ScrollView, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { isAnalyticsConfigured } from '@app/api/analytics'
 import {
 	AppButton,
 	AppText,
@@ -11,7 +12,9 @@ import {
 	ListRow,
 	ScreenHeader,
 	SectionHeader,
+	Toggle,
 } from '@app/components/shared'
+import { useAnalyticsOptOut } from '@app/hooks/useAnalyticsOptOut'
 import useAuth, { useAuthStore } from '@app/hooks/useAuth'
 import { type ThemeMode, useThemeStore } from '@app/store/themeStore'
 
@@ -36,6 +39,8 @@ export default function Settings() {
 
 	const currentLang = (i18n.resolvedLanguage ?? i18n.language ?? 'en').slice(0, 2)
 	const currentLangLabel = LANGUAGE_LABELS[currentLang] ?? currentLang.toUpperCase()
+
+	const analytics = useAnalyticsOptOut()
 
 	const themeMode = useThemeStore(s => s.mode)
 	const setThemeMode = useThemeStore(s => s.setMode)
@@ -89,6 +94,32 @@ export default function Settings() {
 						<ListRow last onPress={showLanguagePicker} title={t('changeLanguage')} value={currentLangLabel} />
 					</ListGroup>
 				</View>
+
+				{isAnalyticsConfigured ? (
+					<>
+						<SectionHeader title={t('settingsScreen.privacy')} />
+						<View className="px-4">
+							<ListGroup>
+								<ListRow
+									first
+									last
+									subtitle={t('settingsScreen.shareAnalyticsHint')}
+									title={t('settingsScreen.shareAnalytics')}
+									trailing={
+										<View className="ml-3">
+											<Toggle
+												accessibilityLabel={t('settingsScreen.shareAnalytics')}
+												onValueChange={analytics.setEnabled}
+												testID="settings-analytics"
+												value={analytics.enabled}
+											/>
+										</View>
+									}
+								/>
+							</ListGroup>
+						</View>
+					</>
+				) : null}
 
 				<View className="mt-8 px-4">
 					<AppButton fullWidth onPress={() => !loading && signOut()} variant="destructive">
