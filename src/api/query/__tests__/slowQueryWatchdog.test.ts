@@ -3,8 +3,6 @@ import { onlineManager, QueryClient, QueryObserver } from '@tanstack/react-query
 import { AppState, type AppStateStatus } from 'react-native'
 import { startSlowQueryWatchdog } from '../slowQueryWatchdog'
 
-jest.mock('@sentry/react-native', () => ({ captureMessage: jest.fn() }))
-
 describe('startSlowQueryWatchdog', () => {
 	let queryClient: QueryClient
 	let stop: (() => void) | null = null

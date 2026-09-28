@@ -84,6 +84,9 @@ module.exports = {
 			rules: {
 				'testing-library/render-result-naming-convention': 'off',
 				'testing-library/no-unnecessary-act': 'warn',
+				// RNTL 14: fireEvent is async (the plugin's react config assumes the sync DOM fireEvent).
+				'testing-library/no-await-sync-events': 'off',
+				'testing-library/await-async-events': ['error', { eventModule: ['fireEvent', 'userEvent'] }],
 			},
 		},
 	],
