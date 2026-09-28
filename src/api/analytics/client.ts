@@ -69,6 +69,8 @@ export function resetAnalytics() {
  * same id); only `SIGNED_OUT` resets, so a signed-out cold start doesn't mint a new anonymous id.
  */
 export function syncAnalyticsUser(uid: string | null, event: string) {
+	// The disabled client only warns on every call.
+	if (!isAnalyticsConfigured) return
 	if (uid) posthog.identify(uid)
 	if (event === 'SIGNED_OUT') resetAnalytics()
 }
