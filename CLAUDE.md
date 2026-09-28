@@ -1,6 +1,6 @@
 # Skeleton Claude Guide
 
-Expo / React Native template (SDK 55, RN 0.83, React 19, Expo Router, NativeWind, Supabase). Forks inherit this setup.
+Expo / React Native template (SDK 57, RN 0.86, React 19, Expo Router, NativeWind, Supabase). Forks inherit this setup.
 
 ## Working rules (always)
 
@@ -14,7 +14,7 @@ Expo / React Native template (SDK 55, RN 0.83, React 19, Expo Router, NativeWind
 - **Git** follows `.claude/rules/git-safety.md`: no commits without a grant; match the repo's commit/PR style; never AI attribution (hooks enforce).
 - **Denied = stop.** Never route around a permission rule, hook, or classifier denial. Explain what was blocked and let the user decide.
 - **Secrets.** `.env*` reads are blocked. Use values through tools (`npx dotenv -e .env -- …`) and print only booleans, hashes, or prefixes.
-- **Local truth first.** Code and `node_modules` > local docs > MCP > web (`.claude/rules/mcp-routing.md`). No unrequested network calls to project backends.
+- **Local truth first.** Code and `node_modules` > local docs > MCP > web (`.claude/rules/mcp-routing.md`). Requests to the project's own Supabase project (the one in `.mcp.json` / `.env`) are **opt-in per session**: ask once, then MCP reads, logs, advisors and app traffic are allowed for the rest of that session. Writes/migrations need a per-action ask. Other backends and untrusted endpoints: ask first.
 - **Session continuity.** Update the plan at meaningful milestones. Start fresh when context becomes unwieldy, with status and verification evidence preserved.
 - Don't substitute a different abstraction than requested (hook vs component). If unsure, ask.
 
@@ -27,4 +27,4 @@ Expo / React Native template (SDK 55, RN 0.83, React 19, Expo Router, NativeWind
 
 ## Commands
 
-`.claude/rules/commands.md`. Gate: `yarn run check` (on Yarn 1, bare `yarn check` is the lockfile validator).
+`.claude/rules/commands.md`. Gate: `yarn check` (lint + test).

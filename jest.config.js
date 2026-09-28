@@ -11,7 +11,6 @@ module.exports = {
 			(?!((jest-)?
 			@expo(nent)?/.*|
 			@react-native(-community)?|
-			@react-navigation/.*|
 			@sentry/react-native|
 			expo(nent)?|
 			expo-modules-core|
@@ -20,7 +19,8 @@ module.exports = {
 			react-native-reanimated|
 			react-native-svg|
 			react-native-worklets|
-			react-navigation|
+			react-native-drawer-layout|
+			standard-navigation|
 		/*)/)`,
 	],
 	testEnvironment: 'node',

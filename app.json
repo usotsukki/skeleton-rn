@@ -62,6 +62,9 @@
 				{
 					"ios": {
 						"useFrameworks": "static"
+					},
+					"android": {
+						"usePrecompiledHeaders": true
 					}
 				}
 			],
@@ -87,7 +90,10 @@
 				{
 					"initialOrientation": "DEFAULT"
 				}
-			]
+			],
+			"@react-native-community/datetimepicker",
+			"expo-font",
+			"expo-status-bar"
 		]
 	}
 }

@@ -12,7 +12,9 @@ You verify one described behavior on a device and report. The parent gives: plat
 ## Rules
 
 - **Never** sign into real accounts, enter credentials, accept purchases, or change device/account settings. If a step needs it, stop and report what the user must do.
+- App signed out and the check needs a session? Stop and report `blocked: run yarn e2e:sign-in` — the user runs it.
 - Don't uninstall the app or wipe the simulator. Don't rebuild unless the prompt says so (builds: `yarn ios` / `yarn android`, `LANG=en_US.UTF-8`, JDK 17).
+- Never tap Sign Out / Delete / destructive controls unless the check is about them. After a tap that navigates, wait for the transition and screenshot before the next tap: the next screen may have a destructive button under the same point.
 - No blind retries: if a tap misses, re-read the screen (screenshot or `uiautomator dump`) before the next action.
 - Save artifacts under the scratch dir given by the parent (else `/tmp/device-check/`). Downscale images before reading them: `sips -Z 1400 <png>`.
 

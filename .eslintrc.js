@@ -34,6 +34,18 @@ module.exports = {
 		'prefer-object-spread': 'error',
 		'no-duplicate-imports': 'error',
 		'no-multi-assign': 'error',
+		// SDK 56+: expo-router no longer ships React Navigation; its APIs live in expo-router, expo-router/drawer and expo-router/react-navigation.
+		'no-restricted-imports': [
+			'error',
+			{
+				patterns: [
+					{
+						group: ['@react-navigation/*'],
+						message: 'Import from expo-router (or expo-router/drawer, expo-router/react-navigation).',
+					},
+				],
+			},
+		],
 
 		'prefer-rest-params': 'warn',
 		'prefer-spread': 'warn',

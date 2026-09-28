@@ -1,5 +1,5 @@
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
-import { useHeaderHeight } from '@react-navigation/elements'
+import { useHeaderHeight } from 'expo-router/react-navigation'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Platform, View } from 'react-native'
@@ -66,7 +66,7 @@ export default function Home() {
 	}
 
 	return (
-		<View style={{ flex: 1 }}>
+		<View style={{ flex: 1 }} testID="home-screen">
 			<KeyboardScrollView className="bg-bg-grouped" contentContainerStyle={{ paddingTop, paddingBottom }}>
 				<View className="px-4 pt-2">
 					<Card className="bg-bg-elevated">

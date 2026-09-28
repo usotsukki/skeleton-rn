@@ -42,7 +42,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
-          cache: yarn
+
+      # Yarn 4 via packageManager; setup-node's `cache: yarn` only understands Yarn 1.
+      - name: Enable corepack
+        run: corepack enable
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.yarn/berry/cache
+          key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+          restore-keys: yarn-${{ runner.os }}-
 
       - name: Setup EAS
         uses: expo/expo-github-action@v8
@@ -51,7 +60,9 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
+        env:
+          COREPACK_ENABLE_DOWNLOAD_PROMPT: 0
 
       - name: Create update
         run: eas update --channel production --environment production --non-interactive --auto

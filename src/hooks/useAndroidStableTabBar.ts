@@ -1,4 +1,4 @@
-import { useFocusEffect } from '@react-navigation/native'
+import { useFocusEffect } from 'expo-router/react-navigation'
 import { useCallback } from 'react'
 import { Platform } from 'react-native'
 import { AndroidSoftInputModes, KeyboardController } from 'react-native-keyboard-controller'

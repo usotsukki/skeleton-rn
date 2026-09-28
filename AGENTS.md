@@ -2,7 +2,7 @@
 
 Tool-agnostic entry point for AI coding agents (Codex, Cursor, Claude Code). Skeleton is an Expo / React Native template — fork into a product repo, then layer product code on top.
 
-Stack: Expo 55, React Native 0.83, React 19 (React Compiler), Expo Router, NativeWind, Zustand, TanStack React Query, Supabase, Jest + RNTL.
+Stack: Expo 57, React Native 0.86, React 19 (React Compiler), Expo Router, NativeWind, Zustand, TanStack React Query, Supabase, Jest + RNTL.
 
 ## Working rules
 

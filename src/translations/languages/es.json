@@ -106,6 +106,7 @@
 		"googleSignInMisconfigured": "El inicio de sesión con Google no está disponible en esta versión de la aplicación.",
 		"invalidEmail": "Por favor, introduzca una dirección de correo electrónico válida.",
 		"emailRateLimit": "Demasiadas solicitudes de correo. Espera unos minutos e inténtalo de nuevo.",
+		"tooManyRequests": "Demasiados intentos. Espera un momento e inténtalo de nuevo.",
 		"repo": {
 			"notFound": "No encontrado",
 			"forbidden": "No tienes permiso para hacer esto",

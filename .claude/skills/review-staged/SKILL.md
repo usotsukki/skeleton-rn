@@ -56,7 +56,7 @@ Default to one reviewer. Add a focused second reviewer only when high-impact ris
 
 ## 4. Triage and handoff
 
-The reviewer reports; the author decides. For author preflight, validate each finding against the code or plan and record **fix**, **reject with evidence**, or **unresolved**. Fix accepted findings within the task's scope. Run relevant checks after edits (`yarn run check` for code; document/skill validation for policy-only changes), then review changed portions where needed. For review-only requests, stop at findings and suggested fixes.
+The reviewer reports; the author decides. For author preflight, validate each finding against the code or plan and record **fix**, **reject with evidence**, or **unresolved**. Fix accepted findings within the task's scope. Run relevant checks after edits (`yarn check` for code; document/skill validation for policy-only changes), then review changed portions where needed. For review-only requests, stop at findings and suggested fixes.
 
 Budget: normally one review plus one focused follow-up after fixes; another round only for remaining high-severity findings. Unresolved blockers remain explicit rather than disappearing when the budget ends.
 

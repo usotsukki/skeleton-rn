@@ -1,4 +1,4 @@
-import type { NativeStackNavigationOptions } from '@react-navigation/native-stack'
+import type { NativeStackNavigationOptions } from 'expo-router'
 import type { ReactNode } from 'react'
 import { Platform, StatusBar, View } from 'react-native'
 import { AppText } from '@app/components/shared'

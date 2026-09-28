@@ -10,15 +10,15 @@
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
 		"jsx": "react-native",
-		"lib": ["ESNext"],
+		// TS 6 no longer auto-includes @types/*; lib comes from expo/tsconfig.base (DOM + ESNext).
+		"types": ["jest", "node"],
 		"moduleResolution": "bundler",
 		"resolveJsonModule": true,
 		"module": "Preserve",
 		"target": "ESNext",
-		"baseUrl": "./",
 		"paths": {
-			"@app/*": ["src/*"],
-			"@assets/*": ["assets/*"]
+			"@app/*": ["./src/*"],
+			"@assets/*": ["./assets/*"]
 		}
 	},
 	"exclude": ["node_modules", "ios", "android"],
