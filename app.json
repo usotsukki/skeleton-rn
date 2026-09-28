@@ -5,7 +5,7 @@
 		"version": "1.5.0",
 		"icon": "./assets/png/icon.png",
 		"scheme": "app",
-		"userInterfaceStyle": "dark",
+		"userInterfaceStyle": "automatic",
 		"experiments": {
 			"typedRoutes": true,
 			"tsconfigPaths": true,
@@ -15,12 +15,12 @@
 			"buildNumber": "1.5.0",
 			"bundleIdentifier": "com.example.app",
 			"backgroundColor": "#1f1e1d",
-			"userInterfaceStyle": "dark"
+			"userInterfaceStyle": "automatic"
 		},
 		"android": {
 			"package": "com.example.app",
 			"versionCode": 53010500,
-			"userInterfaceStyle": "dark",
+			"userInterfaceStyle": "automatic",
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/png/adaptive-foreground.png",
 				"backgroundImage": "./assets/png/adaptive-background.png",
@@ -43,7 +43,7 @@
 			[
 				"expo-system-ui",
 				{
-					"userInterfaceStyle": "dark",
+					"userInterfaceStyle": "automatic",
 					"backgroundColor": "#1f1e1d"
 				}
 			],

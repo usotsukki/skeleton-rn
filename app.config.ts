@@ -225,7 +225,7 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 		name,
 		slug,
 		scheme,
-		userInterfaceStyle: 'dark',
+		userInterfaceStyle: 'automatic',
 		ios: {
 			...initConfig.ios,
 			bundleIdentifier,
