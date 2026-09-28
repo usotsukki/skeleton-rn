@@ -7,7 +7,7 @@ import useAuth from '@app/hooks/useAuth'
 export default function SignIn() {
 	const { t } = useTranslation()
 	const router = useRouter()
-	const { signIn, signInWithGoogle, signInWithApple, loading } = useAuth()
+	const { signInAsync, signInWithGoogle, signInWithApple, loading, pending } = useAuth()
 
 	return (
 		<AuthScreen>
@@ -19,10 +19,12 @@ export default function SignIn() {
 					</AppButton>
 				}
 				loading={loading}
+				oauthLoading={pending.oauth}
+				submitting={pending.credentials}
 				onActionPress={() => router.replace('/SignUp')}
 				onApple={() => signInWithApple()}
 				onGoogle={() => signInWithGoogle()}
-				onSubmit={signIn}
+				onSubmit={signInAsync}
 				promptText={t('modules.auth.noAccount')}
 				submitLabel={t('signIn')}
 				subtitle={t('modules.auth.signInSubtitle')}

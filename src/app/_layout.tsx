@@ -23,9 +23,10 @@ import {
 	createQueryPersistOptions,
 	startSlowQueryWatchdog,
 } from '@app/api/query'
-import { AnimatedSplash, ErrorFallback, Toast } from '@app/components'
+import { AnimatedSplash, AppAlert, ErrorFallback, Toast } from '@app/components'
 import { SkeletonPulseProvider } from '@app/components/shared/SkeletonPulseProvider'
 import { GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID, IS_PROD, SENTRY_DEBUG, SENTRY_DSN } from '@app/env'
+import useAlert from '@app/hooks/useAlert'
 import { useAuthListener, useAuthStore } from '@app/hooks/useAuth'
 import { useAuthAutoRefresh } from '@app/hooks/useAuthAutoRefresh'
 import { useAuthDeepLink } from '@app/hooks/useAuthDeepLink'
@@ -94,6 +95,7 @@ const RootLayout = () => {
 	const authHydrated = useAuthStore(s => s.hydrated)
 	const [splashReady, setSplashReady] = useState(false)
 	const splashFinished = useSplash(s => s.isSplashFinished)
+	const alertVisible = useAlert(s => s.visible)
 	const setSplashFinished = useSplash(s => s.setSplashFinished)
 	const resolvedScheme = themeMode === 'system' ? (deviceScheme ?? 'dark') : themeMode
 	const themeVars = vars(resolvedScheme === 'dark' ? darkVars : lightVars)
@@ -170,20 +172,29 @@ const RootLayout = () => {
 								accessibilityElementsHidden={!splashFinished}
 								className="flex-1"
 								importantForAccessibility={splashFinished ? 'auto' : 'no-hide-descendants'}>
-								<SkeletonPulseProvider>
-									<Toast />
-									<BottomSheetModalProvider>
-										<ErrorBoundary fallbackRender={renderFallback} onError={onBoundaryError} onReset={onReset}>
-											<Stack
-												screenOptions={{
-													headerShown: false,
-													animation: 'fade',
-													animationDuration: 200,
-												}}
-											/>
-										</ErrorBoundary>
-									</BottomSheetModalProvider>
-								</SkeletonPulseProvider>
+								{/* While an alert is open only it is reachable by screen readers (accessibilityViewIsModal
+								    is iOS-only). The alert renders into PortalHost, outside this wrapper. */}
+								<View
+									accessibilityElementsHidden={alertVisible}
+									className="flex-1"
+									importantForAccessibility={alertVisible ? 'no-hide-descendants' : 'auto'}>
+									<SkeletonPulseProvider>
+										<Toast />
+										<BottomSheetModalProvider>
+											<ErrorBoundary fallbackRender={renderFallback} onError={onBoundaryError} onReset={onReset}>
+												<Stack
+													screenOptions={{
+														headerShown: false,
+														animation: 'fade',
+														animationDuration: 200,
+													}}
+												/>
+											</ErrorBoundary>
+											{/* Inside the sheet provider so alerts can open over bottom sheets; renders into PortalHost. */}
+											<AppAlert />
+										</BottomSheetModalProvider>
+									</SkeletonPulseProvider>
+								</View>
 								<PortalHost />
 							</View>
 							{!splashFinished && <AnimatedSplash onHidden={setSplashFinished} ready={splashReady} />}

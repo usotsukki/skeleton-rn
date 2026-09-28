@@ -11,6 +11,10 @@ interface AuthOAuthFooterProps {
 	actionLabel: string
 	onAction: () => void
 	actionTestID?: string
+	/** Any auth request is running: provider buttons are disabled. */
+	disabled?: boolean
+	/** The provider whose request is running shows a spinner. */
+	loadingProvider?: 'apple' | 'google'
 }
 
 export function AuthOAuthFooter({
@@ -20,6 +24,8 @@ export function AuthOAuthFooter({
 	actionLabel,
 	onAction,
 	actionTestID,
+	disabled,
+	loadingProvider,
 }: AuthOAuthFooterProps) {
 	const { t } = useTranslation()
 	return (
@@ -29,6 +35,8 @@ export function AuthOAuthFooter({
 				<View className="flex-row items-center justify-center gap-3">
 					<AppButton
 						accessibilityLabel={t('a11y.signInWithApple')}
+						disabled={disabled && loadingProvider !== 'apple'}
+						loading={loadingProvider === 'apple'}
 						className="h-[50px] w-[64px] rounded-2xl border border-border bg-bg-elevated px-0"
 						onPress={onApple}
 						variant="secondary">
@@ -36,6 +44,8 @@ export function AuthOAuthFooter({
 					</AppButton>
 					<AppButton
 						accessibilityLabel={t('a11y.signInWithGoogle')}
+						disabled={disabled && loadingProvider !== 'google'}
+						loading={loadingProvider === 'google'}
 						className="h-[50px] w-[64px] rounded-2xl border border-border bg-bg-elevated px-0"
 						onPress={onGoogle}
 						variant="secondary">
@@ -46,7 +56,12 @@ export function AuthOAuthFooter({
 					<AppText className="text-text-secondary" variant="ts">
 						{promptText}
 					</AppText>
-					<AppButton onPress={onAction} testID={actionTestID} textClassName="text-[14px]" variant="link">
+					<AppButton
+						disabled={disabled}
+						onPress={onAction}
+						testID={actionTestID}
+						textClassName="text-[14px]"
+						variant="link">
 						{actionLabel}
 					</AppButton>
 				</View>

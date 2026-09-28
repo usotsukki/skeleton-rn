@@ -1,28 +1,40 @@
 import { useRouter } from 'expo-router'
-import { useState } from 'react'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { View } from 'react-native'
+import { type TextInput, View } from 'react-native'
+import { getAuthFormError } from '@app/api/auth'
 import { AuthScreen } from '@app/components/auth'
-import { AppText, AuthEmailInput, FormSubmitFooter } from '@app/components/shared'
+import { focusFirstInvalid, setSubmitError, submitForm, useAppForm } from '@app/components/form'
+import { AppText } from '@app/components/shared'
 import useAuth from '@app/hooks/useAuth'
 import useToast from '@app/hooks/useToast'
+import { forgotPasswordFormOpts, forgotPasswordSchema } from '@app/utils/validators'
 
 export default function ForgotPassword() {
 	const { t } = useTranslation()
 	const router = useRouter()
 	const showToast = useToast(s => s.showToast)
 	const { sendPasswordResetEmailAsync, loading } = useAuth()
-	const [email, setEmail] = useState('')
+	const emailRef = useRef<TextInput>(null)
+	const fieldRefs = [['email', emailRef]] as const
 
-	const onSubmit = async () => {
-		try {
-			await sendPasswordResetEmailAsync({ email: email.trim() })
+	const form = useAppForm({
+		...forgotPasswordFormOpts,
+		onSubmit: async ({ value, formApi }) => {
+			try {
+				await sendPasswordResetEmailAsync(forgotPasswordSchema.parse(value))
+			} catch (error) {
+				const submitError = getAuthFormError(error)
+				if (!submitError) return
+				setSubmitError(formApi, submitError)
+				focusFirstInvalid(formApi, fieldRefs)
+				return
+			}
 			showToast(t('modules.auth.resetEmailSent'), 'success')
 			router.back()
-		} catch {
-			// onError already shows toast
-		}
-	}
+		},
+		onSubmitInvalid: ({ formApi }) => focusFirstInvalid(formApi, fieldRefs),
+	})
 
 	return (
 		<AuthScreen
@@ -32,13 +44,22 @@ export default function ForgotPassword() {
 			<AppText className="mb-6 text-text-secondary" variant="tm">
 				{t('modules.auth.forgotPasswordSubtitle')}
 			</AppText>
-			<AuthEmailInput label={t('modules.auth.email')} onChangeText={setEmail} value={email} />
+			<form.AppField name="email">
+				{field => (
+					<field.EmailField
+						inputRef={emailRef}
+						label={t('modules.auth.email')}
+						onSubmitEditing={() => submitForm(form, loading)}
+						returnKeyType="send"
+						submitBehavior="submit"
+						testID="forgot-email"
+					/>
+				)}
+			</form.AppField>
 			<View className="mt-auto">
-				<FormSubmitFooter
-					disabled={loading || !email.trim()}
-					label={t('modules.auth.sendResetEmail')}
-					onPress={onSubmit}
-				/>
+				<form.AppForm>
+					<form.SubmitButton label={t('modules.auth.sendResetEmail')} loading={loading} testID="forgot-submit" />
+				</form.AppForm>
 			</View>
 		</AuthScreen>
 	)

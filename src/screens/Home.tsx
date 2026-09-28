@@ -18,12 +18,20 @@ import {
 	SwitchInput,
 	TextField,
 } from '@app/components/shared'
+import useAlert from '@app/hooks/useAlert'
 import { useAndroidStableTabBar } from '@app/hooks/useAndroidStableTabBar'
 import { useAuthStore } from '@app/hooks/useAuth'
 import { useTabScreenInsets } from '@app/hooks/useTabScreenInsets'
 import useToast from '@app/hooks/useToast'
+import { showDeleteConfirmation } from '@app/utils/alerts'
 
 const SHEET_SNAP: (string | number)[] = ['50%']
+// Demo only: stands in for an async delete request.
+const DEMO_DELETE_MS = 600
+const wait = (ms: number) =>
+	new Promise(resolve => {
+		setTimeout(resolve, ms)
+	})
 const FORM_SHEET_SNAP: (string | number)[] = ['60%']
 
 export default function Home() {
@@ -144,6 +152,29 @@ export default function Home() {
 					</AppButton>
 					<AppButton fullWidth onPress={() => router.push('/Home/ListDemo')} variant="secondary">
 						{t('listDemo.open')}
+					</AppButton>
+					<AppButton
+						fullWidth
+						onPress={() =>
+							useAlert
+								.getState()
+								.showAlert({ title: t('homeScreen.alertTitle'), description: t('homeScreen.alertBody') })
+						}
+						variant="secondary">
+						{t('homeScreen.showAlert')}
+					</AppButton>
+					<AppButton
+						fullWidth
+						onPress={() =>
+							showDeleteConfirmation({
+								title: t('homeScreen.deleteTitle'),
+								name: t('homeScreen.demoItemName'),
+								onConfirm: () => wait(DEMO_DELETE_MS),
+								onSuccess: () => showToast(t('homeScreen.deleted'), 'success'),
+							})
+						}
+						variant="destructive">
+						{t('homeScreen.confirmDelete')}
 					</AppButton>
 				</View>
 			</KeyboardScrollView>

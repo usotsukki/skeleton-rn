@@ -145,6 +145,12 @@ export const useAuthListener = (cb: (user: AuthUser | null, event: string) => vo
 	}, [staySignedIn])
 }
 
+function oauthPending(google: boolean, apple: boolean): 'google' | 'apple' | undefined {
+	if (google) return 'google'
+	if (apple) return 'apple'
+	return undefined
+}
+
 const useAuth = () => {
 	const showToast = useToast(state => state.showToast)
 
@@ -153,14 +159,13 @@ const useAuth = () => {
 		if (message) showToast(message, 'error')
 	}
 
-	const { mutate: createUser, isPending: isCreateUserPending } = useMutation({
+	// Email/password requests: the form shows their errors inline (getAuthFormError), so no toast here.
+	const { mutateAsync: createUserAsync, isPending: isCreateUserPending } = useMutation({
 		mutationFn: ({ email, password }: { email: string; password: string }) => authCreateUser(email, password),
-		onError,
 	})
 
-	const { mutate: signIn, isPending: isSignInPending } = useMutation({
+	const { mutateAsync: signInAsync, isPending: isSignInPending } = useMutation({
 		mutationFn: ({ email, password }: { email: string; password: string }) => authSignIn(email, password),
-		onError,
 	})
 
 	const { mutate: signInWithGoogle, isPending: isSignInWithGooglePending } = useMutation({
@@ -182,22 +187,12 @@ const useAuth = () => {
 		onError,
 	})
 
-	const {
-		mutate: sendPasswordResetEmail,
-		mutateAsync: sendPasswordResetEmailAsync,
-		isPending: isSendPasswordResetEmailPending,
-	} = useMutation({
+	const { mutateAsync: sendPasswordResetEmailAsync, isPending: isSendPasswordResetEmailPending } = useMutation({
 		mutationFn: ({ email }: { email: string }) => authSendPasswordResetEmail(email),
-		onError,
 	})
 
-	const {
-		mutate: updatePassword,
-		mutateAsync: updatePasswordAsync,
-		isPending: isUpdatePasswordPending,
-	} = useMutation({
+	const { mutateAsync: updatePasswordAsync, isPending: isUpdatePasswordPending } = useMutation({
 		mutationFn: ({ password }: { password: string }) => authUpdatePassword(password),
-		onError,
 	})
 
 	const loading =
@@ -210,17 +205,24 @@ const useAuth = () => {
 		isUpdatePasswordPending
 
 	return {
-		signIn,
+		/** Rejects on failure; the caller shows the error (auth forms: inline). */
+		signInAsync,
 		signInWithGoogle,
 		signInWithApple,
-		createUser,
+		createUserAsync,
 		signOut,
 		signOutAsync,
-		sendPasswordResetEmail,
 		sendPasswordResetEmailAsync,
-		updatePassword,
 		updatePasswordAsync,
 		loading,
+		/** Which auth request is running, so the matching control can show a spinner. */
+		pending: {
+			credentials: isSignInPending || isCreateUserPending,
+			google: isSignInWithGooglePending,
+			apple: isSignInWithApplePending,
+			/** The OAuth provider whose request is running, if any. */
+			oauth: oauthPending(isSignInWithGooglePending, isSignInWithApplePending),
+		},
 	}
 }
 

@@ -50,3 +50,12 @@ Move out when:
 ## Server-data lists
 
 Render query-backed lists with `CachedList` (`src/components/shared/CachedList.tsx`): pass the `useQuery` result as `query`. It owns the loading skeleton, offline and blocking-error states, the empty state, pull-to-refresh, and the "couldn't refresh" notice over cached rows. Map errors for users with `requestErrorMessage`, never `err.message`. Demo: Home → "Open list states demo" (`src/screens/ListDemo.tsx`).
+
+## Forms and confirmations
+
+- New forms use `useAppForm` (`src/components/form`): `<form.AppField name>{f => <f.TextField />}</form.AppField>` and `<form.AppForm><form.SubmitButton /></form.AppForm>`. Add input adapters to `fields.tsx` and register them in `useAppForm.ts`; validators return i18n keys.
+- Validation: schema in `validators.onChange`. Submit is never disabled for invalid input: an invalid submit shows every error and focuses the first invalid field (`onSubmitInvalid` → `focusFirstInvalid`). A field's error shows once it was typed into and left, then updates live; fresh fields stay quiet (`getDisplayedError`).
+- Keyboard flow: every field gets `submitBehavior="submit"` (the default blurs and drops the keyboard before an invalid submit can refocus); each but the last gets `returnKeyType="next"` and `onSubmitEditing` focusing the next field's `inputRef`, the last gets `returnKeyType="go"` (or `send`) and `onSubmitEditing={() => submitForm(form, busy)}`. The keyboard closes when a submit passes validation.
+- Request errors show in the form, not a toast: catch in `onSubmit`, then `setSubmitError(formApi, { key, field? })` + `focusFirstInvalid`. A field-specific error goes under that input; anything else (wrong credentials, network, rate limit) above the submit button, announced to screen readers. Inputs are kept; the error clears on the next edit. Auth errors map via `getAuthFormError`; don't reveal whether an account exists: wrong-credential messages stay generic ("email or password"), and sign-up answers an existing email with the same "check your email" result.
+- Screens holding unsaved edits call `useUnsavedChangesGuard({ isDirty, isSubmitting })`.
+- In-app dialogs go through `useAlert().showAlert` (rendered by `AppAlert`); destructive actions use `showDeleteConfirmation`. Native `Alert.alert` only for pickers with more than two options.

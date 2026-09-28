@@ -1,4 +1,4 @@
-import { getAuthErrorMessage } from './authErrorMessages'
+import { getAuthErrorMessage, getAuthFormError } from './authErrorMessages'
 import {
 	createSupabaseUser,
 	getCurrentSupabaseAuthUser,
@@ -15,7 +15,7 @@ import type { AuthUser, CreateUserResult } from './types'
 
 export type { AuthUser, CreateUserResult }
 
-export { getAuthErrorMessage }
+export { getAuthErrorMessage, getAuthFormError }
 
 export const subscribeToAuthChanges = async (cb: (user: AuthUser | null, event: string) => void) =>
 	subscribeToSupabaseAuthChanges(cb)
