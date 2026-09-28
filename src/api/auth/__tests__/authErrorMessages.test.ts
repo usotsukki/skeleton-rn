@@ -1,4 +1,4 @@
-import { getAuthErrorMessage } from '../authErrorMessages'
+import { getAuthErrorMessage, getAuthFormError } from '../authErrorMessages'
 
 describe('getAuthErrorMessage', () => {
 	it('maps known Supabase / OAuth messages to the right i18n keys', () => {
@@ -58,5 +58,45 @@ describe('getAuthErrorMessage', () => {
 		}
 
 		spy.mockRestore()
+	})
+})
+
+describe('getAuthFormError', () => {
+	const supabaseError = (code: string, message: string) => Object.assign(new Error(message), { code })
+
+	it('keeps wrong credentials form-level and generic', () => {
+		expect(getAuthFormError(supabaseError('invalid_credentials', 'Invalid login credentials'))).toEqual({
+			key: 'error.invalidEmailOrPassword',
+			field: undefined,
+		})
+	})
+
+	it('tells an unconfirmed account to confirm the email instead of calling the password wrong', () => {
+		expect(getAuthFormError(supabaseError('email_not_confirmed', 'Email not confirmed'))?.key).toBe(
+			'error.emailNotConfirmed',
+		)
+	})
+
+	it('puts input-specific errors on their field', () => {
+		expect(getAuthFormError(supabaseError('user_already_exists', 'User already registered'))).toEqual({
+			key: 'error.emailAlreadyInUse',
+			field: 'email',
+		})
+		expect(getAuthFormError(supabaseError('email_address_invalid', 'Email address is invalid'))?.field).toBe('email')
+		const weak = (reasons: string[]) =>
+			Object.assign(supabaseError('weak_password', 'Password should be at least 8 characters.'), { reasons })
+		expect(getAuthFormError(weak(['length']))).toEqual({ key: 'error.shortPassword', field: 'password' })
+		expect(getAuthFormError(weak(['length', 'characters']))).toEqual({ key: 'error.weakPassword', field: 'password' })
+		expect(getAuthFormError(weak(['pwned']))).toEqual({ key: 'error.weakPassword', field: 'password' })
+		expect(getAuthFormError(supabaseError('same_password', 'New password should be different'))?.field).toBe('password')
+	})
+
+	it('keeps network and rate-limit errors form-level', () => {
+		expect(getAuthFormError(new Error('Network request failed'))?.field).toBeUndefined()
+		expect(getAuthFormError(supabaseError('over_request_rate_limit', 'For security purposes…'))?.field).toBeUndefined()
+	})
+
+	it('returns null when the user dismissed the flow', () => {
+		expect(getAuthFormError(new Error('The user canceled the Google sign in.'))).toBeNull()
 	})
 })

@@ -35,6 +35,10 @@ describe('emailSchema', () => {
 	})
 })
 
+it('reports only error.required for an empty email', () => {
+	expect(emailSchema.safeParse('  ').error?.issues.map(i => i.message)).toEqual(['error.required'])
+})
+
 describe('isValidEmail', () => {
 	it('returns true for valid', () => {
 		expect(isValidEmail('a@b.co')).toBe(true)

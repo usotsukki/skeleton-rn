@@ -1,11 +1,14 @@
 import { useRouter } from 'expo-router'
-import { useState } from 'react'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { View } from 'react-native'
+import { type TextInput, View } from 'react-native'
+import { getAuthFormError } from '@app/api/auth'
 import { AuthScreen } from '@app/components/auth'
-import { AppText, AuthPasswordInput, FormSubmitFooter } from '@app/components/shared'
+import { focusFirstInvalid, setSubmitError, submitForm, useAppForm } from '@app/components/form'
+import { AppText } from '@app/components/shared'
 import useAuth, { useAuthStore } from '@app/hooks/useAuth'
 import useToast from '@app/hooks/useToast'
+import { resetPasswordFormOpts } from '@app/utils/validators'
 
 export default function ResetPassword() {
 	const { t } = useTranslation()
@@ -13,21 +16,32 @@ export default function ResetPassword() {
 	const showToast = useToast(s => s.showToast)
 	const setPasswordRecoveryUserId = useAuthStore(s => s.setPasswordRecoveryUserId)
 	const { updatePasswordAsync, loading } = useAuth()
-	const [password, setPassword] = useState('')
-	const [confirm, setConfirm] = useState('')
+	const passwordRef = useRef<TextInput>(null)
+	const confirmRef = useRef<TextInput>(null)
 
-	const mismatch = password.length > 0 && confirm.length > 0 && password !== confirm
+	const fieldRefs = [
+		['password', passwordRef],
+		['confirm', confirmRef],
+	] as const
 
-	const onSubmit = async () => {
-		try {
-			await updatePasswordAsync({ password })
+	const form = useAppForm({
+		...resetPasswordFormOpts,
+		onSubmit: async ({ value, formApi }) => {
+			try {
+				await updatePasswordAsync({ password: value.password })
+			} catch (error) {
+				const submitError = getAuthFormError(error)
+				if (!submitError) return
+				setSubmitError(formApi, submitError)
+				focusFirstInvalid(formApi, fieldRefs)
+				return
+			}
 			setPasswordRecoveryUserId(null)
 			showToast(t('modules.auth.resetPasswordComplete'), 'success')
 			router.replace('/Home')
-		} catch {
-			// onError already shows toast
-		}
-	}
+		},
+		onSubmitInvalid: ({ formApi }) => focusFirstInvalid(formApi, fieldRefs),
+	})
 
 	return (
 		<AuthScreen paddingTop={64} headerLeading={{ kind: 'none' }} headerTitle={t('modules.auth.resetPasswordTitle')}>
@@ -35,20 +49,35 @@ export default function ResetPassword() {
 				{t('modules.auth.resetPasswordInstructions')}
 			</AppText>
 			<View className="gap-4">
-				<AuthPasswordInput label={t('modules.auth.password')} onChangeText={setPassword} value={password} />
-				<AuthPasswordInput
-					errorMessage={mismatch ? t('error.passwordsDoNotMatch') : undefined}
-					label={t('modules.auth.confirmPassword')}
-					onChangeText={setConfirm}
-					value={confirm}
-				/>
+				<form.AppField name="password">
+					{field => (
+						<field.PasswordField
+							inputRef={passwordRef}
+							label={t('modules.auth.password')}
+							onSubmitEditing={() => confirmRef.current?.focus()}
+							returnKeyType="next"
+							submitBehavior="submit"
+							testID="reset-password"
+						/>
+					)}
+				</form.AppField>
+				<form.AppField name="confirm">
+					{field => (
+						<field.PasswordField
+							inputRef={confirmRef}
+							label={t('modules.auth.confirmPassword')}
+							onSubmitEditing={() => submitForm(form, loading)}
+							returnKeyType="go"
+							submitBehavior="submit"
+							testID="reset-confirm"
+						/>
+					)}
+				</form.AppField>
 			</View>
 			<View className="mt-auto">
-				<FormSubmitFooter
-					disabled={loading || !password || !confirm || mismatch}
-					label={t('modules.auth.resetPasswordButton')}
-					onPress={onSubmit}
-				/>
+				<form.AppForm>
+					<form.SubmitButton label={t('modules.auth.resetPasswordButton')} loading={loading} testID="reset-submit" />
+				</form.AppForm>
 			</View>
 		</AuthScreen>
 	)

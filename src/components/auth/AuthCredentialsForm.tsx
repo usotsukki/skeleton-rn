@@ -1,18 +1,24 @@
-import { useForm } from '@tanstack/react-form'
-import type { ReactNode } from 'react'
+import { type ReactNode, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { View } from 'react-native'
-import { AppText, AuthOAuthFooter, CheckboxInput, FormSubmitFooter } from '@app/components/shared'
+import { type TextInput, View } from 'react-native'
+import { getAuthFormError } from '@app/api/auth'
+import { focusFirstInvalid, setSubmitError, submitForm, useAppForm } from '@app/components/form'
+import { AppText, AuthOAuthFooter, CheckboxInput } from '@app/components/shared'
 import { useAuthStore } from '@app/hooks/useAuth'
-import { authCredentialsFormOpts } from '@app/utils/validators'
-import { AuthFormEmailField, AuthFormPasswordField } from './AuthCredentialFields'
+import { authCredentialsFormOpts, authCredentialsSchema } from '@app/utils/validators'
 
 interface AuthCredentialsFormProps {
 	title: string
 	subtitle: string
 	submitLabel: string
+	/** Any auth request is running (disables every action). */
 	loading: boolean
-	onSubmit: (creds: { email: string; password: string }) => void
+	/** The email/password request is running (spinner on submit). */
+	submitting?: boolean
+	/** An OAuth request is running (spinner on that provider). */
+	oauthLoading?: 'apple' | 'google'
+	/** The request; the spinner stays up until it settles, and a rejection is shown in the form. */
+	onSubmit: (creds: { email: string; password: string }) => Promise<unknown>
 	onGoogle: () => void
 	onApple: () => void
 	promptText: string
@@ -26,6 +32,8 @@ export function AuthCredentialsForm({
 	subtitle,
 	submitLabel,
 	loading,
+	submitting,
+	oauthLoading,
 	onSubmit,
 	onGoogle,
 	onApple,
@@ -38,9 +46,28 @@ export function AuthCredentialsForm({
 	const staySignedIn = useAuthStore(s => s.staySignedIn)
 	const setStaySignedIn = useAuthStore(s => s.setStaySignedIn)
 
-	const form = useForm({
+	const emailRef = useRef<TextInput>(null)
+	const passwordRef = useRef<TextInput>(null)
+
+	const fieldRefs = [
+		['email', emailRef],
+		['password', passwordRef],
+	] as const
+
+	const form = useAppForm({
 		...authCredentialsFormOpts,
-		onSubmit: ({ value }) => onSubmit({ email: value.email, password: value.password }),
+		onSubmit: async ({ value, formApi }) => {
+			try {
+				// Parse so the request gets the trimmed email.
+				await onSubmit(authCredentialsSchema.parse(value))
+			} catch (error) {
+				const submitError = getAuthFormError(error)
+				if (!submitError) return
+				setSubmitError(formApi, submitError)
+				focusFirstInvalid(formApi, fieldRefs)
+			}
+		},
+		onSubmitInvalid: ({ formApi }) => focusFirstInvalid(formApi, fieldRefs),
 	})
 
 	return (
@@ -53,12 +80,30 @@ export function AuthCredentialsForm({
 			</View>
 
 			<View className="gap-4">
-				<form.Field name="email">
-					{field => <AuthFormEmailField field={field} label={t('modules.auth.email')} />}
-				</form.Field>
-				<form.Field name="password">
-					{field => <AuthFormPasswordField field={field} label={t('modules.auth.password')} />}
-				</form.Field>
+				<form.AppField name="email">
+					{field => (
+						<field.EmailField
+							inputRef={emailRef}
+							label={t('modules.auth.email')}
+							onSubmitEditing={() => passwordRef.current?.focus()}
+							returnKeyType="next"
+							submitBehavior="submit"
+							testID="auth-email"
+						/>
+					)}
+				</form.AppField>
+				<form.AppField name="password">
+					{field => (
+						<field.PasswordField
+							inputRef={passwordRef}
+							label={t('modules.auth.password')}
+							onSubmitEditing={() => submitForm(form, loading)}
+							returnKeyType="go"
+							submitBehavior="submit"
+							testID="auth-password"
+						/>
+					)}
+				</form.AppField>
 
 				{inlineFieldsAccessory ? (
 					<View className="flex-row items-center justify-between">
@@ -74,24 +119,20 @@ export function AuthCredentialsForm({
 				)}
 			</View>
 
-			<form.Subscribe selector={state => state.canSubmit}>
-				{canSubmit => (
-					<FormSubmitFooter
-						disabled={!canSubmit || loading}
-						label={submitLabel}
-						onPress={() => {
-							form.handleSubmit().catch(() => {
-								// Invalid submit: validators already set field errors.
-							})
-						}}
-						submitTestID="auth-submit"
-					/>
-				)}
-			</form.Subscribe>
+			<form.AppForm>
+				<form.SubmitButton
+					disabled={loading && !submitting}
+					label={submitLabel}
+					loading={submitting}
+					testID="auth-submit"
+				/>
+			</form.AppForm>
 
 			<View className="mt-8">
 				<AuthOAuthFooter
 					actionLabel={actionLabel}
+					disabled={loading}
+					loadingProvider={oauthLoading}
 					onAction={onActionPress}
 					onApple={onApple}
 					onGoogle={onGoogle}

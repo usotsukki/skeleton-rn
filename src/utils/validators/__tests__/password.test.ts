@@ -5,6 +5,11 @@ describe('passwordSchema', () => {
 		expect(passwordSchema.safeParse('secret1').success).toBe(true)
 	})
 
+	it('rejects an empty password with only error.required', () => {
+		const result = passwordSchema.safeParse('')
+		expect(result.error?.issues.map(i => i.message)).toEqual(['error.required'])
+	})
+
 	it('rejects shorter than 6 chars with error.shortPassword', () => {
 		const result = passwordSchema.safeParse('short')
 		expect(result.success).toBe(false)

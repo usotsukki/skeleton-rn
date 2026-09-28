@@ -14,7 +14,17 @@
 			"cancel": "Cancel",
 			"somethingWentWrong": "Something went wrong",
 			"great": "Great",
-			"done": "Done"
+			"done": "Done",
+			"gotIt": "Got it",
+			"delete": "Delete",
+			"error": "Something went wrong",
+			"deleteConfirmMessage": "Delete “{{name}}”? This can’t be undone.",
+			"unsavedChanges": {
+				"title": "Discard changes?",
+				"message": "You have unsaved changes. If you leave, they’ll be lost.",
+				"keepEditing": "Keep editing",
+				"discard": "Discard"
+			}
 		},
 		"auth": {
 			"welcomeSubtitle": "A modern Expo + Supabase template.",
@@ -37,7 +47,10 @@
 			"resetPasswordComplete": "Password changed successfully.",
 			"noAccount": "Don't have an account?",
 			"alreadyHaveAccount": "Already have an account?",
-			"confirmPassword": "Confirm Password"
+			"confirmPassword": "Confirm Password",
+			"checkEmailTitle": "Check your email",
+			"checkEmailBody": "If {{email}} isn't registered yet, we sent it a confirmation link. Open it to finish signing up, then sign in. Already have an account? Sign in instead.",
+			"goToSignIn": "Go to sign in"
 		}
 	},
 	"homeScreen": {
@@ -66,7 +79,14 @@
 		"openFormSheet": "Open form sheet",
 		"formSheetTitle": "Form sheet",
 		"formSheetSubmit": "Submit",
-		"formSheetSubmitted": "Form submitted."
+		"formSheetSubmitted": "Form submitted.",
+		"showAlert": "Show alert",
+		"alertTitle": "All set",
+		"alertBody": "This is the in-app alert.",
+		"confirmDelete": "Confirm delete",
+		"deleteTitle": "Delete item",
+		"demoItemName": "Demo item",
+		"deleted": "Deleted"
 	},
 	"settingsScreen": {
 		"preferences": "Preferences",
@@ -104,8 +124,11 @@
 		"required": "Required",
 		"wrongEmailFormat": "Please enter a valid email address",
 		"shortPassword": "Password must be at least 6 characters long",
+		"weakPassword": "Choose a stronger password.",
+		"samePassword": "Choose a password different from your current one.",
 		"passwordsDoNotMatch": "Passwords don't match",
 		"invalidEmailOrPassword": "Invalid email or password",
+		"emailNotConfirmed": "Confirm your email first. Open the link we sent you, then sign in.",
 		"emailAlreadyInUse": "The email address is already in use by another account",
 		"passwordResetLinkInvalid": "Password reset link is invalid or expired",
 		"networkError": "Network error. Please check your connection.",

@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/react-native'
-import { Alert } from 'react-native'
 import { RepoError } from '@app/api/db/errors'
+import useAlert from '@app/hooks/useAlert'
 import { repoErrorMessage } from '../repoErrorMessage'
 import { showOperationErrorAlert } from '../showOperationErrorAlert'
 
@@ -20,7 +20,6 @@ describe('repoErrorMessage', () => {
 
 describe('showOperationErrorAlert', () => {
 	beforeEach(() => {
-		jest.spyOn(Alert, 'alert').mockImplementation(() => undefined)
 		jest.spyOn(console, 'warn').mockImplementation(() => undefined)
 	})
 
@@ -28,11 +27,12 @@ describe('showOperationErrorAlert', () => {
 		jest.restoreAllMocks()
 	})
 
-	it('shows a generic body, never err.message, and reports the error', () => {
+	it('shows an error alert with the caller title only, never err.message, and reports the error', () => {
 		const leaky = new Error('duplicate key value violates unique constraint "items_name_key"')
 		showOperationErrorAlert('Could not save', leaky)
 
-		expect(Alert.alert).toHaveBeenCalledWith('Could not save', 'modules.common.somethingWentWrong')
+		expect(useAlert.getState()).toMatchObject({ visible: true, title: 'Could not save', variant: 'error' })
+		expect(useAlert.getState().description).toBeUndefined()
 		expect(Sentry.captureException).toHaveBeenCalledWith(leaky)
 	})
 })

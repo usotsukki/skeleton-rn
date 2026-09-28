@@ -14,7 +14,17 @@
 			"cancel": "Cancelar",
 			"somethingWentWrong": "Algo salió mal",
 			"great": "Genial",
-			"done": "Hecho"
+			"done": "Hecho",
+			"gotIt": "Entendido",
+			"delete": "Eliminar",
+			"error": "Algo salió mal",
+			"deleteConfirmMessage": "¿Eliminar «{{name}}»? No se puede deshacer.",
+			"unsavedChanges": {
+				"title": "¿Descartar cambios?",
+				"message": "Tienes cambios sin guardar. Si sales, se perderán.",
+				"keepEditing": "Seguir editando",
+				"discard": "Descartar"
+			}
 		},
 		"auth": {
 			"welcomeSubtitle": "Una plantilla moderna de Expo + Supabase.",
@@ -37,7 +47,10 @@
 			"resetPasswordComplete": "Contraseña cambiada correctamente.",
 			"noAccount": "¿No tienes una cuenta?",
 			"alreadyHaveAccount": "¿Ya tienes una cuenta?",
-			"confirmPassword": "Confirmar Contraseña"
+			"confirmPassword": "Confirmar Contraseña",
+			"checkEmailTitle": "Revisa tu correo",
+			"checkEmailBody": "Si {{email}} aún no está registrado, le enviamos un enlace de confirmación. Ábrelo para terminar el registro y luego inicia sesión. ¿Ya tienes una cuenta? Inicia sesión.",
+			"goToSignIn": "Ir a iniciar sesión"
 		}
 	},
 	"homeScreen": {
@@ -66,7 +79,14 @@
 		"openFormSheet": "Abrir hoja de formulario",
 		"formSheetTitle": "Hoja de formulario",
 		"formSheetSubmit": "Enviar",
-		"formSheetSubmitted": "Formulario enviado."
+		"formSheetSubmitted": "Formulario enviado.",
+		"showAlert": "Mostrar alerta",
+		"alertTitle": "Listo",
+		"alertBody": "Esta es la alerta de la app.",
+		"confirmDelete": "Confirmar eliminación",
+		"deleteTitle": "Eliminar elemento",
+		"demoItemName": "Elemento de demo",
+		"deleted": "Eliminado"
 	},
 	"settingsScreen": {
 		"preferences": "Preferencias",
@@ -104,8 +124,11 @@
 		"required": "Requerido",
 		"wrongEmailFormat": "Por favor, introduzca una dirección de correo electrónico válida",
 		"shortPassword": "La contraseña debe tener al menos 6 caracteres",
+		"weakPassword": "Elige una contraseña más segura.",
+		"samePassword": "Elige una contraseña distinta de la actual.",
 		"passwordsDoNotMatch": "Las contraseñas no coinciden",
 		"invalidEmailOrPassword": "Correo electrónico o contraseña inválidos",
+		"emailNotConfirmed": "Primero confirma tu correo. Abre el enlace que te enviamos y luego inicia sesión.",
 		"emailAlreadyInUse": "La dirección de correo electrónico ya está en uso por otra cuenta",
 		"passwordResetLinkInvalid": "El enlace de restablecimiento de contraseña no es válido o ha expirado",
 		"networkError": "Error de red. Por favor, comprueba tu conexión.",

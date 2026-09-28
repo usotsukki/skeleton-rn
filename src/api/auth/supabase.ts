@@ -52,6 +52,9 @@ export async function signInWithSupabase(email: string, password: string): Promi
 export async function createSupabaseUser(email: string, password: string): Promise<CreateUserResult> {
 	const { data, error } = await supabase.auth.signUp({ email, password })
 	if (error) throw error
+	// With email confirmation on, Supabase answers an existing address like a new one (obfuscated
+	// user, no session) so sign-up can't reveal which emails have accounts; keep it that way and show
+	// the same "check your email" result.
 	return { user: toAuthUser(data.user), hasSession: !!data.session }
 }
 
