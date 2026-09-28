@@ -1,9 +1,8 @@
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
-import { useHeaderHeight } from 'expo-router/react-navigation'
+import { useRouter } from 'expo-router'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Platform, View } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { View } from 'react-native'
 import {
 	AppButton,
 	AppText,
@@ -21,26 +20,22 @@ import {
 } from '@app/components/shared'
 import { useAndroidStableTabBar } from '@app/hooks/useAndroidStableTabBar'
 import { useAuthStore } from '@app/hooks/useAuth'
+import { useTabScreenInsets } from '@app/hooks/useTabScreenInsets'
 import useToast from '@app/hooks/useToast'
 
 const SHEET_SNAP: (string | number)[] = ['50%']
 const FORM_SHEET_SNAP: (string | number)[] = ['60%']
-const IOS_TAB_BAR_BASE_HEIGHT = 49
-const isIOS = Platform.OS === 'ios'
 
 export default function Home() {
 	const { t } = useTranslation()
-	const headerHeight = useHeaderHeight()
-	const insets = useSafeAreaInsets()
+	const router = useRouter()
+	const { paddingTop, paddingBottom } = useTabScreenInsets()
 	const user = useAuthStore(s => s.user)
 	const showToast = useToast(s => s.showToast)
 	const sheetRef = useRef<BottomSheetModal>(null)
 	const formSheetRef = useRef<BottomSheetModal>(null)
 
 	useAndroidStableTabBar()
-
-	const paddingTop = isIOS ? headerHeight : 0
-	const paddingBottom = isIOS ? insets.bottom + IOS_TAB_BAR_BASE_HEIGHT + 12 : 110
 
 	const displayName = user?.displayName ?? null
 	const email = user?.email ?? null
@@ -146,6 +141,9 @@ export default function Home() {
 					</AppButton>
 					<AppButton fullWidth onPress={() => formSheetRef.current?.present()} variant="secondary">
 						{t('homeScreen.openFormSheet')}
+					</AppButton>
+					<AppButton fullWidth onPress={() => router.push('/Home/ListDemo')} variant="secondary">
+						{t('listDemo.open')}
 					</AppButton>
 				</View>
 			</KeyboardScrollView>

@@ -84,14 +84,15 @@
 		"resume": "Reanudar"
 	},
 	"a11y": {
+		"back": "Atrás",
 		"decrease": "Disminuir {{label}}",
-		"increase": "Aumentar {{label}}",
-		"showPassword": "Mostrar contraseña",
-		"hidePassword": "Ocultar contraseña",
 		"dismiss": "Cerrar",
+		"hidePassword": "Ocultar contraseña",
+		"increase": "Aumentar {{label}}",
+		"openMenu": "Abrir menú de navegación",
+		"showPassword": "Mostrar contraseña",
 		"signInWithApple": "Iniciar sesión con Apple",
-		"signInWithGoogle": "Iniciar sesión con Google",
-		"openMenu": "Abrir menú de navegación"
+		"signInWithGoogle": "Iniciar sesión con Google"
 	},
 	"info": {
 		"offline": "Estás desconectado"
@@ -122,5 +123,23 @@
 			"upstream": "Error del servidor. Por favor, inténtelo de nuevo.",
 			"timeout": "La solicitud tardó demasiado. Por favor, inténtelo de nuevo."
 		}
+	},
+	"cachedList": {
+		"offlineTitle": "Sin conexión",
+		"offlineMessage": "Se cargará cuando vuelvas a tener conexión.",
+		"retry": "Reintentar",
+		"loading": "Cargando",
+		"emptyMessage": "Desliza hacia abajo para volver a comprobar.",
+		"refreshFailed": "No se pudo actualizar. {{message}}"
+	},
+	"listDemo": {
+		"title": "Estados de lista",
+		"open": "Abrir demo de estados de lista",
+		"normal": "Normal",
+		"failFirst": "Falla la primera carga",
+		"failRefresh": "Falla la actualización",
+		"empty": "Vacía",
+		"errorTitle": "No se pudieron cargar los elementos",
+		"emptyTitle": "Aún no hay elementos"
 	}
 }

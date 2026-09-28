@@ -10,6 +10,7 @@ export default function HomeStackLayout() {
 	return (
 		<Stack screenOptions={screenOptions}>
 			<Stack.Screen name="index" options={{ title: t('home') }} />
+			<Stack.Screen name="ListDemo" options={{ title: t('listDemo.title') }} />
 		</Stack>
 	)
 }
