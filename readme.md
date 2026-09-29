@@ -1,225 +1,165 @@
-# Skeleton
-
-Production-shaped Expo starter kit for shipping real mobile apps without spending the first week wiring auth, routing, storage, themes, forms, tests, and build plumbing.
-
-Skeleton is an opinionated Expo 57 / React Native 0.86 template with the boring-but-critical app infrastructure already in place: Supabase auth, Expo Router app shells, NativeWind UI primitives, React Query, Zustand + MMKV persistence, Sentry, i18n, maps, Skia demos, CI, EAS profiles, and a small component playground you can fork into a product.
-
-<p>
-  <img alt="Skeleton home screen" src="assets/png/screenshots/home.PNG" width="175" />
-  <img alt="Skeleton bottom modal" src="assets/png/screenshots/modal.PNG" width="175" />
-  <img alt="Skeleton map screen" src="assets/png/screenshots/map.PNG" width="175" />
-  <img alt="Skeleton Skia demo" src="assets/png/screenshots/skia-demo.PNG" width="175" />
-  <img alt="Skeleton settings screen" src="assets/png/screenshots/settings.PNG" width="175" />
+<p align="center">
+  <img src="assets/png/icon.png" alt="Skeleton" width="120" />
 </p>
 
-## What You Get
+<h1 align="center">Skeleton</h1>
 
-| Layer | Included |
-| --- | --- |
-| App shell | Expo Router route groups for auth and authenticated app flows, drawer navigation, bottom tabs, guarded redirects, splash handling |
-| Auth | Supabase email/password, Google, Apple, password reset, recovery deep links, persisted auth state |
-| UI kit | NativeWind components for buttons, text fields, auth fields, cards, avatars, list rows, skeleton pulse, toasts, bottom sheets, keyboard-aware layouts |
-| State | TanStack React Query for server state, Zustand for client state, MMKV-backed persistence |
-| Platform | React Native Maps, Shopify Skia demo, haptics, network status toasts, safe areas, gesture handler, keyboard controller |
-| Product basics | Dark/light/system theme switching, i18next language wiring, Sentry error boundary + navigation integration, PostHog analytics (screens, typed events, Settings opt-out) and feature flags |
-| Quality | TypeScript, ESLint, Prettier, Jest, React Native Testing Library, duplication checks, GitHub Actions |
-| Delivery | EAS development/production profiles, runtime version policy, update URL wiring, app identity resolved from env |
+<p align="center">
+  An Expo template that goes from an empty folder to a signed-in app on a simulator<br/>
+  with one command and no cloud accounts.
+</p>
 
-## Tech Stack
+<p align="center">
+  <a href="https://github.com/usotsukki/skeleton-rn/actions/workflows/lint-and-test.yml">
+    <img alt="Lint and test" src="https://github.com/usotsukki/skeleton-rn/actions/workflows/lint-and-test.yml/badge.svg?branch=main" />
+  </a>
+  <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-blue.svg" /></a>
+</p>
 
-- **Expo 57**, **React Native 0.86**, **React 19**, **TypeScript**
-- **Expo Router** for file-based native navigation
-- **NativeWind** + Tailwind tokens for styling
-- **Supabase** for auth and session lifecycle
-- **TanStack React Query** for server state
-- **Zustand** + **react-native-mmkv** for local state and persistence
-- **@gorhom/bottom-sheet**, **React Native Gesture Handler**, **Reanimated**, **Keyboard Controller**
-- **React Native Maps**, **Shopify React Native Skia**
-- **Sentry**, **PostHog**, **i18next**, **Zod**
-- **Jest** + **React Native Testing Library**
-- **EAS Build / Update**, GitHub Actions, Knip, lint-staged pre-commit
+Skeleton is the app you would have after the first two weeks of a new project: auth, navigation, a themed component kit, offline-tolerant lists, analytics, crash reporting, tests, CI and release builds. The backend runs on your machine in Docker, so a new app works before you have created a single account, and an AI agent can build, sign in and test it without asking you for anything.
 
-## Quick Start
+**Stack:** Expo SDK 57, React Native 0.86 (new architecture), React 19 with the React Compiler, TypeScript, Expo Router, NativeWind, TanStack Query and Form, Zustand, MMKV, Supabase, Skia, Reanimated, Sentry, PostHog, Jest, Maestro.
 
-Prerequisites:
+## Demo
 
-- Node.js 22.13+ (`.nvmrc`)
-- Yarn 4 via Corepack (`corepack enable`; version pinned in `packageManager`)
-- Xcode 26.4+ (SDK 57) and/or Android Studio (JDK 17) for native dev-client runs
-- Docker (Docker Desktop on macOS) for the local backend
-- Optional: a local `.env` (copy `.env.example`) for app identity, a hosted Supabase project, OAuth, maps, EAS, and Sentry
+| Sign in on the local backend | Components | List states |
+| --- | --- | --- |
+| <img src="docs/media/sign-in.gif" width="240" alt="Signing in as the seeded user and landing on Home"> | <img src="docs/media/components.gif" width="240" alt="Success and error toasts, a bottom sheet and an in-app alert"> | <img src="docs/media/list-states.gif" width="240" alt="A cached list: loading, pull to refresh, a failed refresh that keeps the data, and the empty state"> |
+| **Theme and language** | **Skia** | |
+| <img src="docs/media/settings.gif" width="240" alt="Switching to the light theme, to Spanish and back"> | <img src="docs/media/skia.gif" width="240" alt="An animated solar system drawn with Skia"> | |
 
-Install dependencies and run the app:
+Recorded on an iOS simulator from a development build running against the local backend.
+
+## Start a new app
+
+Requires Node 22 with corepack, Docker, and Xcode 26.4+ for iOS or the Android SDK with JDK 17 for Android.
 
 ```bash
+npx create-expo-app@latest my-app --template https://github.com/usotsukki/skeleton-rn --no-install
+cd my-app
 yarn
-yarn dev          # iOS simulator; `yarn dev android` for the emulator
+yarn rename "My App" my-app myapp com.company.myapp
+yarn dev
 ```
 
-`yarn dev` starts the local backend, Metro (on the next free port when another app holds 8081; a Metro of this project that is already running is restarted) and the native dev build. `yarn dev:stop` stops Metro and the backend. The steps also work one by one: `yarn backend:start`, `yarn start`, `yarn ios`.
+| Step | What happens |
+| --- | --- |
+| `npx create-expo-app` | Copies the template into `my-app` and makes one initial commit. None of the template's history comes along. `--no-install` leaves the install to Yarn, which the lockfile is for |
+| `yarn` | Installs dependencies with Yarn 4 (`corepack enable` provides it) |
+| `yarn rename` | Sets the name, slug, URL scheme and bundle id in `package.json`, `app.json` and the local backend config |
+| `yarn dev` | Starts the local backend, starts Metro on a free port, builds the native app and opens it. Pass `android` for the emulator |
 
-`yarn backend:start` runs Supabase in Docker (first run downloads images, a few minutes), points the app at it through `.env.local`, and seeds a dev user you can sign in with: the credentials are in `.env.e2e.example`. No cloud account is needed. `yarn backend:stop` stops it and switches the app back to the Supabase project in `.env`, if any.
+Sign in with `dev@skeleton.test` and `local-dev-password`. That user exists only in the local backend.
 
-Run a native dev client in another terminal after native projects exist:
+The first `yarn dev` downloads the backend's Docker images and compiles the native app, which takes a few minutes. Later runs take seconds. `yarn dev:stop` stops Metro and the backend.
 
-```bash
-yarn ios
-# or
-yarn android
+<details>
+<summary>Other ways to get the code</summary>
+
+| Goal | Command |
+| --- | --- |
+| A new GitHub repository with one initial commit | `gh repo create my-app --template usotsukki/skeleton-rn --private --clone` |
+| The files only, with no git repository | `npx degit usotsukki/skeleton-rn my-app` |
+
+Run `yarn` in the new folder, then continue with `yarn rename`. `yarn create expo-app` fails on a GitHub template URL (it resolves an old create-expo-app), so use `npx`.
+
+</details>
+
+## What is included
+
+| Area | What you get |
+| --- | --- |
+| Auth | Email and password, Google, Apple, password reset through deep links, a persisted session, and errors shown inline in the form |
+| Backend | Supabase with migrations, row-level security and generated TypeScript types. A sample `notes` table shows the pattern for user-owned data |
+| Navigation | Expo Router with an auth group, a drawer and native bottom tabs. Signed-out users can't reach app screens |
+| UI kit | Buttons, text fields, forms, cards, list rows, toasts, in-app alerts, bottom sheets and keyboard-aware layouts, in light and dark |
+| Data | Lists that show cached data on a cold start and keep it on screen when a refresh fails. Requests time out and report to Sentry |
+| Accessibility | Dynamic type, screen reader labels and AA contrast, checked by tests |
+| Analytics | PostHog screen views, typed events, feature flags and a Settings opt-out. Without a project, events print to the console in development |
+| Releases | EAS build and update profiles, Sentry source maps, and an environment check that fails a production build when configuration is missing |
+| Languages | English and Spanish |
+
+## How it works
+
+```mermaid
+flowchart LR
+  Routes["src/app<br/>routes only"] --> Screens["src/screens<br/>composition"]
+  Screens --> Hooks["src/hooks"]
+  Screens --> UI["src/components"]
+  Hooks --> Query["TanStack Query<br/>persisted to MMKV"]
+  Hooks --> Stores["Zustand<br/>persisted to MMKV"]
+  Query --> Api["src/api<br/>auth, db, analytics"]
+  Api --> Supabase["Supabase<br/>local in Docker, or hosted"]
 ```
 
-First run, or after native dependency/config changes:
-
-```bash
-yarn ios:rebuild
-# or
-yarn android:rebuild
+```txt
+src/app          Expo Router routes and layouts
+src/screens      screen composition
+src/components   shared UI kit, auth forms, drawer
+src/hooks        auth, toasts, alerts, feature flags, screen tracking
+src/api          auth facade, Supabase client, repository errors, analytics
+src/store        Zustand stores and the persist helper
+src/env          every environment variable, validated with Zod
+supabase         local backend config, migrations, seed user
+maestro          end-to-end flows
 ```
 
-`yarn start` runs `expo start --dev-client`, so this template expects a custom dev client rather than Expo Go-only development.
+- Route files stay thin. Screens compose, hooks hold behaviour, and only `src/api` talks to a vendor SDK.
+- Environment variables are read in one place and validated at startup. A production build fails when a required value is missing.
+- The app reaches the local backend through `.env.local`, which `yarn dev` writes. A production bundle that still points at your machine fails to build.
+- Optional services stay out of the way until you configure them. Without a Sentry token the upload is skipped, without a Google client id the Google button is hidden, and without a PostHog token nothing is sent.
 
-## Environment
+## Built for AI agents
 
-Configuration is split between `app.json`, `app.config.ts`, `env.rules.json`, and your uncommitted root `.env`.
+The repository carries the rules, scripts and checks an agent needs to work without supervision.
 
-The app reads public build-time values through `EXPO_PUBLIC_*`. `env.rules.json` controls which variables must be non-empty when `EXPO_PUBLIC_NODE_ENV=production`, with separate maps for client runtime env and app config env.
-
-Core variables:
-
-| Variable | Purpose |
+| Piece | What it does |
 | --- | --- |
-| `EXPO_PUBLIC_APP_NAME` | App display name override |
-| `EXPO_PUBLIC_APP_SLUG` | Expo slug override |
-| `EXPO_PUBLIC_APP_SCHEME` | Deep link / OAuth scheme |
-| `EXPO_PUBLIC_IOS_BUNDLE_ID` | iOS bundle identifier |
-| `EXPO_PUBLIC_IOS_BUNDLE_ID_TESTING` | Optional testing bundle id |
-| `EXPO_PUBLIC_ANDROID_PACKAGE` | Android package id |
-| `EXPO_PUBLIC_ANDROID_PACKAGE_TESTING` | Optional testing package id |
-| `EXPO_PUBLIC_SUPABASE_URL` | Supabase project URL |
-| `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase anon / publishable key |
-| `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID` | Google Sign-In web client id |
-| `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID` | Google Sign-In iOS client id; `app.config.ts` also derives the iOS URL scheme from it (required for production native builds) |
-| `GOOGLE_MAPS_API_KEY_ANDROID` | Android maps key |
-| `GOOGLE_MAPS_API_KEY_IOS` | iOS maps key |
-| `EXPO_PUBLIC_SENTRY_DSN` | Optional Sentry DSN |
-| `EXPO_PUBLIC_POSTHOG_PROJECT_TOKEN` | Optional PostHog project token (`phc_…`, public). Unset = analytics and feature flags disabled |
-| `EXPO_PUBLIC_POSTHOG_HOST` | Optional PostHog ingestion host; defaults to `https://eu.i.posthog.com` (use `https://us.i.posthog.com` for US cloud) |
-| `EXPO_PUBLIC_EAS_PROJECT_ID` | EAS project id and Updates URL |
-| `EXPO_PUBLIC_EAS_OWNER` | Expo account owner |
-| `APPLE_TEAM_ID` | Apple Developer Team ID |
-| `EXPO_PUBLIC_NODE_ENV` | `development`, `testing`, or `production` |
-| `EXPO_PUBLIC_ENABLE_DEV_MODE` | Enables dev-mode behavior |
+| Rules in `.claude/rules` | Architecture, testing, debugging, git safety and which commands are safe to run |
+| `yarn dev`, `yarn dev:stop` | One command to a running app, one to stop everything the agent started |
+| Seeded local user | The agent signs in by itself. Hosted projects stay off limits unless you allow them |
+| `yarn e2e:sign-in` | Maestro signs in on iOS or Android, confirms the app is on the local backend before typing, and fails fast when it can't run |
+| `device-check` agent | Runs a described check on a simulator and returns a verdict with screenshots |
+| `review-staged` skill | Sends each change to a second model for review before it is committed |
+| Hooks | Block destructive git commands, hook bypasses and AI attribution in commits |
 
-### Backend
-
-Development uses a local Supabase stack (`supabase/`, Docker):
-
-| Command | What it does |
-| --- | --- |
-| `yarn backend:start` | Starts auth, database, REST and an email catcher (`http://127.0.0.1:54324`); `--full` adds Studio, storage and realtime. Writes the URL and publishable key to `.env.local` |
-| `yarn backend:stop` | Stops the stack and removes the `.env.local` override |
-| `yarn backend:reset` | Re-applies `supabase/migrations` and `supabase/seed.sql` (drops local data) |
-| `yarn backend:types` | Regenerates `src/api/supabase/database.types.ts` |
-
-- Schema lives in `supabase/migrations`. The `notes` table is a sample of a user-owned table with row level security; replace it with your own.
-- `.env.local` outranks `.env`, also in local release builds. A production bundle that points at a local backend fails with a message; run `yarn backend:stop` before building a release.
-- The stack listens on all network interfaces with well-known local credentials. Stop it on untrusted networks.
-- Physical devices can't reach `127.0.0.1` on your machine; use a simulator or emulator. On an Android emulator the dev app swaps `127.0.0.1` for `10.0.2.2` (the emulator's name for your machine) by itself.
-
-For production, create your own Supabase project, push the migrations (`yarn supabase db push`), add OAuth providers, and configure redirect URLs to match your app scheme and production domains.
-
-## Project Map
-
-| Path | Role |
-| --- | --- |
-| `src/app` | Expo Router routes only: auth group, app group, drawer, tabs, per-screen route files |
-| `src/screens` | Screen composition and orchestration |
-| `src/components/shared` | Reusable UI primitives and form pieces |
-| `src/components/auth` | Auth screen/form composition |
-| `src/components/drawer` | Drawer content and menu trigger |
-| `src/api/auth` | Auth facade over Supabase and OAuth helpers |
-| `src/api/supabase` | Supabase client and deep-link helpers |
-| `src/api/db` | Data/repository error boundaries |
-| `src/api/analytics` | PostHog client, typed events (`trackEvent`), feature-flag registry |
-| `src/hooks` | Auth, splash, toasts, haptics, network, app-state, and navigation hooks |
-| `src/store` | Zustand stores and persisted theme state |
-| `src/storage` | MMKV instances and typed storage wrapper |
-| `src/theme` | Color tokens and NativeWind theme vars |
-| `src/translations` | i18next setup and language JSON |
-| `src/utils` | Validators, error helpers, Sentry helpers, test utilities |
-| `src/metro` | Metro-only shims |
-
-`src/types` and `src/features` are reserved conventions for larger products. Add them when a domain grows beyond screens plus API boundaries.
-
-## Starter Screens
-
-- **Welcome / Sign in / Sign up / Forgot password / Reset password**: Supabase auth flows with shared credential fields and provider buttons.
-- **Home**: UI playground for buttons, text inputs, auth fields, checkbox, switch, toasts, and bottom sheets.
-- **Map**: React Native Maps example with a marker and app-configured platform keys.
-- **Skia**: Animated solar-system canvas with speed, pause, and planet controls.
-- **Settings**: Profile summary, language picker, theme picker, and sign out.
+`AGENTS.md` is the entry point for tools other than Claude Code.
 
 ## Scripts
 
-| Command | Use |
+| Script | Runs |
 | --- | --- |
-| `yarn start` | Start Expo dev server for a dev client |
-| `yarn check` | Project gate: all `lint:*` checks, then Jest (read-only, never rewrites files) |
-| `yarn lint:ts` | TypeScript check |
-| `yarn lint:js` | ESLint, fails on any warning |
-| `yarn lint:format` | Prettier check |
-| `yarn lint:unused` | Knip: unused files, dependencies, exports |
-| `yarn fix` | Prettier write + ESLint `--fix` |
-| `yarn test` | Jest tests under `src`, with `TZ=UTC` |
-| `yarn test:coverage` | Jest with coverage report in `coverage/` |
-| `yarn duplication:check` | jscpd copy/paste report |
-| `yarn ios` / `yarn android` | Run native app after native projects exist |
-| `yarn ios:rebuild` / `yarn android:rebuild` | Prebuild then run |
-| `yarn eas-ios` / `yarn eas-android` | Development EAS builds |
-| `yarn eas-ios:prod` / `yarn eas-android:prod` | Production EAS builds |
-| `yarn eas-update:prod` | Production EAS update |
-| `yarn eas-deploy:preview` / `yarn eas-deploy:prod` | EAS web deploy commands |
-| `yarn nuke` | Destructive deep clean for dependencies/native artifacts |
+| `yarn dev [ios\|android]` | Local backend, Metro and the native app |
+| `yarn dev:stop` | Stops this project's Metro and the local backend |
+| `yarn check` | Everything CI runs: types, ESLint, Prettier, Knip, then Jest |
+| `yarn fix` | Prettier and ESLint autofix |
+| `yarn test` | Jest in UTC |
+| `yarn backend:reset` | Re-applies the migrations and the seed |
+| `yarn backend:types` | Regenerates the database types after a migration |
+| `yarn e2e:sign-in [--android]` | Maestro sign-in on the running simulator or emulator |
+| `yarn rename` | Sets the app identity |
 
-## Testing And CI
+## Testing
 
-- Unit and component tests use Jest + React Native Testing Library.
-- Test setup lives in `src/utils/test-utils/setup.ts`.
-- Auth, env validation, screen, validator, and Skia config tests are included.
-- Pre-commit (husky + lint-staged) runs ESLint `--fix`, Prettier, then a project-wide `tsc` on staged JS/TS; commit messages go through commitlint.
-- GitHub Actions (`lint-and-test.yml`) runs on pull requests, pushes to `main`, and manual dispatch: ESLint, TypeScript, Prettier, Knip, Jest with a coverage summary, jscpd, and commitlint over the PR's commits. Node version comes from `.nvmrc`.
-- Knip config (`knip.jsonc`) lists the starter dependencies the template ships without using them yet; drop the ones your app doesn't need.
+- Jest and React Native Testing Library cover auth, forms, hooks, stores, screens, environment validation and theme colours: 250 tests, run with `TZ=UTC`.
+- Tests never reach the network. A request that a test doesn't stub is rejected.
+- Maestro drives the real app through sign-in on both platforms.
+- Every pull request runs ESLint, types, Prettier, Knip, Jest with coverage, a duplication check and commitlint ([workflow](.github/workflows/lint-and-test.yml)).
+- Pre-commit runs ESLint, Prettier and `tsc` on staged files, and commitlint on the message.
 
-## Design Rules
+## Going to production
 
-Skeleton's code layout rules are intentionally boring: routes stay thin, screens orchestrate, shared components stay reusable, API modules hide vendor details, and stores own synchronous client state. The canonical rulebook lives in `.claude/rules/*.md`; start with `.claude/rules/core-architecture.md` before adding major product code.
+The local backend covers development. To ship, create a Supabase project, push the migrations with `yarn supabase db push`, and put its URL and key in `.env` and in your EAS environment. Add Sentry, PostHog, Google and Apple sign-in as you need them. [docs/new-app.md](docs/new-app.md) is the full checklist.
 
-Useful defaults:
+## Docs
 
-- Put route files in `src/app`, but keep behavior in `src/screens`.
-- Prefer shared UI in `src/components/shared` when a component is product-agnostic.
-- Keep Supabase-specific logic behind `src/api/auth` and `src/api/supabase`.
-- Use React Query for async/server state and Zustand for local synchronous state.
-- Add i18n keys in every language file when user-visible copy changes.
-- Run `yarn check` before merging or tagging.
-
-## Fork Checklist
-
-After cloning or forking, replace the template identity with your product identity:
-
-- Create the repo from the template (`gh repo create <name> --template usotsukki/skeleton-rn --clone`) and open that folder as the project root in your editor or agent, so its rules, hooks and scripts apply.
-- Set the app identity: `yarn rename "<Name>" <slug> <scheme> <bundle-id>` (updates `package.json`, `app.json` and `supabase/config.toml`; values in `.env` override `app.json`).
-- Set `.env` values for Supabase, OAuth, maps, EAS, Apple team, Sentry, PostHog, and production env requirements.
-- Analytics: create a PostHog project, set `EXPO_PUBLIC_POSTHOG_PROJECT_TOKEN` (and the host for US cloud) locally and in EAS env. Add events to `src/api/analytics/events.ts` and flags to `featureFlags.ts` (then gate with `useFeatureGate`); delete the `template-demo` flag and the Home demo row. Analytics are on by default with a Settings opt-out; if you need opt-in consent (e.g. EU users), start the client opted out (`defaultOptIn: false`).
-- Tune `env.rules.json` so production fails fast when required product config is missing.
-- Confirm redirect URLs in Supabase for email recovery and OAuth callbacks.
-- Rebrand icon and splash: edit `assets/brand/skull.svg` (any 24×24 stroke icon, e.g. from Lucide) and `assets/brand/brand.json` (gradient, splash color, icon size), regenerate with `scripts/generate-brand-assets.cjs` (see its header), then mirror `splashBackground` / `splashIconSize` in the `expo-splash-screen` entry of `app.json` (a test fails if they drift). Native rebuild required.
-- Replace screenshots under `assets/png/screenshots`.
-- Generate your own Android debug key with `./scripts/generate-debug-keystore.sh` (gitignored, stays on your machine; the shared React Native debug key's SHA-1 is usually already claimed in Google Cloud for common package names). Register its SHA-1 and the EAS keystore SHA-1 (expo.dev → Credentials → Android) as Android OAuth clients in the same Google Cloud project as `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID`, or Android Google Sign-In fails with "Android clients and Web clients must be in the same project".
-- Keep or remove `"private": true` in `package.json` based on your publishing needs.
-- Update EAS owner/project values and build profiles for your release process.
-- Add product screens under `src/screens` and route to them from `src/app`. To land somewhere other than Home after sign-in, change `HOME_ROUTE` in `src/utils/navigation.ts` and put `LANDING_SCREEN_TEST_ID` on that screen's root view.
+| Doc | Covers |
+| --- | --- |
+| [new-app.md](docs/new-app.md) | Checklist from template to product: identity, brand, OAuth, analytics, EAS |
+| [environment.md](docs/environment.md) | Every environment variable, the local backend commands and their limits |
+| [core-architecture.md](.claude/rules/core-architecture.md) | Folder ownership and state rules |
+| [testing.md](.claude/rules/testing.md) | Test setup, mocks and conventions |
 
 ## License
 
-[MIT](LICENSE). Use it, fork it, ship with it. Third-party dependencies keep their own licenses.
+[MIT](LICENSE). Third-party dependencies keep their own licenses.
