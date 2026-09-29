@@ -9,6 +9,9 @@
 	"changeLanguage": "Cambiar Idioma",
 	"or": "o",
 	"modules": {
+		"map": {
+			"noApiKey": "El mapa necesita una clave de API de Google Maps en Android. Define GOOGLE_MAPS_API_KEY_ANDROID y vuelve a compilar la app."
+		},
 		"common": {
 			"close": "Cerrar",
 			"cancel": "Cancelar",

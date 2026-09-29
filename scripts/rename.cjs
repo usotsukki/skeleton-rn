@@ -28,11 +28,11 @@ const writes = []
 
 function updateJson(file, change) {
 	const filePath = path.join(root, file)
-	const source = fs.readFileSync(filePath, 'utf8')
-	const json = JSON.parse(source)
+	const json = JSON.parse(fs.readFileSync(filePath, 'utf8'))
 	change(json)
-	const indent = source.match(/^(\s+)"/m)?.[1] ?? '\t'
-	writes.push([file, `${JSON.stringify(json, null, indent)}\n`])
+	// Tabs, the repo's Prettier style: create-expo-app rewrites these two files with spaces, which fails
+	// `yarn lint:format` in a new app until they are written back.
+	writes.push([file, `${JSON.stringify(json, null, '\t')}\n`])
 }
 
 updateJson('package.json', json => {

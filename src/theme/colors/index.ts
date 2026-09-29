@@ -52,8 +52,9 @@ export const darkColors = {
 	'accent': '#d97757',
 	'accent-pressed': '#c66845',
 	'accent-soft': 'rgba(217, 119, 87, 0.18)',
-	'danger': '#ef6f4f',
-	'danger-soft': 'rgba(239, 111, 79, 0.18)',
+	// A red, not the accent's orange: errors and destructive actions must not read as brand color.
+	'danger': '#ff6b6b',
+	'danger-soft': 'rgba(255, 107, 107, 0.18)',
 	'success': '#6ec07a',
 	'warning': '#d9a45c',
 	'skeleton': '#3a3835',

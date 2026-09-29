@@ -263,6 +263,9 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 		runtimeVersion: {
 			policy: 'appVersion',
 		},
+		// Read by the Map screen from the config embedded in the binary: Google Maps on Android crashes
+		// the app when the build has no API key.
+		extra: { ...initConfig.extra, androidMapsConfigured: !!androidMapsKey },
 	}
 
 	if (projectId) {
@@ -271,7 +274,7 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 			url: `https://u.expo.dev/${projectId}`,
 		}
 		result.extra = {
-			...initConfig.extra,
+			...result.extra,
 			eas: {
 				...(typeof initConfig.extra === 'object' &&
 				initConfig.extra !== null &&

@@ -4,11 +4,52 @@
 # No-op when the app is already signed in.
 appId: ${APP_ID}
 ---
-- launchApp
+# Release build: launch the app. Dev build (DEV_URL set by the script): open it on this project's Metro,
+# since a plain launch lands on the dev-client launcher unless the client remembers a server.
+- runFlow:
+    when:
+      true: ${DEV_URL == ''}
+    commands:
+      - launchApp
+- runFlow:
+    when:
+      true: ${DEV_URL != ''}
+    commands:
+      - stopApp
+      - openLink: ${DEV_URL}
+      # Things that can sit between the link and the app: the iOS "Open in <app>?" prompt, and the
+      # dev menu on a fresh install (tap above the sheet to close it).
+      - repeat:
+          times: 30
+          while:
+            notVisible:
+              id: 'welcome-sign-in|landing-screen'
+          commands:
+            - runFlow:
+                when:
+                  visible: 'Open in .*'
+                commands:
+                  - tapOn: 'Open'
+            - runFlow:
+                when:
+                  visible: 'Fast Refresh'
+                commands:
+                  - tapOn:
+                      point: '50%,15%'
+      # expo-router logs a console error when Android starts the app from a link
+      # (useLinking.native.js, before the navigator mounts). Its LogBox toast sits over the bottom
+      # buttons and would take the next tap.
+      - runFlow:
+          when:
+            visible: ".*hasn't mounted yet.*"
+          commands:
+            - tapOn: ".*hasn't mounted yet.*"
+            - tapOn: 'Dismiss'
 - extendedWaitUntil:
     visible:
       id: 'welcome-sign-in|landing-screen'
-    timeout: 30000
+    # A dev build's first launch waits for Metro to bundle.
+    timeout: 120000
 - runFlow:
     when:
       visible:
@@ -31,6 +72,18 @@ appId: ${APP_ID}
       - hideKeyboard
       - tapOn:
           id: 'auth-submit'
+      # iOS offers to save the password in a sheet that covers the app.
+      - repeat:
+          times: 20
+          while:
+            notVisible:
+              id: 'landing-screen'
+          commands:
+            - runFlow:
+                when:
+                  visible: 'Not Now'
+                commands:
+                  - tapOn: 'Not Now'
 - extendedWaitUntil:
     visible:
       id: 'landing-screen'
