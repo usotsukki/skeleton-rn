@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Maestro sign-in with the .env.e2e test user (maestro/flows/sign-in.yaml). No-op when already signed in.
-# Usage: yarn e2e:sign-in [--android] [--hosted]
+# Usage: yarn e2e:sign-in [--android] [--hosted] [--free-port]
 #   (MAESTRO_DEVICE=<udid|serial> when several devices run; APP_ID overrides; E2E_TIMEOUT seconds, default 300)
 # Targets the local stack (yarn backend:start). --hosted allows a hosted Supabase project: the credentials go
 # to that project, so use a test user you created there.
@@ -8,10 +8,12 @@ set -euo pipefail
 
 platform=ios
 hosted=false
+free_port=false
 for arg in "$@"; do
 	case "$arg" in
 	--android) platform=android ;;
 	--hosted) hosted=true ;;
+	--free-port) free_port=true ;;
 	*)
 		echo "e2e:sign-in: unknown option $arg" >&2
 		exit 1
@@ -47,24 +49,47 @@ if [[ -z "$APP_ID" ]]; then
 	exit 1
 fi
 
-# Maestro drives iOS through port 7001 and has no flag to change it. Another Maestro CLI (often a
-# `maestro mcp` left by another project's session) holding it makes `maestro test` hang without output.
-if [[ "$platform" == ios ]]; then
-	# lsof exits 1 when nothing listens
-	owner="$(lsof -nP -iTCP:7001 -sTCP:LISTEN 2>/dev/null | awk 'NR==2 {print $1, $2}' || true)"
-	if [[ "$owner" == java\ * ]]; then
-		pid="${owner#java }"
-		echo "e2e:sign-in: port 7001 (Maestro iOS driver) is held by another Maestro process, pid ${pid}:" >&2
-		echo "  $(ps -o command= -p "$pid" | cut -c1-160)" >&2
-		echo "e2e:sign-in: stop that process, then run this again." >&2
+# Maestro talks to its driver through host port 7001 on both platforms and has no flag to change it.
+# Another Maestro CLI holding it (often a `maestro mcp` server started by an editor or agent session)
+# makes `maestro test` wait two minutes and fail with DEADLINE_EXCEEDED. --free-port stops that process.
+owner="$(lsof -nP -iTCP:7001 -sTCP:LISTEN 2>/dev/null | awk 'NR==2 {print $1, $2}' || true)"
+if [[ "$owner" == java\ * ]]; then
+	pid="${owner#java }"
+	holder="$(ps -o command= -p "$pid" | cut -c1-160)"
+	if [[ "$free_port" == true && "$holder" == *maestro* ]]; then
+		echo "e2e:sign-in: stopping the Maestro process on port 7001 (pid ${pid})" >&2
+		kill "$pid" 2>/dev/null || true
+		for _ in 1 2 3 4 5 6 7 8 9 10; do
+			[[ -z "$(lsof -nP -t -iTCP:7001 -sTCP:LISTEN 2>/dev/null || true)" ]] && break
+			sleep 0.5
+		done
+		if [[ -n "$(lsof -nP -t -iTCP:7001 -sTCP:LISTEN 2>/dev/null || true)" ]]; then
+			echo "e2e:sign-in: port 7001 is still in use after stopping pid ${pid}" >&2
+			exit 1
+		fi
+	else
+		echo "e2e:sign-in: port 7001 (Maestro driver) is held by another process, pid ${pid}:" >&2
+		echo "  ${holder}" >&2
+		echo "e2e:sign-in: stop it, or run again with --free-port (stops a Maestro process only)." >&2
 		exit 1
 	fi
+fi
+
+# A dev build opens the dev-client launcher, not the app, unless it remembers a server. With this
+# project's Metro running, the flow opens the app on it; without (release build) it only launches.
+dev_url=""
+if metro_port="$(./scripts/dev.sh port 2>/dev/null)"; then
+	scheme="$(npx expo config --json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const v=JSON.parse(s).scheme;console.log(Array.isArray(v)?v[0]:v??"")})')"
+	# The emulator's name for this machine; the simulator shares its network.
+	[[ "$platform" == android ]] && metro_host=10.0.2.2 || metro_host=localhost
+	[[ -n "$scheme" ]] && dev_url="${scheme}://expo-development-client/?url=http%3A%2F%2F${metro_host}%3A${metro_port}"
 fi
 
 timeout_s="${E2E_TIMEOUT:-300}"
 maestro ${MAESTRO_DEVICE:+--device "$MAESTRO_DEVICE"} test \
 	-e APP_ID="$APP_ID" -e E2E_EMAIL="$E2E_EMAIL" -e E2E_PASSWORD="$E2E_PASSWORD" \
 	-e LOCAL_ONLY="$([[ "$hosted" == true ]] && echo false || echo true)" \
+	-e DEV_URL="$dev_url" \
 	maestro/flows/sign-in.yaml &
 maestro_pid=$!
 (

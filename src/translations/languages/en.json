@@ -9,6 +9,9 @@
 	"changeLanguage": "Change Language",
 	"or": "or",
 	"modules": {
+		"map": {
+			"noApiKey": "The map needs a Google Maps API key on Android. Set GOOGLE_MAPS_API_KEY_ANDROID and rebuild the app."
+		},
 		"common": {
 			"close": "Close",
 			"cancel": "Cancel",

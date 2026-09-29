@@ -21,7 +21,7 @@ Agent-runnable scripts. EAS and destructive utilities are user-only and not list
 - `TZ=UTC jest src/path` — single file / pattern
 - `yarn check` — `lint && test`. Merge gate; read-only.
 - `yarn duplication:check` — jscpd duplication report
-- `yarn e2e:sign-in` — Maestro sign-in with the `.env.e2e` test user (`maestro/flows/sign-in.yaml`; no-op when signed in; `--android` for the Android package; `MAESTRO_DEVICE=<udid|serial>` with several devices). Agent-runnable against the local stack; it exits 1 when the Supabase host isn't local, and the flow asserts the app's `backend-local` marker before typing. Fails fast (exit 1, names the pid) when another Maestro process holds the iOS driver port 7001, and stops after `E2E_TIMEOUT` seconds (default 300). `--hosted` sends the credentials to the hosted project: user-run.
+- `yarn e2e:sign-in` — Maestro sign-in with the `.env.e2e` test user (`maestro/flows/sign-in.yaml`; no-op when signed in; `--android` for the Android package; `MAESTRO_DEVICE=<udid|serial>` with several devices). Agent-runnable against the local stack; it exits 1 when the Supabase host isn't local, and the flow asserts the app's `backend-local` marker before typing. Fails fast (exit 1, names the pid) when another Maestro process holds the driver port 7001 (iOS and Android); `--free-port` stops that Maestro process first (it is usually another session's `maestro mcp` server, which loses its Maestro tools). Stops after `E2E_TIMEOUT` seconds (default 300). `--hosted` sends the credentials to the hosted project: user-run.
 
 ## Fork setup
 
