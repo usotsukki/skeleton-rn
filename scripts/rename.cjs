@@ -18,10 +18,21 @@ if (!name || !slug || !scheme || !bundleId) fail('usage: yarn rename <name> <slu
 if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug)) fail(`slug "${slug}" must be lowercase letters, digits and dashes`)
 if (!/^[a-z][a-z0-9+.-]*$/.test(scheme))
 	fail(`scheme "${scheme}" must start with a letter (lowercase letters, digits, + . -)`)
-// Valid for both stores: iOS allows dashes, Android doesn't.
-if (!/^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+$/.test(bundleId)) {
-	fail(`bundle id "${bundleId}" must look like com.company.app (lowercase letters, digits, underscores)`)
+// One id for both platforms: iOS allows dashes but not underscores, Android the reverse.
+if (!/^[a-z][a-z0-9]*(\.[a-z][a-z0-9]*)+$/.test(bundleId)) {
+	fail(`bundle id "${bundleId}" must look like com.company.app (lowercase letters and digits)`)
 }
+// Java keywords and literals cannot be Android package segments, even when the characters are valid.
+const reservedSegments = new Set(
+	(
+		'abstract assert boolean break byte case catch char class const continue default do double else enum ' +
+		'extends final finally float for goto if implements import instanceof int interface long native new ' +
+		'package private protected public return short static strictfp super switch synchronized this throw ' +
+		'throws transient try void volatile while true false null'
+	).split(' '),
+)
+const reservedSegment = bundleId.split('.').find(segment => reservedSegments.has(segment))
+if (reservedSegment) fail(`bundle id "${bundleId}" contains the reserved Java word "${reservedSegment}"`)
 
 // Every file is read, checked and changed in memory first, so a bad file can't leave a half-renamed tree.
 const writes = []

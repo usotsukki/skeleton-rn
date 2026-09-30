@@ -1,4 +1,4 @@
-import { act, fireEvent, screen, waitFor } from '@testing-library/react-native'
+import { act, fireEvent, screen } from '@testing-library/react-native'
 import React from 'react'
 import { Text } from 'react-native'
 import { RepoError } from '@app/api/db/errors'
@@ -17,8 +17,17 @@ const loaded: Query = {
 	refetch: jest.fn(() => Promise.resolve()) as unknown as Query['refetch'],
 }
 
-const renderList = (query: Partial<Query>) =>
-	renderWithAppProviders(
+// FlashList marks itself loaded in a requestAnimationFrame (a 0 ms timer in Jest); run it inside act.
+const flushListLoad = () =>
+	act(
+		() =>
+			new Promise<void>(resolve => {
+				setTimeout(resolve, 0)
+			}),
+	)
+
+async function renderList(query: Partial<Query>) {
+	const view = await renderWithAppProviders(
 		<CachedList
 			emptyTitle="No places yet"
 			errorTitle="Couldn't load places"
@@ -29,6 +38,9 @@ const renderList = (query: Partial<Query>) =>
 			testID="places"
 		/>,
 	)
+	await flushListLoad()
+	return view
+}
 
 // FlashList hands `refreshing` to its ScrollView's refreshControl.
 const isRefreshing = () =>
@@ -44,6 +56,13 @@ function heldRefetch() {
 	)
 	return { refetch: refetch as unknown as Query['refetch'], calls: refetch, finish: () => act(async () => finish()) }
 }
+
+// fireEvent's promise waits for the held refetch, so it isn't awaited; a macrotask lets its act() finish.
+// waitFor here would switch the act environment off while that act is still running.
+const settle = () =>
+	new Promise(resolve => {
+		setImmediate(resolve)
+	})
 
 describe('CachedList', () => {
 	it('shows the skeleton before any data', async () => {
@@ -89,7 +108,8 @@ describe('CachedList', () => {
 		const { refetch, finish } = heldRefetch()
 		const view = await renderList({ refetch })
 		const press = fireEvent(screen.getByTestId('places'), 'refresh')
-		await waitFor(() => expect(isRefreshing()).toBe(true))
+		await settle()
+		expect(isRefreshing()).toBe(true)
 
 		await view.rerender(
 			<CachedList
@@ -126,7 +146,8 @@ describe('CachedList', () => {
 		expect(screen.getByText('cachedList.refreshFailed')).toBeOnTheScreen()
 
 		const press = fireEvent.press(screen.getByRole('button', { name: 'cachedList.retry' }))
-		await waitFor(() => expect(isRefreshing()).toBe(true))
+		await settle()
+		expect(isRefreshing()).toBe(true)
 		expect(calls).toHaveBeenCalledTimes(1)
 
 		await finish()

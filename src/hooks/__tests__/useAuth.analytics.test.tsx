@@ -31,6 +31,13 @@ async function renderAuth() {
 
 const creds = { email: 'a@b.co', password: 'secret1' }
 
+// TanStack notifies React of each mutation state change on a 0 ms timer, after the promise act() awaited
+// (and mutate() returns none): wait for those renders inside act.
+const flushNotifications = () =>
+	new Promise(resolve => {
+		setTimeout(resolve, 10)
+	})
+
 describe('useAuth analytics events', () => {
 	it('tracks an email sign-in only when it succeeds', async () => {
 		mockSignIn.mockRejectedValueOnce(new Error('Invalid login credentials')).mockResolvedValueOnce(undefined)
@@ -38,11 +45,13 @@ describe('useAuth analytics events', () => {
 
 		await act(async () => {
 			await result.current.signInAsync(creds).catch(() => undefined)
+			await flushNotifications()
 		})
 		expect(posthog.capture).not.toHaveBeenCalled()
 
 		await act(async () => {
 			await result.current.signInAsync(creds)
+			await flushNotifications()
 		})
 		expect(posthog.capture).toHaveBeenCalledWith('signed_in', { method: 'email' })
 	})
@@ -54,11 +63,13 @@ describe('useAuth analytics events', () => {
 
 		await act(async () => {
 			await result.current.createUserAsync(creds)
+			await flushNotifications()
 		})
 		expect(posthog.capture).toHaveBeenCalledWith('sign_up_submitted', undefined)
 
 		await act(async () => {
 			result.current.signInWithGoogle()
+			await flushNotifications()
 		})
 		expect(posthog.capture).toHaveBeenCalledWith('signed_in', { method: 'google' })
 	})

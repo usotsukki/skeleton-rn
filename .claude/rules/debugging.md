@@ -10,7 +10,7 @@
 
 **Loops.**
 
-- After **2 failed fixes** in the same layer: stop. Write hypothesis, evidence for/against, 2 alternative frames, the layer above/below, and the smallest failing check that defines "fixed".
+- After **2 failed fixes** in the same layer: stop. Write hypothesis, evidence for/against, 2 alternative frames, the layer above/below, and the smallest failing check that defines "fixed". Then hand that artifact to GPT-6 Astra through Codex CLI (read-only; recipe in `review-staged` §3 "Stuck") and verify its claims against `node_modules`/source before acting.
 - Before **fix #3**: a failing test (or a one-shot diagnostic with expected output) must exist and fail for the intended reason.
 - Cap any architecture/provider/ABI theory at ~10 minutes, then return to the emitter.
 - Probe before theorizing: a 5-line component or one log line beats an explanation.

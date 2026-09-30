@@ -1,6 +1,7 @@
 import type { ConfigContext, ExpoConfig } from 'expo/config'
 import { z, type ZodError } from 'zod'
 import envRules from './env.rules.json'
+import { hasAndroidMapsKey } from './src/metro/androidMapsConfig'
 
 /** Required only for native builds, and only for the platform that uses them. */
 const nativeBuildOnlyProductionKeys = new Map<string, 'ios' | 'android'>([
@@ -263,9 +264,9 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 		runtimeVersion: {
 			policy: 'appVersion',
 		},
-		// Read by the Map screen from the config embedded in the binary: Google Maps on Android crashes
-		// the app when the build has no API key.
-		extra: { ...initConfig.extra, androidMapsConfigured: !!androidMapsKey },
+		// expo-constants regenerates the embedded config on compile, but the native key changes only on
+		// prebuild. Read the generated native manifest so env changes cannot enable an unconfigured map.
+		extra: { ...initConfig.extra, androidMapsConfigured: hasAndroidMapsKey(__dirname) },
 	}
 
 	if (projectId) {
