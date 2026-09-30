@@ -46,6 +46,8 @@ Development uses a local Supabase stack (`supabase/`, Docker):
 - The stack listens on all network interfaces with well-known local credentials. Stop it on untrusted networks.
 - Physical devices can't reach `127.0.0.1` on your machine; use a simulator or emulator. On an Android emulator the dev app swaps `127.0.0.1` for `10.0.2.2` (the emulator's name for your machine) by itself.
 
+Android Maps keys are installed during prebuild. After changing `GOOGLE_MAPS_API_KEY_ANDROID`, run `yarn android:rebuild`; `yarn dev android` recompiles an existing native project. The map fallback reads a flag built from the generated Android manifest, so changing the env alone cannot enable a map whose native key is missing.
+
 ## Hosted project
 
 For production, create your own Supabase project, push the migrations (`yarn supabase db push`), add OAuth providers, and configure redirect URLs to match your app scheme and production domains.

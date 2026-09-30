@@ -23,7 +23,7 @@ The always-on rules live in [CLAUDE.md](CLAUDE.md) ("Working rules") and apply t
 
 ## Skills and agents
 
-- Skills (`.claude/skills/`): `review-staged` (plan/code/policy review + author triage; automatic Cursor preflight in Claude Code), `release-check` (release build, bundle, cold launch), `new-app-setup` (fork checklist, console safety).
+- Skills (`.claude/skills/`): `review-staged` (plan/code/policy review + author triage; Cursor/Grok preflight, Codex Sol for high-risk, Codex Astra when stuck, Sonnet 5.5 `pr-audit` for direct requests), `release-check` (release build, bundle, cold launch), `new-app-setup` (fork checklist, console safety).
 - Agents (`.claude/agents/`): `pr-audit` (read-only plan/change review), `device-check` (sim/emulator verification).
 - Asked to review as Cursor/Codex? Review directly with the `pr-audit` checklist — no subagents, no `cursor-agent` calls. Distinguish self-review from an independent or cross-model review; review alone does not authorize edits.
 

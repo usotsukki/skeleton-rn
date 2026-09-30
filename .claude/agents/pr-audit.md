@@ -2,7 +2,8 @@
 name: pr-audit
 description: Read-only review of a named plan or explicit working, staged, commit, branch, or PR change set. Used by review-staged or a direct review request. Reports confirmed defects, verification gaps, open questions, and a verdict.
 tools: Read, Glob, Grep, Bash
-model: opus
+model: claude-sonnet-5-5
+effort: high
 ---
 
 # PR audit

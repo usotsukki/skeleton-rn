@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-native'
+import { act, renderHook } from '@testing-library/react-native'
 import { Appearance, Platform } from 'react-native'
 import { useThemeStore } from '@app/store/themeStore'
 import { useSyncNativeAppearance } from '../useSyncNativeAppearance'
@@ -17,11 +17,11 @@ describe('useSyncNativeAppearance', () => {
 		const { rerender } = await renderHook(() => useSyncNativeAppearance())
 		expect(setColorScheme).toHaveBeenLastCalledWith('dark')
 
-		useThemeStore.getState().setMode('light')
+		await act(() => useThemeStore.getState().setMode('light'))
 		await rerender({})
 		expect(setColorScheme).toHaveBeenLastCalledWith('light')
 
-		useThemeStore.getState().setMode('system')
+		await act(() => useThemeStore.getState().setMode('system'))
 		await rerender({})
 		expect(setColorScheme).toHaveBeenLastCalledWith('unspecified')
 	})
