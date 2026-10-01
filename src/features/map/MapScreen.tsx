@@ -46,7 +46,7 @@ export default function Map() {
 			<MapView initialRegion={INITIAL_REGION} style={styles.map}>
 				<Marker
 					coordinate={{ latitude: INITIAL_REGION.latitude, longitude: INITIAL_REGION.longitude }}
-					title="San Francisco"
+					title={t('modules.map.markerTitle')}
 				/>
 			</MapView>
 		</View>
