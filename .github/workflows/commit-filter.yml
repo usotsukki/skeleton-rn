@@ -4,32 +4,50 @@ on:
     outputs:
       skip-eas-workflow:
         value: ${{ jobs.commit-filter.outputs.skip-workflow }}
+
+env:
+  # Run the actions' JavaScript on Node 24 ahead of GitHub retiring Node 20.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 jobs:
   commit-filter:
+    # Output: skip-workflow=true when expo.version did not change (OTA update allowed),
+    # false when it changed (a new runtime version needs a build before any update).
     name: Determine if Workflow Should Be Skipped
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     outputs:
       skip-workflow: ${{ steps.check-commit-message.outputs.skip-workflow }}
     steps:
       - uses: actions/checkout@v4
         with:
-            fetch-depth: 2
+          # The pre-push tip can be several commits back.
+          fetch-depth: 0
 
       - id: check-commit-message
         shell: bash
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
         run: |
           current_version=$(jq -r '.expo.version' app.json)
 
-          # A fork's first commit has no parent: treat it as a version change, so no OTA update is
-          # published before the first build exists.
-          if git rev-parse --verify --quiet HEAD~1 >/dev/null; then
-            previous_version=$(git show HEAD~1:app.json | jq -r '.expo.version')
-          else
-            previous_version=""
+          # Compare with the tip before this push, not HEAD~1: a push can carry several commits and the
+          # version bump need not be the last one. After a force-push that tip isn't in this clone, so
+          # fetch it. Without a usable tip (first push of the branch, a tip that's gone) count it as a
+          # version change: that skips the OTA update, so it can't reach a binary built for an older
+          # runtime. A fork's first push lands here too: no update before the first build exists.
+          previous_version=""
+          if [[ "$BEFORE_SHA" =~ ^[0-9a-f]{40}$ && ! "$BEFORE_SHA" =~ ^0+$ ]]; then
+            git cat-file -e "${BEFORE_SHA}^{commit}" 2>/dev/null ||
+              git fetch --no-tags --depth=1 origin "$BEFORE_SHA" 2>/dev/null || true
+            if git cat-file -e "${BEFORE_SHA}^{commit}" 2>/dev/null; then
+              previous_version=$(git show "${BEFORE_SHA}:app.json" 2>/dev/null | jq -r '.expo.version' || true)
+            fi
           fi
+          echo "Comparing ${previous_version:-unknown} (${BEFORE_SHA:-no previous tip}) -> ${current_version} (HEAD)"
 
           if [[ "$current_version" != "$previous_version" ]]; then
-            echo "skip-workflow=false" >> $GITHUB_OUTPUT
+            echo "skip-workflow=false" >> "$GITHUB_OUTPUT"
           else
-            echo "skip-workflow=true" >> $GITHUB_OUTPUT
+            echo "skip-workflow=true" >> "$GITHUB_OUTPUT"
           fi

@@ -12,13 +12,17 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  # Run the actions' JavaScript on Node 24 ahead of GitHub retiring Node 20.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+  HUSKY: 0
+  COREPACK_ENABLE_DOWNLOAD_PROMPT: 0
+
 jobs:
-  lint-and-test:
-    name: Lint and test
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    env:
-      HUSKY: 0
     steps:
       - uses: actions/checkout@v4
         with:
@@ -33,16 +37,29 @@ jobs:
       - name: Enable corepack
         run: corepack enable
 
-      - uses: actions/cache@v4
+      # The installed tree (patches applied), so a cache hit skips `yarn install` entirely.
+      - name: Cache node_modules
+        id: node-modules
+        uses: actions/cache@v4
         with:
-          path: ~/.yarn/berry/cache
-          key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
-          restore-keys: yarn-${{ runner.os }}-
+          path: node_modules
+          # package.json too: a hit skips `yarn install --immutable`, the check that catches a stale yarn.lock.
+          key: node-modules-${{ runner.os }}-${{ hashFiles('yarn.lock', 'package.json', '.yarnrc.yml', '.nvmrc', 'patches/**') }}
 
       - name: Install dependencies
+        if: steps.node-modules.outputs.cache-hit != 'true'
         run: yarn install --immutable
-        env:
-          COREPACK_ENABLE_DOWNLOAD_PROMPT: 0
+
+      # Incremental tsc, ESLint and Prettier caches: saved every run, restored from the latest.
+      - name: Cache lint results
+        uses: actions/cache@v4
+        with:
+          path: |
+            .eslintcache
+            node_modules/.cache/tsc
+            node_modules/.cache/prettier
+          key: lint-${{ runner.os }}-${{ hashFiles('yarn.lock', 'tsconfig.json', '.eslintrc.js', 'prettier.config.js') }}-${{ github.sha }}
+          restore-keys: lint-${{ runner.os }}-${{ hashFiles('yarn.lock', 'tsconfig.json', '.eslintrc.js', 'prettier.config.js') }}-
 
       - name: ESLint
         run: yarn lint:js
@@ -59,18 +76,6 @@ jobs:
       - name: Feature boundaries
         run: yarn lint:architecture
 
-      - name: Tests
-        run: yarn test:coverage
-
-      - name: Coverage summary
-        if: ${{ !cancelled() && hashFiles('coverage/coverage-summary.json') != '' }}
-        run: >
-          jq -r '.total | "### Coverage", "",
-          "| Statements | Branches | Functions | Lines |",
-          "| --- | --- | --- | --- |",
-          "| \(.statements.pct)% | \(.branches.pct)% | \(.functions.pct)% | \(.lines.pct)% |"'
-          coverage/coverage-summary.json >> "$GITHUB_STEP_SUMMARY"
-
       - name: Code duplication
         run: yarn duplication:check
 
@@ -80,3 +85,84 @@ jobs:
           yarn commitlint --config commitlint.config.js --verbose
           --from ${{ github.event.pull_request.base.sha }}
           --to ${{ github.event.pull_request.head.sha }}
+
+  test:
+    name: Test (shard ${{ matrix.shard }}/2)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      # Both shards report, so one failure doesn't hide the other's.
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Cache node_modules
+        id: node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          # package.json too: a hit skips `yarn install --immutable`, the check that catches a stale yarn.lock.
+          key: node-modules-${{ runner.os }}-${{ hashFiles('yarn.lock', 'package.json', '.yarnrc.yml', '.nvmrc', 'patches/**') }}
+
+      - name: Install dependencies
+        if: steps.node-modules.outputs.cache-hit != 'true'
+        run: yarn install --immutable
+
+      - name: Cache Jest transforms
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.cache/jest
+          key: jest-${{ runner.os }}-shard${{ matrix.shard }}-${{ hashFiles('yarn.lock', 'jest.config.js', 'babel.config.js') }}-${{ github.sha }}
+          restore-keys: jest-${{ runner.os }}-shard${{ matrix.shard }}-${{ hashFiles('yarn.lock', 'jest.config.js', 'babel.config.js') }}-
+
+      - name: Tests
+        run: >
+          yarn test --shard=${{ matrix.shard }}/2 --coverage --coverageReporters=json
+          --cacheDirectory=node_modules/.cache/jest
+
+      - name: Upload coverage
+        if: ${{ !cancelled() && hashFiles('coverage/coverage-final.json') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.shard }}
+          path: coverage/coverage-final.json
+          retention-days: 1
+
+  coverage:
+    name: Coverage summary
+    needs: test
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .nvmrc
+            scripts/coverage-summary.cjs
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - uses: actions/download-artifact@v4
+        # No shard uploaded coverage (e.g. both failed before Jest wrote it): nothing to summarize.
+        continue-on-error: true
+        with:
+          pattern: coverage-*
+          path: coverage
+
+      # Merges the shards' raw coverage (no install needed) into the job summary table.
+      - name: Coverage summary
+        if: ${{ hashFiles('coverage/*/coverage-final.json') != '' }}
+        run: node scripts/coverage-summary.cjs coverage/*/coverage-final.json >> "$GITHUB_STEP_SUMMARY"

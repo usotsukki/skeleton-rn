@@ -54,7 +54,7 @@ App Store review rejects binaries that link a privacy-sensitive API without its 
 
 ## 4. GitHub Actions
 
-`lint-and-test.yml` needs nothing. The EAS workflows need the `EXPO_TOKEN` secret and the repository variables listed in [environment.md → GitHub Actions](environment.md#github-actions); disable them (GitHub → Actions → workflow → Disable) until EAS is set up. Every push to `main` that doesn't change `expo.version` publishes an OTA update; a version change skips it so a build can go first.
+`lint-and-test.yml` needs nothing. The EAS workflows need the `EXPO_TOKEN` secret and the repository variables listed in [environment.md → GitHub Actions](environment.md#github-actions); disable them (GitHub → Actions → workflow → Disable) until EAS is set up. Every push to `main` that doesn't change `expo.version` publishes an OTA update; a version change (or a push whose previous tip can't be found, such as the first one) skips it so a build (manual, `eas-build.yml`) can go first.
 
 ## 5. Brand
 

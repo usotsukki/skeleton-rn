@@ -25,6 +25,10 @@ on:
 permissions:
   contents: read
 
+env:
+  # Run the actions' JavaScript on Node 24 ahead of GitHub retiring Node 20.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 jobs:
   build:
     name: Install, verify, and build
@@ -32,6 +36,8 @@ jobs:
     timeout-minutes: 20
     env:
       HUSKY: 0
+      # Job-wide: on a node_modules cache hit the first `yarn` call is the one that fetches Yarn.
+      COREPACK_ENABLE_DOWNLOAD_PROMPT: 0
       EXPO_PUBLIC_NODE_ENV: ${{ inputs.profile == 'production' && 'production' || inputs.profile == 'prod-apk' && 'production' || 'development' }}
       EXPO_PUBLIC_ENABLE_DEV_MODE: ${{ inputs.profile == 'production' && 'false' || inputs.profile == 'prod-apk' && 'false' || 'true' }}
       EXPO_PUBLIC_EAS_PROJECT_ID: ${{ vars.EXPO_PUBLIC_EAS_PROJECT_ID }}
@@ -55,11 +61,14 @@ jobs:
       - name: Enable corepack
         run: corepack enable
 
-      - uses: actions/cache@v4
+      # The installed tree (patches applied), shared with lint-and-test; a hit skips `yarn install`.
+      - name: Cache node_modules
+        id: node-modules
+        uses: actions/cache@v4
         with:
-          path: ~/.yarn/berry/cache
-          key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
-          restore-keys: yarn-${{ runner.os }}-
+          path: node_modules
+          # package.json too: a hit skips `yarn install --immutable`, the check that catches a stale yarn.lock.
+          key: node-modules-${{ runner.os }}-${{ hashFiles('yarn.lock', 'package.json', '.yarnrc.yml', '.nvmrc', 'patches/**') }}
 
       - name: Setup Expo and EAS
         uses: expo/expo-github-action@v8
@@ -68,9 +77,8 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Install dependencies
+        if: steps.node-modules.outputs.cache-hit != 'true'
         run: yarn install --immutable
-        env:
-          COREPACK_ENABLE_DOWNLOAD_PROMPT: 0
 
       - name: Run linters
         run: yarn lint

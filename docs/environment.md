@@ -52,7 +52,9 @@ Map keys and their production requirement disappear when you remove the Map demo
 - Secret `EXPO_TOKEN` (expo.dev → Account settings → Access tokens).
 - Repository variables mirroring the production `EXPO_PUBLIC_*` values (`EXPO_PUBLIC_EAS_PROJECT_ID`, `EXPO_PUBLIC_EAS_OWNER`, `EXPO_PUBLIC_APP_*`, bundle ids/packages; see the `env:` block of each workflow). Production builds fail fast when a required one is missing.
 
-Until EAS is set up, disable the two EAS workflows (GitHub → Actions → workflow → Disable). A push that changes `expo.version` skips the OTA update (the new runtime version needs a build first); any other push to `main` publishes one.
+Until EAS is set up, disable the two EAS workflows (GitHub → Actions → workflow → Disable). A push that changes `expo.version` anywhere in its commits skips the OTA update (the new runtime version needs a build first; start one from `eas-build.yml`, builds are manual). So does a push whose previous tip can't be found, such as the first push. Any other push to `main` publishes one.
+
+CI caches `node_modules` (keyed on `yarn.lock`, `package.json`, `.yarnrc.yml`, `.nvmrc` and `patches/`) and the lint caches, and runs Jest in two shards whose coverage is merged into the job summary (`scripts/coverage-summary.cjs`). If branch protection requires checks, require the `Lint` and both `Test (shard N/2)` jobs (GitHub may list them prefixed with `Lint and test /`).
 
 ## Local backend
 
