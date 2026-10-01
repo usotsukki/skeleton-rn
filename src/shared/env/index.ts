@@ -41,8 +41,14 @@ export const SENTRY_DSN = clientEnv.EXPO_PUBLIC_SENTRY_DSN
 
 export const GOOGLE_WEB_CLIENT_ID = clientEnv.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID
 export const GOOGLE_IOS_CLIENT_ID = clientEnv.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID
-/** iOS can't configure or run Google Sign-In without its client id (red box at launch, generic failure on tap). */
-export const IS_GOOGLE_SIGN_IN_CONFIGURED = Platform.OS !== 'ios' || !!GOOGLE_IOS_CLIENT_ID
+/**
+ * iOS can't configure or run Google Sign-In without its client id (red box at launch, generic failure on
+ * tap); Android returns an ID token only when the web client id is configured. No native module on web.
+ */
+export const IS_GOOGLE_SIGN_IN_CONFIGURED =
+	Platform.OS === 'ios' ? !!GOOGLE_IOS_CLIENT_ID : Platform.OS === 'android' && !!GOOGLE_WEB_CLIENT_ID
+/** `expo-apple-authentication` ships only for Apple platforms; elsewhere `signInAsync` throws. */
+export const IS_APPLE_SIGN_IN_AVAILABLE = Platform.OS === 'ios'
 
 export const EAS_PROJECT_ID = clientEnv.EXPO_PUBLIC_EAS_PROJECT_ID
 

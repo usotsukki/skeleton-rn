@@ -5,7 +5,8 @@ import AppButton from './AppButton'
 import AppText from './AppText'
 
 interface AuthOAuthFooterProps {
-	onApple: () => void
+	/** Omit to hide the Apple button (it only works on iOS). */
+	onApple?: () => void
 	/** Omit to hide the Google button (e.g. the build has no Google client id). */
 	onGoogle?: () => void
 	promptText: string
@@ -29,32 +30,37 @@ export function AuthOAuthFooter({
 	loadingProvider,
 }: AuthOAuthFooterProps) {
 	const { t } = useTranslation()
+	const hasProvider = !!onApple || !!onGoogle
 	return (
 		<>
-			<Spacer label="OR" />
+			{hasProvider ? <Spacer label={t('or').toUpperCase()} /> : null}
 			<View className="gap-6">
-				<View className="flex-row items-center justify-center gap-3">
-					<AppButton
-						accessibilityLabel={t('a11y.signInWithApple')}
-						disabled={disabled && loadingProvider !== 'apple'}
-						loading={loadingProvider === 'apple'}
-						className="h-[50px] w-[64px] rounded-2xl border border-border bg-bg-elevated px-0"
-						onPress={onApple}
-						variant="secondary">
-						<AppleIcon />
-					</AppButton>
-					{onGoogle ? (
-						<AppButton
-							accessibilityLabel={t('a11y.signInWithGoogle')}
-							disabled={disabled && loadingProvider !== 'google'}
-							loading={loadingProvider === 'google'}
-							className="h-[50px] w-[64px] rounded-2xl border border-border bg-bg-elevated px-0"
-							onPress={onGoogle}
-							variant="secondary">
-							<GoogleIcon />
-						</AppButton>
-					) : null}
-				</View>
+				{hasProvider ? (
+					<View className="flex-row items-center justify-center gap-3">
+						{onApple ? (
+							<AppButton
+								accessibilityLabel={t('a11y.signInWithApple')}
+								disabled={disabled && loadingProvider !== 'apple'}
+								loading={loadingProvider === 'apple'}
+								className="h-[50px] w-[64px] rounded-2xl border border-border bg-bg-elevated px-0"
+								onPress={onApple}
+								variant="secondary">
+								<AppleIcon />
+							</AppButton>
+						) : null}
+						{onGoogle ? (
+							<AppButton
+								accessibilityLabel={t('a11y.signInWithGoogle')}
+								disabled={disabled && loadingProvider !== 'google'}
+								loading={loadingProvider === 'google'}
+								className="h-[50px] w-[64px] rounded-2xl border border-border bg-bg-elevated px-0"
+								onPress={onGoogle}
+								variant="secondary">
+								<GoogleIcon />
+							</AppButton>
+						) : null}
+					</View>
+				) : null}
 				<View className="flex-row items-center justify-center gap-1">
 					<AppText className="text-text-secondary" variant="ts">
 						{promptText}
