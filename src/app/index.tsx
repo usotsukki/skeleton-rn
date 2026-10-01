@@ -1,6 +1,6 @@
 import { Redirect } from 'expo-router'
-import { useAuthStore } from '@app/hooks/useAuth'
-import { HOME_ROUTE } from '@app/utils/navigation'
+import { useAuthStore } from '@app/features/auth'
+import { HOME_ROUTE } from '@app/shared/utils/navigation'
 
 /**
  * Root index. Picks a starting route before nested layouts run.

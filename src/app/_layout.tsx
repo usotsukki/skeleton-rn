@@ -17,16 +17,16 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { KeyboardProvider } from 'react-native-keyboard-controller'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableScreens } from 'react-native-screens'
-import { posthog, syncAnalyticsUser } from '@app/api/analytics'
+import { AnimatedSplash, AppAlert, ErrorFallback, Toast } from '@app/app-shell/components'
+import { useAuthAutoRefresh, useAuthDeepLink, useAuthListener, useAuthStore } from '@app/features/auth'
+import { posthog, syncAnalyticsUser } from '@app/shared/api/analytics'
 import {
 	bindQueryManagers,
 	createAppQueryClient,
 	createQueryCacheOwnership,
 	createQueryPersistOptions,
 	startSlowQueryWatchdog,
-} from '@app/api/query'
-import { AnimatedSplash, AppAlert, ErrorFallback, Toast } from '@app/components'
-import { SkeletonPulseProvider } from '@app/components/shared/SkeletonPulseProvider'
+} from '@app/shared/api/query'
 import {
 	GOOGLE_IOS_CLIENT_ID,
 	GOOGLE_WEB_CLIENT_ID,
@@ -34,20 +34,18 @@ import {
 	IS_PROD,
 	SENTRY_DEBUG,
 	SENTRY_DSN,
-} from '@app/env'
-import useAlert from '@app/hooks/useAlert'
-import { useAuthListener, useAuthStore } from '@app/hooks/useAuth'
-import { useAuthAutoRefresh } from '@app/hooks/useAuthAutoRefresh'
-import { useAuthDeepLink } from '@app/hooks/useAuthDeepLink'
-import useNetworkToast from '@app/hooks/useNetworkToast'
-import { useScreenTracking } from '@app/hooks/useScreenTracking'
-import useSplash from '@app/hooks/useSplash'
-import { useSyncNativeAppearance } from '@app/hooks/useSyncNativeAppearance'
-import { useStorageDevTools } from '@app/storage'
-import { useThemeStore } from '@app/store/themeStore'
-import { darkVars, lightVars } from '@app/theme/colors'
-import '@app/theme/textShim'
-import '@app/translations'
+} from '@app/shared/env'
+import useAlert from '@app/shared/hooks/useAlert'
+import useNetworkToast from '@app/shared/hooks/useNetworkToast'
+import { useScreenTracking } from '@app/shared/hooks/useScreenTracking'
+import useSplash from '@app/shared/hooks/useSplash'
+import { useSyncNativeAppearance } from '@app/shared/hooks/useSyncNativeAppearance'
+import { useStorageDevTools } from '@app/shared/storage'
+import { darkVars, lightVars } from '@app/shared/theme/colors'
+import '@app/shared/theme/textShim'
+import { useThemeStore } from '@app/shared/theme/themeStore'
+import '@app/shared/translations'
+import { SkeletonPulseProvider } from '@app/shared/ui/SkeletonPulseProvider'
 import '../../global.css'
 
 if (__DEV__) {

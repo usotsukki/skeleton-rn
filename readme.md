@@ -83,28 +83,28 @@ Run `yarn` in the new folder, then continue with `yarn rename`. `yarn create exp
 
 ```mermaid
 flowchart LR
-  Routes["src/app<br/>routes only"] --> Screens["src/screens<br/>composition"]
-  Screens --> Hooks["src/hooks"]
-  Screens --> UI["src/components"]
-  Hooks --> Query["TanStack Query<br/>persisted to MMKV"]
-  Hooks --> Stores["Zustand<br/>persisted to MMKV"]
-  Query --> Api["src/api<br/>auth, db, analytics"]
+  Routes["src/app<br/>routes only"] --> Features["src/features<br/>screens, hooks, api"]
+  Routes --> Shell["src/app-shell<br/>overlays, drawer"]
+  Shell --> Features
+  Features --> Shared["src/shared<br/>ui, hooks, utils"]
+  Features --> Query["TanStack Query<br/>persisted to MMKV"]
+  Features --> Stores["Zustand<br/>persisted to MMKV"]
+  Query --> Api["src/shared/api<br/>supabase, db, analytics"]
   Api --> Supabase["Supabase<br/>local in Docker, or hosted"]
 ```
 
 ```txt
 src/app          Expo Router routes and layouts
-src/screens      screen composition
-src/components   shared UI kit, auth forms, drawer
-src/hooks        auth, toasts, alerts, feature flags, screen tracking
-src/api          auth facade, Supabase client, repository errors, analytics
-src/store        Zustand stores and the persist helper
-src/env          every environment variable, validated with Zod
+src/app-shell    global overlays, drawer, tab chrome
+src/features     auth, home, map, settings, skia: screens with their hooks, components and api
+src/shared       UI kit, forms, hooks, Supabase client, analytics, env, theme, storage, i18n
+src/test         Jest setup and render helpers
+metro            bundler-only stubs and the release backend guard
 supabase         local backend config, migrations, seed user
 maestro          end-to-end flows
 ```
 
-- Route files stay thin. Screens compose, hooks hold behaviour, and only `src/api` talks to a vendor SDK.
+- Route files stay thin. Each feature owns its screens, hooks and API; `src/shared` never imports a feature, and `yarn lint:architecture` enforces the boundaries. Only `api/` folders talk to a vendor SDK.
 - Environment variables are read in one place and validated at startup. A production build fails when a required value is missing.
 - The app reaches the local backend through `.env.local`, which `yarn dev` writes. A production bundle that still points at your machine fails to build.
 - Optional services stay out of the way until you configure them. Without a Sentry token the upload is skipped, without a Google client id the Google button is hidden, and without a PostHog token nothing is sent.
@@ -120,7 +120,7 @@ The repository carries the rules, scripts and checks an agent needs to work with
 | Seeded local user | The agent signs in by itself. Hosted projects stay off limits unless you allow them |
 | `yarn e2e:sign-in` | Maestro signs in on iOS or Android, confirms the app is on the local backend before typing, and fails fast when it can't run |
 | `device-check` agent | Runs a described check on a simulator and returns a verdict with screenshots |
-| `review-staged` skill | Sends each change to a second model for review before it is committed |
+| `review-staged` skill | Reviews each relevant change in a fresh context before it is committed; plug in Cursor or Codex as reviewers from your own `~/.claude/CLAUDE.md` |
 | Hooks | Block destructive git commands, hook bypasses and AI attribution in commits |
 
 `AGENTS.md` is the entry point for tools other than Claude Code.

@@ -1,1 +1,1 @@
-export { default } from '@app/screens/ResetPassword'
+export { ResetPasswordScreen as default } from '@app/features/auth'

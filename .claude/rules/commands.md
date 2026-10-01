@@ -14,6 +14,7 @@ Agent-runnable scripts. EAS and destructive utilities are user-only and not list
 - `yarn lint:ts` — `tsc --noEmit` (incremental). Run after any TS change.
 - `yarn lint:js` — eslint, `--max-warnings=0`
 - `yarn lint:format` — prettier check (read-only)
+- `yarn lint:architecture` — feature-boundary check (`scripts/check-feature-boundaries.cjs`; layout in `docs/source-architecture.md`)
 - `yarn lint:unused` — knip (unused files / deps / exports; config in `knip.jsonc`)
 - `yarn fix` — prettier write + eslint `--fix`
 - `yarn test` — jest, `TZ=UTC` baked in
@@ -32,7 +33,7 @@ Agent-runnable scripts. EAS and destructive utilities are user-only and not list
 - `yarn backend:start` — starts Docker if needed, runs the minimal stack (auth, database, REST, email catcher; `--full` adds Studio, storage, realtime), writes the Supabase URL and publishable key to `.env.local`, creates `.env.e2e` when missing. Cold start pulls images (minutes); warm starts take seconds. Restart Metro afterwards.
 - `yarn backend:stop` — stops the stack and removes the `.env.local` override, so `.env` applies again.
 - `yarn backend:reset` — re-applies `supabase/migrations` and `supabase/seed.sql` (drops local data).
-- `yarn backend:types` — regenerates `src/api/supabase/database.types.ts` after a migration.
+- `yarn backend:types` — regenerates `src/shared/api/supabase/database.types.ts` after a migration.
 
 ## Gotchas
 
@@ -41,7 +42,7 @@ Agent-runnable scripts. EAS and destructive utilities are user-only and not list
 - `yarn ios` / `yarn android` / `:rebuild` / `expo prebuild` are allowed (multi-minute; run in background). Only rebuild when native deps or config plugins changed; JS-only changes just need Metro (`yarn start`). `expo prebuild` recreates `ios/`/`android/` by default (SDK 57); `--no-clean` keeps them.
 - Native builds on macOS: Xcode 26.4+ (older fails in `expo-modules-jsi` headers), `LANG=en_US.UTF-8` (CocoaPods), JDK 17 for Android (`JAVA_HOME=$(/usr/libexec/java_home -v 17)`); `expo run:android --device` takes the AVD name.
 - The Bash tool's shell may be zsh: quote globs (`--include='*.ts'`) and run array-heavy scripts with `bash -c`.
-- `.env.local` outranks `.env` in Expo CLI (every mode except `test`), including local release builds. A production bundle with a local or private Supabase host fails (`src/metro/releaseEnvGuard.js`; `yarn iosr` checks first): run `yarn backend:stop`, or set `ALLOW_LOCAL_BACKEND_IN_RELEASE=true` to test a release build against the local stack.
+- `.env.local` outranks `.env` in Expo CLI (every mode except `test`), including local release builds. A production bundle with a local or private Supabase host fails (`metro/releaseEnvGuard.js`; `yarn iosr` checks first): run `yarn backend:stop`, or set `ALLOW_LOCAL_BACKEND_IN_RELEASE=true` to test a release build against the local stack.
 - Builds without `SENTRY_AUTH_TOKEN` skip the Sentry upload (`app.config.ts`); with the token they upload as before.
 - `yarn ios` uses `--no-bundler` and always opens the app on port 8081. With another app's Metro there, use `yarn dev`.
 - `yarn nuke` is destructive (clears node_modules, pods, Xcode caches). User-only.

@@ -1,7 +1,7 @@
 import type { ConfigContext, ExpoConfig } from 'expo/config'
 import { z, type ZodError } from 'zod'
 import envRules from './env.rules.json'
-import { hasAndroidMapsKey } from './src/metro/androidMapsConfig'
+import { hasAndroidMapsKey } from './metro/androidMapsConfig'
 
 /** Required only for native builds, and only for the platform that uses them. */
 const nativeBuildOnlyProductionKeys = new Map<string, 'ios' | 'android'>([

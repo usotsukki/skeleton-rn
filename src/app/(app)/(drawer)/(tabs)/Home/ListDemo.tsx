@@ -1,1 +1,1 @@
-export { default } from '@app/screens/ListDemo'
+export { ListDemoScreen as default } from '@app/features/home'

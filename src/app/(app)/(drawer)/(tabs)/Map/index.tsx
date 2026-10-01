@@ -1,1 +1,1 @@
-export { default } from '@app/screens/Map'
+export { MapScreen as default } from '@app/features/map'

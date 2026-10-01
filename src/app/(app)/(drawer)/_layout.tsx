@@ -1,7 +1,7 @@
 import { useSegments } from 'expo-router'
 import { Drawer } from 'expo-router/drawer'
-import { DrawerContent } from '@app/components/drawer'
-import { isPushedTabScreen } from '@app/utils/navigation'
+import { DrawerContent } from '@app/app-shell/drawer'
+import { isPushedTabScreen } from '@app/shared/utils/navigation'
 
 const DrawerLayout = () => {
 	const swipeEnabled = !isPushedTabScreen(useSegments())

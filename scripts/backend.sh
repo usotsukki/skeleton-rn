@@ -4,13 +4,13 @@
 #   start  starts the stack and points the app at it through .env.local (values are never printed)
 #   stop   stops the stack and removes the override, so .env (hosted project, if any) applies again
 #   reset  re-applies supabase/migrations and supabase/seed.sql
-#   types  regenerates src/api/supabase/database.types.ts from the local database
+#   types  regenerates src/shared/api/supabase/database.types.ts from the local database
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
 ENV_LOCAL=".env.local"
-TYPES_FILE="src/api/supabase/database.types.ts"
+TYPES_FILE="src/shared/api/supabase/database.types.ts"
 API_PORT=54321
 URL_KEY="EXPO_PUBLIC_SUPABASE_URL"
 PUBLISHABLE_KEY="EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY"

@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router'
 import { useTranslation } from 'react-i18next'
-import { DrawerMenuButton } from '@app/components/drawer'
-import { useTabStackScreenOptions } from '@app/hooks/useTabStackScreenOptions'
+import { DrawerMenuButton } from '@app/app-shell/drawer'
+import { useTabStackScreenOptions } from '@app/app-shell/useTabStackScreenOptions'
 
 export default function HomeStackLayout() {
 	const { t } = useTranslation()

@@ -1,1 +1,1 @@
-export { default } from '@app/screens/SignUp'
+export { SignUpScreen as default } from '@app/features/auth'

@@ -39,7 +39,7 @@ Development uses a local Supabase stack (`supabase/`, Docker):
 | `yarn backend:start` | Starts auth, database, REST and an email catcher (`http://127.0.0.1:54324`); `--full` adds Studio, storage and realtime. Writes the URL and publishable key to `.env.local` |
 | `yarn backend:stop` | Stops the stack and removes the `.env.local` override |
 | `yarn backend:reset` | Re-applies `supabase/migrations` and `supabase/seed.sql` (drops local data) |
-| `yarn backend:types` | Regenerates `src/api/supabase/database.types.ts` |
+| `yarn backend:types` | Regenerates `src/shared/api/supabase/database.types.ts` |
 
 - Schema lives in `supabase/migrations`. The `notes` table is a sample of a user-owned table with row level security; replace it with your own.
 - `.env.local` outranks `.env`, also in local release builds. A production bundle that points at a local backend fails with a message; run `yarn backend:stop` before building a release.
