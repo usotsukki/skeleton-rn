@@ -17,7 +17,7 @@ Source of truth for `src/` layout and ownership. Code wins on disagreement; upda
 | `src/shared/api/db` | `RepoError`, assertions | Feature repository implementations |
 | `src/shared/api/query` | Query client, persister, retry policy, slow-query watchdog | Feature query keys |
 | `src/shared/api/analytics` | PostHog client, typed events, feature-flag registry | — |
-| `src/shared/storage` | MMKV instances + schema, `persistStorage.ts` | Feature-owned MMKV instances |
+| `src/shared/storage` | MMKV instances + schema, `persistStorage.ts`, encrypted `authStorage.ts` | Feature-owned MMKV instances |
 | `src/shared/theme` | Colors, brand, text shim, `themeStore` | Feature theming |
 | `src/shared/{env,translations,svg}` | Env wiring, i18n, SVG icons | — |
 | `src/test` | Jest setup, render helpers, test query client | Production code |
