@@ -108,7 +108,18 @@
 		},
 		"privacy": "Privacidad",
 		"shareAnalytics": "Compartir datos de uso",
-		"shareAnalyticsHint": "Envía cómo usas la app, vinculado al ID de tu cuenta (no a tu nombre ni correo), para mejorarla. Si está desactivado no se envía el uso, pero la configuración de funciones se sigue cargando y esas solicitudes incluyen el ID de tu cuenta."
+		"shareAnalyticsHint": "Envía cómo usas la app, vinculado al ID de tu cuenta (no a tu nombre ni correo), para mejorarla. Si está desactivado no se envía el uso, pero la configuración de funciones se sigue cargando y esas solicitudes incluyen el ID de tu cuenta.",
+		"version": {
+			"label": "Versión de la app {{version}}",
+			"hint": "Muestra qué actualización se está ejecutando",
+			"update": "Actualización",
+			"embedded": "Paquete integrado (sin actualizaciones)",
+			"published": "Publicada",
+			"channel": "Canal",
+			"runtime": "Runtime",
+			"copy": "Copiar ID de actualización",
+			"copied": "ID de actualización copiado"
+		}
 	},
 	"skiaScreen": {
 		"planets": "Planetas",
