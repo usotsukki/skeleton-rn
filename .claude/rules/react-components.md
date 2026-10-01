@@ -49,7 +49,11 @@ Move out when:
 
 ## Server-data lists
 
-Render query-backed lists with `CachedList` (`src/shared/ui/CachedList.tsx`): pass the `useQuery` result as `query`. It owns the loading skeleton, offline and blocking-error states, the empty state, pull-to-refresh, and the "couldn't refresh" notice over cached rows. Map errors for users with `requestErrorMessage`, never `err.message`. Demo: Home → "Open list states demo" (`src/features/home/ListDemoScreen.tsx`).
+Render query-backed lists with `CachedList` (`src/shared/ui/CachedList.tsx`): pass the `useQuery` result as `query`. It owns the loading skeleton, offline and blocking-error states, the empty state, pull-to-refresh, and the "couldn't refresh" notice over cached rows. Map errors for users with `requestErrorMessage`, never `err.message`.
+
+<!-- #region template:list-demo -->
+Demo: Home → "Open list states demo" (`src/features/home/ListDemoScreen.tsx`).
+<!-- #endregion template:list-demo -->
 
 ## Feature flags and analytics
 

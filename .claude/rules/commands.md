@@ -26,7 +26,8 @@ Agent-runnable scripts. EAS and destructive utilities are user-only and not list
 
 ## Fork setup
 
-- `yarn rename "<Name>" <slug> <scheme> <bundle-id>` — app identity in `package.json`, `app.json`, `supabase/config.toml`. Rewrites tracked files: run it only when the user asks.
+- `yarn rename "<Name>" <slug> <scheme> <bundle-id>` — app identity in `package.json`, `app.json`, `supabase/config.toml`, then `yarn.lock` (via `yarn install --mode=update-lockfile`). Rewrites tracked files: run it only when the user asks.
+- `yarn setup` — identity plus removal of demos and starter packages (manifest `scripts/setup/modules.cjs`, code marked `#region template:<id>`, removed ids recorded in `scripts/setup/removed.json`). Agents: `yarn setup --list`, `--dry-run` freely; applying (`--remove/--keep … --yes`) deletes code, so only when the user asks. Refuses a dirty tree without `--force`.
 
 ## Local backend (Supabase in Docker)
 

@@ -1,12 +1,17 @@
 import type { ConfigContext, ExpoConfig } from 'expo/config'
 import { z, type ZodError } from 'zod'
 import envRules from './env.rules.json'
+// #region template:map
 import { hasAndroidMapsKey } from './metro/androidMapsConfig'
+
+// #endregion template:map
 
 /** Required only for native builds, and only for the platform that uses them. */
 const nativeBuildOnlyProductionKeys = new Map<string, 'ios' | 'android'>([
+	// #region template:map
 	['GOOGLE_MAPS_API_KEY_ANDROID', 'android'],
 	['GOOGLE_MAPS_API_KEY_IOS', 'ios'],
+	// #endregion template:map
 	['APPLE_TEAM_ID', 'ios'],
 	['EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID', 'ios'],
 ])
@@ -40,8 +45,10 @@ const appConfigEnvSchema = z.object({
 	EXPO_PUBLIC_IOS_BUNDLE_ID_TESTING: z.preprocess(optionalEnvString, z.string().optional()),
 	EXPO_PUBLIC_ANDROID_PACKAGE: z.preprocess(optionalEnvString, z.string().optional()),
 	EXPO_PUBLIC_ANDROID_PACKAGE_TESTING: z.preprocess(optionalEnvString, z.string().optional()),
+	// #region template:map
 	GOOGLE_MAPS_API_KEY_ANDROID: z.preprocess(optionalEnvString, z.string().optional()),
 	GOOGLE_MAPS_API_KEY_IOS: z.preprocess(optionalEnvString, z.string().optional()),
+	// #endregion template:map
 	APPLE_TEAM_ID: z.preprocess(optionalEnvString, z.string().optional()),
 	EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: z.preprocess(optionalEnvString, z.string().optional()),
 })
@@ -189,8 +196,10 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 				(androidFromEnv || androidFromConfig ? `${androidBase}.test` : bundleIdentifier)
 			: androidBase
 
+	// #region template:map
 	const androidMapsKey = env.GOOGLE_MAPS_API_KEY_ANDROID
 	const iosMapsKey = env.GOOGLE_MAPS_API_KEY_IOS
+	// #endregion template:map
 	const appleTeamId = env.APPLE_TEAM_ID || initConfig.ios?.appleTeamId
 	const requireNativeBuildOnlyValues =
 		process.env.EAS_BUILD === 'true' || process.env.EXPO_REQUIRE_NATIVE_CONFIG === 'true'
@@ -208,8 +217,10 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 			EXPO_PUBLIC_IOS_BUNDLE_ID_TESTING: env.EXPO_PUBLIC_IOS_BUNDLE_ID_TESTING,
 			EXPO_PUBLIC_ANDROID_PACKAGE: androidBase,
 			EXPO_PUBLIC_ANDROID_PACKAGE_TESTING: env.EXPO_PUBLIC_ANDROID_PACKAGE_TESTING,
+			// #region template:map
 			GOOGLE_MAPS_API_KEY_ANDROID: androidMapsKey,
 			GOOGLE_MAPS_API_KEY_IOS: iosMapsKey,
+			// #endregion template:map
 			APPLE_TEAM_ID: appleTeamId,
 			EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID,
 		},
@@ -221,9 +232,11 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 
 	const plugins = (initConfig.plugins ?? []).flatMap((p): NonNullable<ExpoConfig['plugins']> => {
 		const pluginName = Array.isArray(p) ? p[0] : p
+		// #region template:map
 		if (pluginName === 'react-native-maps') {
 			return [['react-native-maps', { androidGoogleMapsApiKey: androidMapsKey, iosGoogleMapsApiKey: iosMapsKey }]]
 		}
+		// #endregion template:map
 		// Options select the plugin's non-Firebase mode (iOS URL scheme only). Without a client id
 		// there is nothing to register, so skip it rather than fall back to Firebase config files.
 		if (pluginName === '@react-native-google-signin/google-signin') {
@@ -246,27 +259,36 @@ export default ({ config: initConfig }: ConfigContext): ExpoConfig => {
 			requireFullScreen: true,
 			appleTeamId,
 			config: {
-				googleMapsApiKey: env.GOOGLE_MAPS_API_KEY_IOS,
+				// #region template:map
+				googleMapsApiKey: iosMapsKey,
+				// #endregion template:map
 				usesNonExemptEncryption: false,
 			},
 			infoPlist: {
-				UIBackgroundModes: ['remote-notification', 'processing'],
+				// #region template:notifications
+				// Silent (content-available) pushes wake the app in the background.
+				UIBackgroundModes: ['remote-notification'],
+				// #endregion template:notifications
 				CADisableMinimumFrameDurationOnPhone: true,
 			},
 		},
 		android: {
 			...initConfig.android,
 			package: androidPackage,
+			// #region template:map
 			config: {
-				googleMaps: { apiKey: env.GOOGLE_MAPS_API_KEY_ANDROID },
+				googleMaps: { apiKey: androidMapsKey },
 			},
+			// #endregion template:map
 		},
 		runtimeVersion: {
 			policy: 'appVersion',
 		},
+		// #region template:map
 		// expo-constants regenerates the embedded config on compile, but the native key changes only on
 		// prebuild. Read the generated native manifest so env changes cannot enable an unconfigured map.
 		extra: { ...initConfig.extra, androidMapsConfigured: hasAndroidMapsKey(__dirname) },
+		// #endregion template:map
 	}
 
 	if (projectId) {
