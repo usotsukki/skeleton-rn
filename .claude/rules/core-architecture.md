@@ -24,7 +24,7 @@ Feature split. Folder map, hard rules, old → new path table and the per-featur
   - `api/db` — repository errors and assertions. `api/query` — query client, persister, retry policy, slow-query watchdog.
   - `api/analytics` — PostHog boundary: the client (`posthog`, disabled without a token), typed events (`trackEvent`; add names to `events.ts`, never raw strings), the feature-flag registry (`FEATURE_FLAGS`), and `syncAnalyticsUser` (identify by user id only; sign-out reset keeps the opt-out). Flag hooks live in `shared/hooks/useFeatureFlag.ts`.
   - `env` — client env: every `EXPO_PUBLIC_*` read statically (release inlining); schema in `clientEnvSchema.ts`.
-  - `storage` — MMKV instances and schema; `persistStorage.ts` (`createPersistStorage`, use it for every persisted store).
+  - `storage` — MMKV instances and schema; `persistStorage.ts` (`createPersistStorage`, use it for every persisted store); `authStorage.ts` (session + auth store, AES-256 on iOS/Android with the key in Keychain/Keystore; keep secrets there, not in the plain instances).
   - `theme` — design tokens: `colors` (use `useThemeColors()` in components — no static palette), `brand.ts` (from `assets/brand/brand.json`), `themeStore.ts`.
   - `translations` — i18n resources and wiring. `utils` — generic helpers and validators (`email`, `password`).
 - `src/test` — Jest setup (`setup.ts`), `render.tsx`, `queryClient.ts`.

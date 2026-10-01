@@ -38,7 +38,7 @@ Requires Node 22 with corepack, Docker, and Xcode 26.4+ for iOS or the Android S
 npx create-expo-app@latest my-app --template https://github.com/usotsukki/skeleton-rn --no-install
 cd my-app
 yarn
-yarn rename "My App" my-app myapp com.company.myapp
+yarn setup
 yarn dev
 ```
 
@@ -46,7 +46,7 @@ yarn dev
 | --- | --- |
 | `npx create-expo-app` | Copies the template into `my-app` and makes one initial commit. None of the template's history comes along. `--no-install` leaves the install to Yarn, which the lockfile is for |
 | `yarn` | Installs dependencies with Yarn 4 (`corepack enable` provides it) |
-| `yarn rename` | Sets the name, slug, URL scheme and bundle id in `package.json`, `app.json` and the local backend config |
+| `yarn setup` | Asks for the app name, slug, URL scheme and bundle id, then which demos and starter packages to remove. `yarn setup --list` shows them; flags make it non-interactive |
 | `yarn dev` | Starts the local backend, starts Metro on a free port, builds the native app and opens it. Pass `android` for the emulator |
 
 Sign in with `dev@skeleton.test` and `local-dev-password`. That user exists only in the local backend.
@@ -61,7 +61,7 @@ The first `yarn dev` downloads the backend's Docker images and compiles the nati
 | A new GitHub repository with one initial commit | `gh repo create my-app --template usotsukki/skeleton-rn --private --clone` |
 | The files only, with no git repository | `npx degit usotsukki/skeleton-rn my-app` |
 
-Run `yarn` in the new folder, then continue with `yarn rename`. `yarn create expo-app` fails on a GitHub template URL (it resolves an old create-expo-app), so use `npx`.
+Run `yarn` in the new folder, then continue with `yarn setup` (with `degit`, run `git init` and make a first commit before it, so its changes can be reviewed and undone). `yarn create expo-app` fails on a GitHub template URL (it resolves an old create-expo-app), so use `npx`.
 
 </details>
 
@@ -69,14 +69,14 @@ Run `yarn` in the new folder, then continue with `yarn rename`. `yarn create exp
 
 | Area | What you get |
 | --- | --- |
-| Auth | Email and password, Google, Apple, password reset through deep links, a persisted session, and errors shown inline in the form |
+| Auth | Email and password, Google, Apple (iOS), password reset through deep links, a session persisted encrypted (key in the Keychain / Keystore), and errors shown inline in the form |
 | Backend | Supabase with migrations, row-level security and generated TypeScript types. A sample `notes` table shows the pattern for user-owned data |
 | Navigation | Expo Router with an auth group, a drawer and native bottom tabs. Signed-out users can't reach app screens |
 | UI kit | Buttons, text fields, forms, cards, list rows, toasts, in-app alerts, bottom sheets and keyboard-aware layouts, in light and dark |
 | Data | Lists that show cached data on a cold start and keep it on screen when a refresh fails. Requests time out and report to Sentry |
 | Accessibility | Dynamic type, screen reader labels and AA contrast, checked by tests |
 | Analytics | PostHog screen views, typed events, feature flags and a Settings opt-out. Without a project, events print to the console in development |
-| Releases | EAS build and update profiles, Sentry source maps, and an environment check that fails a production build when configuration is missing |
+| Releases | EAS build and update profiles, Sentry source maps, an environment check that fails a production build when configuration is missing, and the app version with the running OTA update id in Settings |
 | Languages | English and Spanish |
 
 ## How it works
@@ -131,20 +131,21 @@ The repository carries the rules, scripts and checks an agent needs to work with
 | --- | --- |
 | `yarn dev [ios\|android]` | Local backend, Metro and the native app |
 | `yarn dev:stop` | Stops this project's Metro and the local backend |
-| `yarn check` | Everything CI runs: types, ESLint, Prettier, Knip, then Jest |
+| `yarn check` | Everything CI runs: types, ESLint, Prettier, Knip, feature boundaries, then Jest |
 | `yarn fix` | Prettier and ESLint autofix |
 | `yarn test` | Jest in UTC |
 | `yarn backend:reset` | Re-applies the migrations and the seed |
 | `yarn backend:types` | Regenerates the database types after a migration |
 | `yarn e2e:sign-in [--android]` | Maestro sign-in on the running simulator or emulator |
-| `yarn rename` | Sets the app identity |
+| `yarn setup` | New identity plus removal of demos and unused packages (interactive) |
+| `yarn rename` | Sets the app identity only (`package.json`, `app.json`, local backend config, `yarn.lock`) |
 
 ## Testing
 
-- Jest and React Native Testing Library cover auth, forms, hooks, stores, screens, environment validation and theme colours: 250 tests, run with `TZ=UTC`.
+- Jest and React Native Testing Library cover auth, forms, hooks, stores, screens, environment validation, theme contrast, `app.config.ts` and the setup script, run with `TZ=UTC`.
 - Tests never reach the network. A request that a test doesn't stub is rejected.
 - Maestro drives the real app through sign-in on both platforms.
-- Every pull request runs ESLint, types, Prettier, Knip, Jest with coverage, a duplication check and commitlint ([workflow](.github/workflows/lint-and-test.yml)).
+- Every pull request runs ESLint, types, Prettier, Knip, the feature-boundary check, Jest with coverage, a duplication check and commitlint ([workflow](.github/workflows/lint-and-test.yml)).
 - Pre-commit runs ESLint, Prettier and `tsc` on staged files, and commitlint on the message.
 
 ## Going to production
