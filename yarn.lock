@@ -7643,6 +7643,7 @@ __metadata:
     expo-notifications: "npm:~57.0.21"
     expo-router: "npm:~57.0.23"
     expo-screen-orientation: "npm:~57.0.2"
+    expo-secure-store: "npm:~57.0.4"
     expo-splash-screen: "npm:~57.0.9"
     expo-sqlite: "npm:~57.0.3"
     expo-status-bar: "npm:~57.0.1"
@@ -8170,6 +8171,15 @@ __metadata:
     expo: "*"
     react-native: "*"
   checksum: 10c0/cd1e0c28e254d9a65f7f7c129e73742cf1b2ef544e5dabaf97ca996c37c3e580df744f5cd2628ab4b72780eb342838ac6b9a1306b47268efefc45f4b6519402c
+  languageName: node
+  linkType: hard
+
+"expo-secure-store@npm:~57.0.4":
+  version: 57.0.4
+  resolution: "expo-secure-store@npm:57.0.4"
+  peerDependencies:
+    expo: "*"
+  checksum: 10c0/8f94ff747808d6a270536171bf14eaa3e75aeae31c7a20615a76d101e167d2cf7a09db6c7f9b770a587a8852362bb69ecb15b4208db0789fcd24a61a50941c0f
   languageName: node
   linkType: hard
 

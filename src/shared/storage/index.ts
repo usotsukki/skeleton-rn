@@ -17,7 +17,7 @@ export const useStorageDevTools = (): void => useMMKVDevTools({ storage: zustand
 
 export const deviceStorage = new MMKVStorage<[], Device>({ id: 'device' })
 
-export const authStorage = createMMKV({ id: 'auth' })
+export { authStorage, type KeyValueStore, SESSION_KEY_PREFIX } from './authStorage'
 
 /** TanStack Query cache snapshot. Owned by `src/shared/api/query/queryPersister.ts`; don't write to it directly. */
 export const queryCacheStorage = createMMKV({ id: 'tanstack-query' })

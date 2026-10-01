@@ -40,6 +40,8 @@ jest.mock('react-native-mmkv', () => {
 				recrypt: jest.fn(),
 			}
 		}),
+		existsMMKV: jest.fn((id: string) => (stores.get(id)?.size ?? 0) > 0),
+		deleteMMKV: jest.fn((id: string) => stores.delete(id)),
 		/** Test-only: empties every MMKV instance (called afterEach below). */
 		__clearAllStores: () => stores.forEach(store => store.clear()),
 	}
@@ -242,6 +244,21 @@ jest.mock('expo-crypto', () => ({
 	getRandomValues: jest.fn((bytes: Uint8Array) => bytes),
 	randomUUID: jest.fn(() => 'mock-uuid'),
 }))
+
+// Keychain / Keystore as an in-memory map (auth storage keeps its encryption key here).
+jest.mock('expo-secure-store', () => {
+	const items = new Map<string, string>()
+	return {
+		AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY: 'AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY',
+		getItem: jest.fn((key: string) => items.get(key) ?? null),
+		setItem: jest.fn((key: string, value: string) => {
+			items.set(key, value)
+		}),
+		deleteItemAsync: jest.fn(async (key: string) => {
+			items.delete(key)
+		}),
+	}
+})
 
 jest.mock('expo-localization', () => ({
 	getLocales: () => [{ languageCode: 'en' }],
