@@ -4,7 +4,9 @@
 	"expo": { "config": ["app.json"] },
 	"entry": [
 		"app.config.ts",
+		// #region template:map
 		"metro/reactNativeMapsStub.tsx",
+		// #endregion template:map
 		"scripts/generate-brand-assets.cjs",
 		"plugins/*.js",
 		".claude/hooks/*.mjs",

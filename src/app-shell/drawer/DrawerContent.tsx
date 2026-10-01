@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router'
+import { type Href, useRouter } from 'expo-router'
 import { DrawerContentComponentProps, DrawerContentScrollView } from 'expo-router/drawer'
 import { DrawerActions } from 'expo-router/react-navigation'
 import { useTranslation } from 'react-i18next'
@@ -33,7 +33,7 @@ export function DrawerContent(props: DrawerContentComponentProps) {
 
 	const closeDrawer = () => props.navigation.dispatch(DrawerActions.closeDrawer())
 
-	const goTab = (path: '/Home' | '/Map' | '/Skia') => {
+	const goTab = (path: Href) => {
 		router.navigate(path)
 		closeDrawer()
 	}
@@ -60,8 +60,12 @@ export function DrawerContent(props: DrawerContentComponentProps) {
 
 				<View className="px-2 py-2">
 					<DrawerLink label={t('home')} onPress={() => goTab('/Home')} />
+					{/* #region template:map */}
 					<DrawerLink label={t('map')} onPress={() => goTab('/Map')} />
+					{/* #endregion template:map */}
+					{/* #region template:skia */}
 					<DrawerLink label={t('skia')} onPress={() => goTab('/Skia')} />
+					{/* #endregion template:skia */}
 				</View>
 
 				<View className="border-t border-separator px-2 pt-4">

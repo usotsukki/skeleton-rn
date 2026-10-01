@@ -24,10 +24,13 @@ export default function TabsLayout() {
 				<NativeTabs.Trigger.Icon md="home" sf={{ default: 'house', selected: 'house.fill' }} />
 				<NativeTabs.Trigger.Label hidden>{t('home')}</NativeTabs.Trigger.Label>
 			</NativeTabs.Trigger>
+			{/* #region template:map */}
 			<NativeTabs.Trigger name="Map">
 				<NativeTabs.Trigger.Icon md="map" sf={{ default: 'map', selected: 'map.fill' }} />
 				<NativeTabs.Trigger.Label hidden>{t('map')}</NativeTabs.Trigger.Label>
 			</NativeTabs.Trigger>
+			{/* #endregion template:map */}
+			{/* #region template:skia */}
 			<NativeTabs.Trigger name="Skia">
 				<NativeTabs.Trigger.Icon
 					md="auto_awesome"
@@ -35,6 +38,7 @@ export default function TabsLayout() {
 				/>
 				<NativeTabs.Trigger.Label hidden>{t('skia')}</NativeTabs.Trigger.Label>
 			</NativeTabs.Trigger>
+			{/* #endregion template:skia */}
 		</NativeTabs>
 	)
 }
