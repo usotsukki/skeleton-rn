@@ -10,7 +10,8 @@
 	"or": "or",
 	"modules": {
 		"map": {
-			"noApiKey": "The map needs a Google Maps API key on Android. Set GOOGLE_MAPS_API_KEY_ANDROID and rebuild the app."
+			"noApiKey": "The map needs a Google Maps API key on Android. Set GOOGLE_MAPS_API_KEY_ANDROID and rebuild the app.",
+			"markerTitle": "San Francisco"
 		},
 		"common": {
 			"close": "Close",
@@ -96,7 +97,8 @@
 			"loading": "loading",
 			"on": "on",
 			"off": "off"
-		}
+		},
+		"switch": "Switch"
 	},
 	"settingsScreen": {
 		"preferences": "Preferences",
