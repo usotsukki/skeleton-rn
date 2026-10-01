@@ -12,14 +12,12 @@
 			"reactCompiler": true
 		},
 		"ios": {
-			"buildNumber": "1.5.0",
 			"bundleIdentifier": "com.example.app",
 			"backgroundColor": "#1f1e1d",
 			"userInterfaceStyle": "automatic"
 		},
 		"android": {
 			"package": "com.example.app",
-			"versionCode": 53010500,
 			"userInterfaceStyle": "automatic",
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/png/adaptive-foreground.png",

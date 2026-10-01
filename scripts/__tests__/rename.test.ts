@@ -5,7 +5,7 @@ import { runInNewContext } from 'node:vm'
 const SCRIPT_DIR = path.resolve(__dirname, '..')
 const SCRIPT = readFileSync(path.join(SCRIPT_DIR, 'rename.cjs'), 'utf8')
 
-function runRename(bundleId: string) {
+function runRename(bundleId: string, { lockStatus = 0 }: { lockStatus?: number } = {}) {
 	const files: Record<string, string> = {
 		'package.json': JSON.stringify({ name: 'template' }),
 		'app.json': JSON.stringify({ expo: {} }),
@@ -17,12 +17,13 @@ function runRename(bundleId: string) {
 			files[path.basename(file)] = content
 		}),
 	}
+	const childProcess = { spawnSync: jest.fn(() => ({ status: lockStatus })) }
 	let exitCode = 0
 	try {
 		runInNewContext(SCRIPT, {
 			__dirname: SCRIPT_DIR,
-			require: (name: string) => (name === 'fs' ? fs : require(name)),
-			console: { log: jest.fn(), error: jest.fn() },
+			require: (name: string) => ({ fs, child_process: childProcess })[name] ?? require(name),
+			console: { log: jest.fn(), warn: jest.fn(), error: jest.fn() },
 			process: {
 				argv: ['node', 'rename.cjs', 'Demo', 'demo', 'demo', bundleId],
 				exit: (code: number) => {
@@ -34,7 +35,7 @@ function runRename(bundleId: string) {
 	} catch (error) {
 		if (!(error instanceof Error) || error.message !== 'script exited') throw error
 	}
-	return { exitCode, fs, files }
+	return { exitCode, fs, files, childProcess }
 }
 
 describe('rename application ID validation', () => {
@@ -60,5 +61,26 @@ describe('rename application ID validation', () => {
 			android: { package: 'com.acme.myapp2' },
 		})
 		expect(result.files['config.toml']).toBe('project_id = "demo"\n')
+	})
+
+	it('lets Yarn rewrite the lockfile after the package name changes', () => {
+		const result = runRename('com.acme.myapp2')
+		expect(result.childProcess.spawnSync).toHaveBeenCalledWith(
+			'yarn',
+			['install', '--mode=update-lockfile'],
+			expect.objectContaining({ cwd: path.resolve(SCRIPT_DIR, '..') }),
+		)
+		// The lockfile is rewritten after package.json, which carries the new workspace name.
+		expect(result.fs.writeFileSync.mock.invocationCallOrder[0]).toBeLessThan(
+			result.childProcess.spawnSync.mock.invocationCallOrder[0],
+		)
+	})
+
+	it('fails when Yarn cannot update the lockfile (immutable installs would break)', () => {
+		expect(runRename('com.acme.myapp2', { lockStatus: 1 }).exitCode).toBe(1)
+	})
+
+	it('does not touch the lockfile when validation fails', () => {
+		expect(runRename('com.acme.class').childProcess.spawnSync).not.toHaveBeenCalled()
 	})
 })

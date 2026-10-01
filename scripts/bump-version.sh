@@ -1,126 +1,64 @@
 #!/bin/bash
+# Bumps expo.version in app.json: yarn increment-version <major|minor|patch> [--decrement] [--commit]
+#
+# Build numbers are not touched: eas.json uses `appVersionSource: remote` with `autoIncrement`, so EAS
+# owns iOS buildNumber / Android versionCode. A new version also changes the runtime version
+# (`policy: appVersion`), so it needs a new build before OTA updates reach it.
+# --commit commits app.json only (nothing else that is staged).
+set -euo pipefail
 
-# ANSI color codes
 GREEN='\033[0;32m'
 RED='\033[0;31m'
-NC='\033[0m' # No color
+NC='\033[0m'
 
-# Emoji icons
-STARTING_ICON="🚀"
-SUCCESS_ICON="✅"
-ERROR_ICON="👺"
-UPDATING_ICON="🌸"
-
-COMMIT_VERSION_UPDATE=true  # Set to false to disable Git commit
+fail() {
+  echo -e "${RED}bump-version: $1${NC}" >&2
+  exit 1
+}
 
 json_file="app.json"
-
-# Define the expo_sdk_version variable
-expo_sdk_version="053"
-
-# Get the update type argument (major, minor, or patch) and optional --decrement flag
-update_type="$1"
-decrement_flag="$2"
-
-if [ -z "$update_type" ] || ! [[ "$update_type" =~ ^(major|minor|patch)$ ]]; then
-  echo -e "${RED}${ERROR_ICON} Error: Invalid update type. Use one of <major|minor|patch>${NC}"
-  exit 1
-fi
-
-if [ -n "$decrement_flag" ] && [ "$decrement_flag" != "--decrement" ]; then
-  echo -e "${RED}${ERROR_ICON} Error: Invalid option. Use --decrement to decrease the version.${NC}"
-  exit 1
-fi
-
-if [ ! -f "$json_file" ]; then
-  echo -e "${RED}${ERROR_ICON} Error: JSON file not found at path: $json_file${NC}"
-  exit 1
-fi
-
-echo -e "${GREEN}${STARTING_ICON} Starting the update process... ${STARTING_ICON}${NC}"
-
-current_version=$(jq -r '.expo.version' "$json_file")
-current_build_number=$(jq -r '.expo.ios.buildNumber' "$json_file")
-current_version_code=$(jq -r '.expo.android.versionCode' "$json_file")
-
-IFS='.' read -r -a version_parts <<< "$current_version"
-
-# Handle the decrement flag (if present, decrement instead of increment)
-if [ "$decrement_flag" == "--decrement" ]; then
-  case "$update_type" in
-    "major")
-      if ((version_parts[0] > 1)); then
-        ((version_parts[0]--))
-        version_parts[1]=0
-        version_parts[2]=0
-      else
-        echo -e "${RED}${ERROR_ICON} Cannot decrement major version below 1.${NC}"
-        exit 1
-      fi
-      ;;
-    "minor")
-      if ((version_parts[1] > 0)); then
-        ((version_parts[1]--))
-        version_parts[2]=0
-      else
-        echo -e "${RED}${ERROR_ICON} Cannot decrement minor version below 0.${NC}"
-        exit 1
-      fi
-      ;;
-    "patch")
-      if ((version_parts[2] > 0)); then
-        ((version_parts[2]--))
-      else
-        echo -e "${RED}${ERROR_ICON} Cannot decrement patch version below 0.${NC}"
-        exit 1
-      fi
-      ;;
+update_type="${1:-}"
+decrement=false
+commit=false
+for flag in "${@:2}"; do
+  case "$flag" in
+    --decrement) decrement=true ;;
+    --commit) commit=true ;;
+    *) fail "unknown option \"$flag\" (use --decrement and/or --commit)" ;;
   esac
-else
-  # If no decrement flag, increment as usual
-  case "$update_type" in
-    "major")
-      ((version_parts[0]++))
-      version_parts[1]=0
-      version_parts[2]=0
-      ;;
-    "minor")
-      ((version_parts[1]++))
-      version_parts[2]=0
-      ;;
-    "patch")
-      ((version_parts[2]++))
-      ;;
-  esac
-fi
-
-# Ensure that version components do not exceed 99
-for i in "${!version_parts[@]}"; do
-  if ((version_parts[i] > 99)); then
-    version_parts[i]=99
-  fi
 done
 
-new_version="${version_parts[0]}.${version_parts[1]}.${version_parts[2]}"
+[[ "$update_type" =~ ^(major|minor|patch)$ ]] || fail "use one of <major|minor|patch>"
+[ -f "$json_file" ] || fail "$json_file not found"
+command -v jq >/dev/null || fail "jq is required"
 
-new_version_code_dynamic="${expo_sdk_version}$(printf "%02d" "${version_parts[0]}")$(printf "%02d" "${version_parts[1]}")$(printf "%02d" "${version_parts[2]}")"
+current_version=$(jq -r '.expo.version' "$json_file")
+[[ "$current_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || fail "expo.version \"$current_version\" is not x.y.z"
+IFS='.' read -r major minor patch <<< "$current_version"
 
-# Update the version, buildNumber, and versionCode fields in the JSON file
-jq --arg new_version "$new_version" --arg new_version_code "$new_version_code_dynamic" '.expo.version = $new_version | .expo.ios.buildNumber = $new_version | .expo.android.versionCode = ($new_version_code | tonumber)' "$json_file" > tmp.json && mv tmp.json "$json_file"
+if $decrement; then
+  case "$update_type" in
+    major) ((major > 1)) || fail "cannot decrement major below 1"; major=$((major - 1)); minor=0; patch=0 ;;
+    minor) ((minor > 0)) || fail "cannot decrement minor below 0"; minor=$((minor - 1)); patch=0 ;;
+    patch) ((patch > 0)) || fail "cannot decrement patch below 0"; patch=$((patch - 1)) ;;
+  esac
+else
+  case "$update_type" in
+    major) major=$((major + 1)); minor=0; patch=0 ;;
+    minor) minor=$((minor + 1)); patch=0 ;;
+    patch) patch=$((patch + 1)) ;;
+  esac
+fi
 
-prettier --write "$json_file"
+new_version="$major.$minor.$patch"
+tmp_file="$(mktemp)"
+jq --arg v "$new_version" '.expo.version = $v' "$json_file" > "$tmp_file"
+mv "$tmp_file" "$json_file"
+npx prettier --write "$json_file" >/dev/null
 
-echo -e "${GREEN} version, buildNumber and versionCode updated ${UPDATING_ICON}${NC}"
-echo -e "${GREEN}${SUCCESS_ICON}${NC} version: $new_version"
-echo -e "${GREEN}${SUCCESS_ICON}${NC} buildNumber: $new_version"
-echo -e "${GREEN}${SUCCESS_ICON}${NC} versionCode: $new_version_code_dynamic"
+echo -e "${GREEN}✅ version: $current_version → $new_version${NC}"
 
-if [ "$COMMIT_VERSION_UPDATE" = true ]; then
-  git add "$json_file"
-  git commit -m "chore: bump version to $new_version"
-  if [ $? -eq 0 ]; then
-    echo -e "${GREEN}${SUCCESS_ICON} Successfully committed version bump to $new_version.${NC}"
-  else
-    echo -e "${RED}${ERROR_ICON} Failed to create a commit.${NC}"
-  fi
+if $commit; then
+  git commit -m "chore: bump version to $new_version" -- "$json_file" || fail "commit failed; app.json is updated but not committed"
+  echo -e "${GREEN}✅ committed $json_file${NC}"
 fi

@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 // Gives a fork its own identity. Usage: yarn rename <name> <slug> <scheme> <bundle-id>
 //   e.g. yarn rename "Todo Manager" todo-manager todomanager com.acme.todomanager
-// Updates package.json, app.json and supabase/config.toml. Values in .env (EXPO_PUBLIC_APP_*,
-// EXPO_PUBLIC_IOS_BUNDLE_ID, EXPO_PUBLIC_ANDROID_PACKAGE) override app.json: change or remove them too.
+// Updates package.json, app.json and supabase/config.toml, then lets Yarn update yarn.lock.
+// Values in .env (EXPO_PUBLIC_APP_*, EXPO_PUBLIC_IOS_BUNDLE_ID, EXPO_PUBLIC_ANDROID_PACKAGE) override
+// app.json: change or remove them too.
+const childProcess = require('child_process')
 const fs = require('fs')
 const path = require('path')
 
@@ -70,6 +72,17 @@ for (const [file, content] of writes) {
 	fs.writeFileSync(path.join(root, file), content)
 	console.log(`rename: updated ${file}`)
 }
+
+// Yarn keys the root workspace by package name and keeps lockfile entries sorted, so let Yarn rewrite
+// the lockfile (no linking, no build scripts); a stale entry fails `yarn install --immutable` in CI.
+const lock = childProcess.spawnSync('yarn', ['install', '--mode=update-lockfile'], {
+	cwd: root,
+	stdio: 'inherit',
+	// Windows runs yarn through a .cmd shim, which spawnSync finds only with a shell.
+	shell: process.platform === 'win32',
+})
+if (lock.status !== 0) fail('files renamed, but yarn.lock is out of date: run `yarn` before committing')
+console.log('rename: updated yarn.lock')
 
 console.log('rename: done. Next: check .env for EXPO_PUBLIC_APP_* overrides, then rebuild the native app')
 console.log('rename: (yarn ios:rebuild / yarn android:rebuild, or yarn dev).')

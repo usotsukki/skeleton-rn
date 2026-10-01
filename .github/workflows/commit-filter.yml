@@ -20,7 +20,13 @@ jobs:
         run: |
           current_version=$(jq -r '.expo.version' app.json)
 
-          previous_version=$(git show HEAD~1:app.json | jq -r '.expo.version')
+          # A fork's first commit has no parent: treat it as a version change, so no OTA update is
+          # published before the first build exists.
+          if git rev-parse --verify --quiet HEAD~1 >/dev/null; then
+            previous_version=$(git show HEAD~1:app.json | jq -r '.expo.version')
+          else
+            previous_version=""
+          fi
 
           if [[ "$current_version" != "$previous_version" ]]; then
             echo "skip-workflow=false" >> $GITHUB_OUTPUT

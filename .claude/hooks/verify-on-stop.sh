@@ -15,6 +15,9 @@ export CLAUDE_VERIFY_ON_STOP_RUNNING=1
 
 ROOT_DIR="${CLAUDE_PROJECT_DIR:-$(pwd)}"
 cd "$ROOT_DIR"
+# Per-project logs, so two forks on one machine don't overwrite each other's.
+LOG_PREFIX="${TMPDIR:-/tmp}"
+LOG_PREFIX="${LOG_PREFIX%/}/$(basename "$ROOT_DIR")-claude"
 
 INPUT_JSON="$(cat)"
 
@@ -31,7 +34,11 @@ if [[ "$STOP_HOOK_ACTIVE" == "true" ]]; then
   exit 0
 fi
 
-mapfile -t CHANGED_FILES < <(git diff --name-only --cached --diff-filter=ACMR; git diff --name-only --diff-filter=ACMR) || true
+# Bash 3.2 (macOS /bin/bash) has no mapfile or associative arrays: read lines, dedupe with sort -u.
+CHANGED_FILES=()
+while IFS= read -r file; do
+  [[ -n "$file" ]] && CHANGED_FILES+=("$file")
+done < <({ git diff --name-only --cached --diff-filter=ACMR; git diff --name-only --diff-filter=ACMR; } 2>/dev/null | sort -u)
 
 if [[ "${#CHANGED_FILES[@]}" -eq 0 ]]; then
   exit 0
@@ -43,23 +50,18 @@ if [[ "${#CHANGED_FILES[@]}" -gt "$CHANGED_FILES_LIMIT" ]]; then
   exit 0
 fi
 
-declare -A seen
 JS_TS_FILES=()
 TS_FILES=()
 
 for file in "${CHANGED_FILES[@]}"; do
-  [[ -z "$file" ]] && continue
   # Skip files that don't exist on disk (e.g. staged-add then deleted in worktree).
   [[ ! -f "$file" ]] && continue
-  if [[ -z "${seen[$file]+x}" ]]; then
-    seen[$file]=1
-    case "$file" in
-      *.js|*.jsx|*.ts|*.tsx) JS_TS_FILES+=("$file") ;;
-    esac
-    case "$file" in
-      *.ts|*.tsx) TS_FILES+=("$file") ;;
-    esac
-  fi
+  case "$file" in
+    *.js|*.jsx|*.ts|*.tsx) JS_TS_FILES+=("$file") ;;
+  esac
+  case "$file" in
+    *.ts|*.tsx) TS_FILES+=("$file") ;;
+  esac
 done
 
 if [[ "${#JS_TS_FILES[@]}" -eq 0 ]]; then
@@ -80,7 +82,10 @@ if [[ ! -x ./node_modules/.bin/eslint ]]; then
 fi
 
 # ESLint warns on explicitly passed ignored files, which --max-warnings=0 turns into a failure (same filter as .lintstagedrc.mjs).
-mapfile -t LINTABLE_FILES < <(node -e "
+LINTABLE_FILES=()
+while IFS= read -r file; do
+  [[ -n "$file" ]] && LINTABLE_FILES+=("$file")
+done < <(node -e "
 const { ESLint } = require('eslint');
 const eslint = new ESLint();
 Promise.all(process.argv.slice(1).map(async f => ((await eslint.isPathIgnored(f)) ? null : f))).then(files =>
@@ -89,16 +94,16 @@ Promise.all(process.argv.slice(1).map(async f => ((await eslint.isPathIgnored(f)
 " "${JS_TS_FILES[@]}")
 
 if [[ "${#LINTABLE_FILES[@]}" -gt 0 ]]; then
-  ./node_modules/.bin/eslint --cache --max-warnings=0 "${LINTABLE_FILES[@]}" >/tmp/expo-app-claude-eslint.log 2>&1 || fail "Stop blocked: eslint failed on changed files. See /tmp/expo-app-claude-eslint.log."
+  ./node_modules/.bin/eslint --cache --max-warnings=0 "${LINTABLE_FILES[@]}" >"$LOG_PREFIX-eslint.log" 2>&1 || fail "Stop blocked: eslint failed on changed files. See $LOG_PREFIX-eslint.log."
 fi
 
 # Project-wide (incremental via tsconfig): per-file checks miss breakage in importers.
 if [[ -x ./node_modules/.bin/tsc && "${#TS_FILES[@]}" -gt 0 ]]; then
-  ./node_modules/.bin/tsc --noEmit --pretty false >/tmp/expo-app-claude-tsc.log 2>&1 || fail "Stop blocked: TypeScript check failed. See /tmp/expo-app-claude-tsc.log."
+  ./node_modules/.bin/tsc --noEmit --pretty false >"$LOG_PREFIX-tsc.log" 2>&1 || fail "Stop blocked: TypeScript check failed. See $LOG_PREFIX-tsc.log."
 fi
 
 if [[ -x ./node_modules/.bin/jest && "${#JS_TS_FILES[@]}" -gt 0 ]]; then
-  TZ=UTC yarn jest --runInBand --passWithNoTests --findRelatedTests "${JS_TS_FILES[@]}" >/tmp/expo-app-claude-related-tests.log 2>&1 || fail "Stop blocked: related tests failed."
+  TZ=UTC yarn jest --runInBand --passWithNoTests --findRelatedTests "${JS_TS_FILES[@]}" >"$LOG_PREFIX-related-tests.log" 2>&1 || fail "Stop blocked: related tests failed. See $LOG_PREFIX-related-tests.log."
 fi
 
 exit 0
