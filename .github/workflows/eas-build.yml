@@ -38,18 +38,6 @@ jobs:
       HUSKY: 0
       # Job-wide: on a node_modules cache hit the first `yarn` call is the one that fetches Yarn.
       COREPACK_ENABLE_DOWNLOAD_PROMPT: 0
-      EXPO_PUBLIC_NODE_ENV: ${{ inputs.profile == 'production' && 'production' || inputs.profile == 'prod-apk' && 'production' || 'development' }}
-      EXPO_PUBLIC_ENABLE_DEV_MODE: ${{ inputs.profile == 'production' && 'false' || inputs.profile == 'prod-apk' && 'false' || 'true' }}
-      EXPO_PUBLIC_EAS_PROJECT_ID: ${{ vars.EXPO_PUBLIC_EAS_PROJECT_ID }}
-      EXPO_PUBLIC_BASE_API_URL: ${{ vars.EXPO_PUBLIC_BASE_API_URL }}
-      EXPO_PUBLIC_EAS_OWNER: ${{ vars.EXPO_PUBLIC_EAS_OWNER }}
-      EXPO_PUBLIC_APP_NAME: ${{ vars.EXPO_PUBLIC_APP_NAME }}
-      EXPO_PUBLIC_APP_SLUG: ${{ vars.EXPO_PUBLIC_APP_SLUG }}
-      EXPO_PUBLIC_APP_SCHEME: ${{ vars.EXPO_PUBLIC_APP_SCHEME }}
-      EXPO_PUBLIC_IOS_BUNDLE_ID: ${{ vars.EXPO_PUBLIC_IOS_BUNDLE_ID }}
-      EXPO_PUBLIC_IOS_BUNDLE_ID_TESTING: ${{ vars.EXPO_PUBLIC_IOS_BUNDLE_ID_TESTING }}
-      EXPO_PUBLIC_ANDROID_PACKAGE: ${{ vars.EXPO_PUBLIC_ANDROID_PACKAGE }}
-      EXPO_PUBLIC_ANDROID_PACKAGE_TESTING: ${{ vars.EXPO_PUBLIC_ANDROID_PACKAGE_TESTING }}
     steps:
       - uses: actions/checkout@v4
 
@@ -86,5 +74,19 @@ jobs:
       - name: Run tests
         run: yarn test
 
+      # Step-scoped: a production EXPO_PUBLIC_NODE_ENV in the test step makes the env schema throw on import.
       - name: Build on EAS
+        env:
+          EXPO_PUBLIC_NODE_ENV: ${{ inputs.profile == 'production' && 'production' || inputs.profile == 'prod-apk' && 'production' || 'development' }}
+          EXPO_PUBLIC_ENABLE_DEV_MODE: ${{ inputs.profile == 'production' && 'false' || inputs.profile == 'prod-apk' && 'false' || 'true' }}
+          EXPO_PUBLIC_EAS_PROJECT_ID: ${{ vars.EXPO_PUBLIC_EAS_PROJECT_ID }}
+          EXPO_PUBLIC_BASE_API_URL: ${{ vars.EXPO_PUBLIC_BASE_API_URL }}
+          EXPO_PUBLIC_EAS_OWNER: ${{ vars.EXPO_PUBLIC_EAS_OWNER }}
+          EXPO_PUBLIC_APP_NAME: ${{ vars.EXPO_PUBLIC_APP_NAME }}
+          EXPO_PUBLIC_APP_SLUG: ${{ vars.EXPO_PUBLIC_APP_SLUG }}
+          EXPO_PUBLIC_APP_SCHEME: ${{ vars.EXPO_PUBLIC_APP_SCHEME }}
+          EXPO_PUBLIC_IOS_BUNDLE_ID: ${{ vars.EXPO_PUBLIC_IOS_BUNDLE_ID }}
+          EXPO_PUBLIC_IOS_BUNDLE_ID_TESTING: ${{ vars.EXPO_PUBLIC_IOS_BUNDLE_ID_TESTING }}
+          EXPO_PUBLIC_ANDROID_PACKAGE: ${{ vars.EXPO_PUBLIC_ANDROID_PACKAGE }}
+          EXPO_PUBLIC_ANDROID_PACKAGE_TESTING: ${{ vars.EXPO_PUBLIC_ANDROID_PACKAGE_TESTING }}
         run: eas build --platform "${{ inputs.platform }}" --profile "${{ inputs.profile }}" --non-interactive --no-wait

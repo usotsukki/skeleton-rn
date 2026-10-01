@@ -35,8 +35,9 @@ Recorded on an iOS simulator from a development build running against the local 
 Requires Node 22 with corepack, Docker, and Xcode 26.4+ for iOS or the Android SDK with JDK 17 for Android.
 
 ```bash
-npx create-expo-app@latest my-app --template https://github.com/usotsukki/skeleton-rn --no-install
+npx degit usotsukki/skeleton-rn my-app
 cd my-app
+git init && git add -A && git commit -m "chore: initial commit"
 yarn
 yarn setup
 yarn dev
@@ -44,7 +45,8 @@ yarn dev
 
 | Step | What happens |
 | --- | --- |
-| `npx create-expo-app` | Copies the template into `my-app` and makes one initial commit. None of the template's history comes along. `--no-install` leaves the install to Yarn, which the lockfile is for |
+| `npx degit` | Copies the template's files into `my-app`, dotfiles included. None of the template's history comes along |
+| `git init … commit` | A first commit, so `yarn` can install the git hooks and `yarn setup` starts from a clean tree whose changes can be reviewed and undone |
 | `yarn` | Installs dependencies with Yarn 4 (`corepack enable` provides it) |
 | `yarn setup` | Asks for the app name, slug, URL scheme and bundle id, then which demos and starter packages to remove. `yarn setup --list` shows them; flags make it non-interactive |
 | `yarn dev` | Starts the local backend, starts Metro on a free port, builds the native app and opens it. Pass `android` for the emulator |
@@ -59,9 +61,8 @@ The first `yarn dev` downloads the backend's Docker images and compiles the nati
 | Goal | Command |
 | --- | --- |
 | A new GitHub repository with one initial commit | `gh repo create my-app --template usotsukki/skeleton-rn --private --clone` |
-| The files only, with no git repository | `npx degit usotsukki/skeleton-rn my-app` |
 
-Run `yarn` in the new folder, then continue with `yarn setup`. With `degit`, run `git init` before `yarn` (so it can install the git hooks) and make a first commit before `yarn setup` (so its changes can be reviewed and undone). `yarn create expo-app` fails on a GitHub template URL (it resolves an old create-expo-app), so use `npx`.
+Run `yarn` in the new folder, then continue with `yarn setup`. Don't use `create-expo-app --template` with this repository: it skips dotfiles from GitHub templates (`.yarnrc.yml`, `.nvmrc`, `.husky`, `.github`, `.claude` rules, ESLint and Prettier config) and writes its own `.gitignore` and `.claude/settings.json`. Without `.yarnrc.yml`, `yarn` falls back to Plug'n'Play and leaves `.pnp.cjs`, `.pnp.loader.mjs` and `.yarn/` behind.
 
 </details>
 
