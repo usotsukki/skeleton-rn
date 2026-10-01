@@ -73,16 +73,23 @@ for (const [file, content] of writes) {
 	console.log(`rename: updated ${file}`)
 }
 
-// Yarn keys the root workspace by package name and keeps lockfile entries sorted, so let Yarn rewrite
-// the lockfile (no linking, no build scripts); a stale entry fails `yarn install --immutable` in CI.
-const lock = childProcess.spawnSync('yarn', ['install', '--mode=update-lockfile'], {
-	cwd: root,
-	stdio: 'inherit',
-	// Windows runs yarn through a .cmd shim, which spawnSync finds only with a shell.
-	shell: process.platform === 'win32',
-})
-if (lock.status !== 0) fail('files renamed, but yarn.lock is out of date: run `yarn` before committing')
-console.log('rename: updated yarn.lock')
+// Yarn keys the root workspace by package name: the lockfile entry (a stale one fails `yarn install
+// --immutable` in CI) and the install state. A lockfile-only update leaves the state on the old name and
+// `yarn run` can't find any binary (`command not found: jest`), so run a full install (seconds when cached).
+// Under `yarn setup` (RENAME_FROM_SETUP=1) setup installs once at the end and prints the next steps.
+const fromSetup = process.env.RENAME_FROM_SETUP === '1'
+if (!fromSetup) {
+	const install = childProcess.spawnSync('yarn', ['install'], {
+		cwd: root,
+		stdio: 'inherit',
+		// Windows runs yarn through a .cmd shim, which spawnSync finds only with a shell.
+		shell: process.platform === 'win32',
+	})
+	if (install.status !== 0) fail('files renamed, but `yarn install` failed: run it before committing')
+	console.log('rename: updated yarn.lock and node_modules')
+}
 
-console.log('rename: done. Next: check .env for EXPO_PUBLIC_APP_* overrides, then rebuild the native app')
-console.log('rename: (yarn ios:rebuild / yarn android:rebuild, or yarn dev).')
+if (!fromSetup) {
+	console.log('rename: done. Next: check .env for EXPO_PUBLIC_APP_* overrides, then rebuild the native app')
+	console.log('rename: (yarn ios:rebuild / yarn android:rebuild, or yarn dev).')
+}

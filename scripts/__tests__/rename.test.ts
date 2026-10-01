@@ -5,7 +5,10 @@ import { runInNewContext } from 'node:vm'
 const SCRIPT_DIR = path.resolve(__dirname, '..')
 const SCRIPT = readFileSync(path.join(SCRIPT_DIR, 'rename.cjs'), 'utf8')
 
-function runRename(bundleId: string, { lockStatus = 0 }: { lockStatus?: number } = {}) {
+function runRename(
+	bundleId: string,
+	{ lockStatus = 0, env = {} }: { lockStatus?: number; env?: Record<string, string> } = {},
+) {
 	const files: Record<string, string> = {
 		'package.json': JSON.stringify({ name: 'template' }),
 		'app.json': JSON.stringify({ expo: {} }),
@@ -26,6 +29,7 @@ function runRename(bundleId: string, { lockStatus = 0 }: { lockStatus?: number }
 			console: { log: jest.fn(), warn: jest.fn(), error: jest.fn() },
 			process: {
 				argv: ['node', 'rename.cjs', 'Demo', 'demo', 'demo', bundleId],
+				env,
 				exit: (code: number) => {
 					exitCode = code
 					throw new Error('script exited')
@@ -63,11 +67,11 @@ describe('rename application ID validation', () => {
 		expect(result.files['config.toml']).toBe('project_id = "demo"\n')
 	})
 
-	it('lets Yarn rewrite the lockfile after the package name changes', () => {
+	it('runs a full yarn install after the package name changes (lockfile and install state)', () => {
 		const result = runRename('com.acme.myapp2')
 		expect(result.childProcess.spawnSync).toHaveBeenCalledWith(
 			'yarn',
-			['install', '--mode=update-lockfile'],
+			['install'],
 			expect.objectContaining({ cwd: path.resolve(SCRIPT_DIR, '..') }),
 		)
 		// The lockfile is rewritten after package.json, which carries the new workspace name.
@@ -76,8 +80,14 @@ describe('rename application ID validation', () => {
 		)
 	})
 
-	it('fails when Yarn cannot update the lockfile (immutable installs would break)', () => {
+	it('fails when yarn install fails (immutable installs would break)', () => {
 		expect(runRename('com.acme.myapp2', { lockStatus: 1 }).exitCode).toBe(1)
+	})
+
+	it('leaves the install to yarn setup when it runs the rename', () => {
+		const result = runRename('com.acme.myapp2', { env: { RENAME_FROM_SETUP: '1' } })
+		expect(result.exitCode).toBe(0)
+		expect(result.childProcess.spawnSync).not.toHaveBeenCalled()
 	})
 
 	it('does not touch the lockfile when validation fails', () => {

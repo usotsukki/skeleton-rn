@@ -1,5 +1,16 @@
 import { execFileSync } from 'node:child_process'
-import { existsSync, readFileSync, statSync } from 'node:fs'
+import {
+	chmodSync,
+	cpSync,
+	existsSync,
+	mkdirSync,
+	mkdtempSync,
+	readFileSync,
+	rmSync,
+	statSync,
+	writeFileSync,
+} from 'node:fs'
+import { tmpdir } from 'node:os'
 import path from 'node:path'
 
 const ROOT = path.resolve(__dirname, '../..')
@@ -219,6 +230,54 @@ describe('setup CLI', () => {
 		expect(out).toContain('Dry run: nothing was written.')
 		expect(touched.map(f => [f, read(f)])).toEqual(before)
 		expect(plan.deletes.filter(p => !repo.exists(p))).toEqual([])
+	})
+
+	it('ends an applied run with one full `yarn install` (a lockfile-only update leaves Yarn without binaries)', () => {
+		// A tiny app with the real scripts, and `yarn` / `npx` stubs that record their arguments.
+		const app = mkdtempSync(path.join(tmpdir(), 'setup-cli-'))
+		try {
+			for (const file of ['scripts/setup.cjs', 'scripts/rename.cjs', 'scripts/setup']) {
+				cpSync(path.join(ROOT, file), path.join(app, file), { recursive: true })
+			}
+			mkdirSync(path.join(app, 'supabase'))
+			writeFileSync(path.join(app, 'supabase/config.toml'), 'project_id = "template"\n')
+			writeFileSync(path.join(app, 'package.json'), JSON.stringify({ name: 'template', dependencies: {} }))
+			writeFileSync(path.join(app, 'app.json'), JSON.stringify({ expo: { version: '1.5.0', plugins: [] } }))
+			const bin = path.join(app, 'bin')
+			mkdirSync(bin)
+			for (const tool of ['yarn', 'npx']) {
+				writeFileSync(path.join(bin, tool), `#!/bin/sh\necho "${tool} $*" >> "${path.join(app, 'calls.log')}"\n`)
+				chmodSync(path.join(bin, tool), 0o755)
+			}
+			execFileSync('git', ['init', '-q'], { cwd: app })
+
+			execFileSync(
+				process.execPath,
+				[
+					path.join(app, 'scripts/setup.cjs'),
+					'--identity',
+					'Demo',
+					'demo',
+					'demo',
+					'com.acme.demo',
+					'--yes',
+					'--force',
+				],
+				{ cwd: app, env: { ...process.env, PATH: `${bin}${path.delimiter}${process.env.PATH}` }, stdio: 'pipe' },
+			)
+
+			const yarnCalls = readFileSync(path.join(app, 'calls.log'), 'utf8')
+				.split('\n')
+				.filter(line => line.startsWith('yarn '))
+			// rename skipped its own install under setup; setup ran exactly one, without --mode.
+			expect(yarnCalls).toEqual(['yarn install'])
+			expect(JSON.parse(readFileSync(path.join(app, 'app.json'), 'utf8')).expo).toMatchObject({
+				name: 'Demo',
+				version: '1.0.0',
+			})
+		} finally {
+			rmSync(app, { recursive: true, force: true })
+		}
 	})
 
 	it('rejects an unknown id in --keep instead of removing everything else', () => {

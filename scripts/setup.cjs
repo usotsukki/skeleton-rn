@@ -6,10 +6,10 @@
 //   yarn setup --list                           # modules and what they remove
 //   yarn setup --remove map,skia --dry-run      # preview
 //   yarn setup --keep notifications --yes       # remove everything else, no questions
-//   yarn setup --identity "Todo" todo todo com.acme.todo --remove all --yes --install
+//   yarn setup --identity "Todo" todo todo com.acme.todo --remove all --yes
 //
 // Options: --remove <ids|all>, --keep <ids> (remove the rest), --identity <name> <slug> <scheme> <bundle-id>,
-// --yes (never reads the terminal), --dry-run (no writes, no subprocesses), --install (yarn install after),
+// --yes (never reads the terminal), --dry-run (no writes, no subprocesses),
 // --force (allow a dirty git tree).
 const childProcess = require('child_process')
 const fs = require('fs')
@@ -38,7 +38,6 @@ const flags = {
 	list: args.includes('--list'),
 	yes: args.includes('--yes'),
 	dryRun: args.includes('--dry-run'),
-	install: args.includes('--install'),
 	force: args.includes('--force'),
 	remove: option('--remove'),
 	keep: option('--keep'),
@@ -177,6 +176,11 @@ async function main() {
 	}
 
 	const rl = interactive ? readline.createInterface({ input: process.stdin, output: process.stdout }) : undefined
+	// Ctrl-D / closed input while a question is open: readline would leave it unanswered and exit 0.
+	let asking = !!rl
+	rl?.on('close', () => {
+		if (asking) fail('cancelled; nothing was written')
+	})
 	try {
 		const identity = flags.identity ?? (rl ? await askIdentity(rl) : undefined)
 		const remove = selectionFromFlags() ?? (rl ? await askRemovals(rl) : new Set())
@@ -199,9 +203,16 @@ async function main() {
 			console.log('Cancelled; nothing was written.')
 			return
 		}
+		// No more questions: input closing from here on doesn't cancel the run.
+		asking = false
+		rl?.close()
 
 		if (identity) {
-			const renamed = run(process.execPath, [path.join(__dirname, 'rename.cjs'), ...identity], { stdio: 'inherit' })
+			// One `yarn install` at the end covers the rename and the removed packages.
+			const renamed = run(process.execPath, [path.join(__dirname, 'rename.cjs'), ...identity], {
+				stdio: 'inherit',
+				env: { ...process.env, RENAME_FROM_SETUP: '1' },
+			})
 			if (renamed.status !== 0) fail('rename failed; no modules were removed')
 		}
 		// Re-plan after the rename: it rewrote package.json and app.json.
@@ -214,16 +225,14 @@ async function main() {
 		if (formatted.status !== 0) console.warn('setup: prettier did not run; `yarn fix` will format the edited files')
 		console.log(`\nsetup: ${final.writes.size} files edited, ${final.deletes.length} deleted`)
 
-		// Required, and on every applied run (fast, no linking): a lockfile that still lists removed packages
-		// fails `yarn install --immutable` in CI, and a run stopped here left it stale.
-		const lock = run('yarn', ['install', '--mode=update-lockfile'], { stdio: 'inherit' })
-		if (lock.status !== 0) fail('yarn.lock is out of date; run `yarn` before committing')
+		// Required, on every applied run: a lockfile that still lists removed packages fails `yarn install
+		// --immutable` in CI, and a renamed workspace needs a full install before `yarn run` finds binaries
+		// (a lockfile-only update leaves `command not found: jest`). Seconds with a warm cache.
+		if (run('yarn', ['install'], { stdio: 'inherit' }).status !== 0) {
+			fail('`yarn install` failed; run it before committing')
+		}
 		// Last: a run stopped before this point leaves the modules unrecorded, so the next run finishes them.
 		if (final.removedRecord) fs.writeFileSync(path.join(root, REMOVED_FILE), final.removedRecord)
-		const install = flags.install || (rl && (await ask(rl, 'Run yarn install now? [Y/n] ')).toLowerCase() !== 'n')
-		if (install && run('yarn', ['install'], { stdio: 'inherit' }).status !== 0) {
-			fail('yarn install failed')
-		}
 
 		console.log('\nNext:')
 		console.log('  yarn fix && yarn check')
@@ -231,6 +240,7 @@ async function main() {
 			console.log('  npx expo prebuild --clean   (native modules or identity changed), then yarn dev')
 		}
 	} finally {
+		asking = false
 		rl?.close()
 	}
 }
