@@ -61,8 +61,8 @@
 		"rename": "node scripts/rename.cjs",
 		"start": "expo start --dev-client",
 		"switch-env": "./scripts/switch-env.sh",
-		"test": "TZ=UTC jest src metro scripts",
-		"test:coverage": "TZ=UTC jest src metro scripts --coverage"
+		"test": "TZ=UTC jest src metro scripts __tests__",
+		"test:coverage": "TZ=UTC jest src metro scripts __tests__ --coverage"
 	},
 	"dependencies": {
 		"@babel/runtime": "^7.25.6",

@@ -9,7 +9,7 @@ paths:
 
 - Jest with `jest-expo`, React Native Testing Library
 - Shared setup: `src/test/setup.ts`
-- `yarn test` sets `TZ=UTC`. If running jest directly: `TZ=UTC jest src metro scripts`.
+- `yarn test` sets `TZ=UTC`. If running jest directly: `TZ=UTC jest src metro scripts __tests__` (`__tests__/` at the root covers `app.config.ts`).
 
 ## Harness (automatic, `setup.ts`)
 
