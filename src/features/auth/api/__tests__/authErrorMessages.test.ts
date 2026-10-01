@@ -16,8 +16,14 @@ describe('getAuthErrorMessage', () => {
 		)
 	})
 
-	it('returns null for Google user-cancel flows', () => {
-		expect(getAuthErrorMessage(new Error('The user canceled the Google sign in. Please try again.'))).toBeNull()
+	it('returns null when the user closes the Google or Apple sheet', () => {
+		// Thrown by getGoogleIdToken for a `cancelled` response (providerTokens.ts).
+		expect(getAuthErrorMessage(new Error('GoogleSignIn cancelled'))).toBeNull()
+		// expo-apple-authentication's CodedError for a dismissed sheet.
+		const appleCancel = Object.assign(new Error('The user canceled the authorization attempt'), {
+			code: 'ERR_REQUEST_CANCELED',
+		})
+		expect(getAuthErrorMessage(appleCancel)).toBeNull()
 	})
 
 	it('maps Google Android configuration failures to a dedicated message', () => {

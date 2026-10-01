@@ -1,7 +1,7 @@
 import { type ReactNode, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type TextInput, View } from 'react-native'
-import { IS_GOOGLE_SIGN_IN_CONFIGURED } from '@app/shared/env'
+import { IS_APPLE_SIGN_IN_AVAILABLE, IS_GOOGLE_SIGN_IN_CONFIGURED } from '@app/shared/env'
 import { focusFirstInvalid, setSubmitError, submitForm, useAppForm } from '@app/shared/form'
 import { AppText, AuthOAuthFooter, CheckboxInput } from '@app/shared/ui'
 import { getAuthFormError } from '../api'
@@ -135,7 +135,7 @@ export function AuthCredentialsForm({
 					disabled={loading}
 					loadingProvider={oauthLoading}
 					onAction={onActionPress}
-					onApple={onApple}
+					onApple={IS_APPLE_SIGN_IN_AVAILABLE ? onApple : undefined}
 					onGoogle={IS_GOOGLE_SIGN_IN_CONFIGURED ? onGoogle : undefined}
 					promptText={promptText}
 				/>

@@ -54,7 +54,9 @@ function getAuthErrorKey(error: unknown): string | null {
 	if (isRequestTimeoutMessage(message) || isFailedAuthFetch(error)) return 'error.networkError'
 	if (m.includes('network')) return 'error.networkError'
 	if (m.includes('provider is not enabled')) return 'error.providerDisabled'
-	if (m.includes('google') && m.includes('cancel')) return null
+	// The user closed the provider sheet: Apple rejects with ERR_REQUEST_CANCELED, Google with
+	// `GoogleSignIn cancelled` (providerTokens.ts).
+	if (code === 'ERR_REQUEST_CANCELED' || (m.includes('google') && m.includes('cancel'))) return null
 	// Google rejects the app's package + signing SHA-1 (no matching Android OAuth client in the web client's project).
 	if (m.includes('developer_error') || m.includes('non-recoverable sign in failure')) {
 		if (__DEV__) {
