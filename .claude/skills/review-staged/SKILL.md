@@ -1,18 +1,18 @@
 ---
 name: review-staged
-description: Review a plan or an explicit code/policy change set. Claude Code automatically uses Cursor before relevant commits or handoffs; direct review requests stay read-only. Includes scope selection, independent review, and author triage.
+description: Review a plan or an explicit code/policy change set. Claude Code runs an independent review before relevant commits or handoffs; direct review requests stay read-only. Includes scope selection, reviewer dispatch, and author triage.
 ---
 
 # Review plans and changes
 
-Preserve the useful second opinion without manual copying between tools. Cursor review produced value in 25 of 30 commits in one user-reported session; use it by default for relevant Claude Code changes, then verify its findings locally.
+A second opinion from a fresh context catches what the author misses. Run it by default for relevant changes, then verify its findings locally.
 
 ## 1. Choose the mode and relevance
 
-- **Review-only request:** hand the requested artifact to one fresh `pr-audit` subagent (Claude Sonnet 5.5, `effort: high`) and report its findings. Do not fix, stage, commit, or launch a second reviewer. An explicit review request overrides the automatic skip criteria.
+- **Review-only request:** review the requested artifact with the direct-review reviewer (§3) and report its findings. Do not fix, stage, commit, or launch a second reviewer unless the user names one. An explicit review request overrides the automatic skip criteria.
 - **Author preflight:** after relevant checks and before committing or handing off implementation work, run the review automatically. Review never grants Git permission.
 - **Plan preflight:** before implementing a substantial architecture decision or a risky auth, data, native, or deployment change, review the plan. A plan review does not replace review of the implementation.
-- **Escalation (a second angle, not a second pass):** for high-risk changes or plans (auth, money, data or RLS migrations, native/config, concurrency, release tooling) add one GPT-6.1 Sol review through Codex after the Grok review. When stuck (two failed fixes, conflicting evidence, no repro, device or computer-use trouble) consult GPT-6 Astra with the reframe artifact from `.claude/rules/debugging.md`. Name the question each escalation must answer.
+- **Escalation (a second angle, not a second pass):** for high-risk changes or plans (auth, money, data or RLS migrations, native/config, concurrency, release tooling) add one second-angle review after the first. When stuck (two failed fixes, conflicting evidence, no repro, device or computer-use trouble) run a stuck consult with the reframe artifact from `.claude/rules/debugging.md`. Name the question each escalation must answer.
 
 Relevant changes include behavior, nontrivial refactors/tests, dependencies, auth, env/native config, CI/hooks, and agent rules/skills that change actions, permissions, or verification. File count is not the trigger.
 
@@ -39,42 +39,57 @@ Reuse a completed review when the artifact, base, and requirements are unchanged
 
 ## 3. Run the reviewer
 
-**Direct review request in Claude Code:** one fresh `pr-audit` subagent on the pinned artifact. No `cursor-agent` or `codex` call unless the user names that reviewer.
+Reviewers are roles. The defaults need nothing beyond Claude Code. Which external tool or model fills a role (and where its binary lives, and what it costs) is personal setup: put it in user-level instructions (`~/.claude/CLAUDE.md`) or the env vars below, not in this repo. When user-level instructions assign a reviewer to a stage, use it with the mechanics here.
 
-**Running outside Claude Code (Cursor or Codex asked to review):** use the plan/code checklist in [pr-audit](../../agents/pr-audit.md) yourself. Do not spawn subagents or call `cursor-agent`. Label the result accurately: self-review if you authored the work; independent review if you did not participate in authoring it; cross-model only when different author/reviewer models are known.
+| Role | Default | Optional external adapter |
+| --- | --- | --- |
+| Direct review request | one fresh `pr-audit` subagent | only a reviewer the user names |
+| Author / plan preflight | one fresh `pr-audit` subagent | Cursor CLI with `REVIEW_MODEL` |
+| High-risk second angle | a second fresh `pr-audit`, given the first findings | Codex CLI with `ADVISORY_MODEL` |
+| Stuck consult | a fresh general-purpose subagent with the brief | Codex CLI with `STUCK_MODEL` |
 
-**Claude Code author preflight:** Cursor CLI is the default for relevant plans and changes. Invoke it without another user prompt when this workflow applies. Use a fresh invocation in read-only ask mode, not a resumed author conversation:
+Invoke the configured preflight reviewer without another user prompt when this workflow applies. A second angle is most useful from a different model than the author's.
+
+Inputs per role, whichever reviewer fills it:
+
+- **Second angle:** append the first reviewer's findings to `request.md` under `## First reviewer findings` and ask for defects and angles it missed rather than a repeat.
+- **Stuck consult:** write a self-contained `stuck-brief.md` from the reframe artifact (symptom, evidence for and against, what was tried, relevant paths, the exact question) and ask for a ranked root cause, a repro recipe and the minimal fix. It is a consult, not a `pr-audit` verdict.
+
+Before running an adapter, set its model variable from the user-level assignment when it is not already exported. If the variable is still empty, do not run the adapter: use the role's default and say so.
+
+**Running outside Claude Code (Cursor, Codex, or another tool asked to review):** use the plan/code checklist in [pr-audit](../../agents/pr-audit.md) yourself. Do not spawn subagents or call another reviewer CLI. Label the result accurately: self-review if you authored the work; independent review if you did not participate in authoring it; cross-model only when different author/reviewer models are known.
+
+**Cursor CLI adapter.** A fresh invocation in read-only ask mode, not a resumed author conversation; `cursor-agent --list-models` lists IDs. Never use `-f/--force` or edit mode.
 
 ```bash
-cursor-agent -p --trust --mode ask --model "${REVIEW_MODEL:-grok-4.7-high-fast}" --output-format json \
+cursor-agent -p --trust --mode ask --model "$REVIEW_MODEL" --output-format json \
   "Read $REVIEW_SCRATCH/request.md and review its pinned artifact using .claude/agents/pr-audit.md. Read-only: no edits, Git mutations, builds, or subagents. Use the plan checklist for plans and the code checklist for changes. Report evidence-backed defects, verification gaps, and open questions separately." \
   > "$REVIEW_SCRATCH/cursor-review.json"
 ```
 
-Run in the background, then wait for completion. Read the JSON `result` field and retain the output path and exit code. Exit 0 plus a usable completed report is required; empty output or a failed process is not a passing review. Model IDs can be checked with `cursor-agent --list-models`; preserve `REVIEW_MODEL` when set. Never use `-f/--force` or edit mode.
+Read the JSON `result` field.
 
-**High-risk escalation (Codex, GPT-6.1 Sol high):** after the Grok review, append its findings to `request.md` under `## First reviewer findings`, then run:
+**Codex CLI adapter.** `CODEX` defaults to `codex` on PATH; set it when the binary lives elsewhere.
 
 ```bash
-CODEX=/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex   # not on PATH
-"$CODEX" exec -s read-only --ephemeral -m "${ADVISORY_MODEL:-gpt-6.1-sol}" -c model_reasoning_effort=high \
+"${CODEX:-codex}" exec -s read-only --ephemeral -m "$ADVISORY_MODEL" -c model_reasoning_effort=high \
   -C "$PWD" -o "$REVIEW_SCRATCH/codex-review.md" \
   "Review the pinned artifact described in the <stdin> block using .claude/agents/pr-audit.md. Read-only: no edits, Git mutations, builds, or subagents. A first reviewer's findings are included; look for defects and angles it missed rather than repeating them. Report evidence-backed defects, verification gaps, and open questions separately." \
   < "$REVIEW_SCRATCH/request.md"
 ```
 
-Exit 0 plus a non-empty `codex-review.md` is required. Always give `codex exec` a closed stdin (a file or `/dev/null`); with an inherited terminal stdin it waits forever. Codex draws on the ChatGPT plan allowance, so keep it to the escalation cases; Grok runs from Cursor's included pool.
-
-**Stuck (Codex, GPT-6 Astra):** write a self-contained brief from the reframe artifact (symptom, evidence for and against, what was tried, relevant paths, the exact question; ask for a ranked root cause, a repro recipe and the minimal fix), then:
+Stuck consult:
 
 ```bash
-"$CODEX" exec -s read-only --ephemeral -m gpt-6-astra -c model_reasoning_effort=medium \
-  -C "$PWD" -o "$REVIEW_SCRATCH/astra-answer.md" - < "$REVIEW_SCRATCH/astra-brief.md"
+"${CODEX:-codex}" exec -s read-only --ephemeral -m "$STUCK_MODEL" -c model_reasoning_effort=medium \
+  -C "$PWD" -o "$REVIEW_SCRATCH/stuck-answer.md" - < "$REVIEW_SCRATCH/stuck-brief.md"
 ```
 
-Use `high` for design decisions built on conflicting evidence and `-i shot.png` to attach screenshots. Verify every claim against the installed source before acting on it.
+Use `high` effort for design decisions built on conflicting evidence; add `-i <screenshot>` only when the brief refers to one. Always give `codex exec` a closed stdin (a file or `/dev/null`); with an inherited terminal stdin it waits forever.
 
-If Cursor is unavailable or fails operationally, use one fresh `pr-audit` agent with the same request and disclose the fallback. If Codex is unavailable, say so; the Grok review stands alone. A permission or policy denial is not an operational failure: follow the denied-action rule, never route around it. A fallback may be independent without being cross-model. If neither reviewer can run, report the gap; do not claim the review passed.
+Run external reviewers in the background and wait for completion. Exit 0 plus a usable, non-empty report is required; empty output or a failed process is not a passing review. Retain the output path and exit code. Verify every claim against the installed source before acting on it.
+
+If a configured external reviewer is unavailable or fails operationally, fall back to the role's default and disclose it. A permission or policy denial is not an operational failure: follow the denied-action rule, never route around it. A fallback may be independent without being cross-model. If no reviewer can run, report the gap; do not claim the review passed.
 
 Default to one reviewer. Add a focused second reviewer only when high-impact risk or an unresolved finding warrants another perspective; name the specific question it should resolve.
 

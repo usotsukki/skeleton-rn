@@ -1,0 +1,35 @@
+import { useRouter } from 'expo-router'
+import { useTranslation } from 'react-i18next'
+import { AppButton } from '@app/shared/ui'
+import { AuthCredentialsForm, AuthScreen } from './components'
+import useAuth from './hooks/useAuth'
+
+export default function SignIn() {
+	const { t } = useTranslation()
+	const router = useRouter()
+	const { signInAsync, signInWithGoogle, signInWithApple, loading, pending } = useAuth()
+
+	return (
+		<AuthScreen>
+			<AuthCredentialsForm
+				actionLabel={t('signUp')}
+				inlineFieldsAccessory={
+					<AppButton onPress={() => router.push('/ForgotPassword')} variant="link">
+						{t('modules.auth.forgotPassword')}
+					</AppButton>
+				}
+				loading={loading}
+				oauthLoading={pending.oauth}
+				submitting={pending.credentials}
+				onActionPress={() => router.replace('/SignUp')}
+				onApple={() => signInWithApple()}
+				onGoogle={() => signInWithGoogle()}
+				onSubmit={signInAsync}
+				promptText={t('modules.auth.noAccount')}
+				submitLabel={t('signIn')}
+				subtitle={t('modules.auth.signInSubtitle')}
+				title={t('modules.auth.signInTitle')}
+			/>
+		</AuthScreen>
+	)
+}

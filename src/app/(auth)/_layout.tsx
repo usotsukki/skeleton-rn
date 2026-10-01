@@ -1,6 +1,6 @@
 import { Redirect, Stack } from 'expo-router'
-import { useAuthStore } from '@app/hooks/useAuth'
-import { HOME_ROUTE } from '@app/utils/navigation'
+import { useAuthStore } from '@app/features/auth'
+import { HOME_ROUTE } from '@app/shared/utils/navigation'
 
 /**
  * Unauthenticated stack. Redirects to (app) when a session exists,

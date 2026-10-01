@@ -1,1 +1,1 @@
-export { default } from '@app/screens/ForgotPassword'
+export { ForgotPasswordScreen as default } from '@app/features/auth'

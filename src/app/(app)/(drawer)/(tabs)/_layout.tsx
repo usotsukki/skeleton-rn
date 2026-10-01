@@ -1,7 +1,7 @@
 import { NativeTabs } from 'expo-router/unstable-native-tabs'
 import { useTranslation } from 'react-i18next'
 import { DynamicColorIOS, Platform } from 'react-native'
-import { darkColors, lightColors, useThemeColors } from '@app/theme/colors'
+import { darkColors, lightColors, useThemeColors } from '@app/shared/theme/colors'
 
 const isIOS = Platform.OS === 'ios'
 const dyn = (light: string, dark: string) => (isIOS ? DynamicColorIOS({ light, dark }) : null)

@@ -1,6 +1,6 @@
 /**
  * Resets every zustand store to its initial state after each test (zustand's documented testing
- * pattern). Activated by `jest.mock('zustand')` in `src/utils/test-utils/setup.ts`; a root manual
+ * pattern). Activated by `jest.mock('zustand')` in `src/test/setup.ts`; a root manual
  * mock for a node module is not applied on its own.
  *
  * `getInitialState()` is the state before persist hydration, so persisted stores reset to their

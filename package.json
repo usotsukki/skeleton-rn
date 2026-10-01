@@ -48,6 +48,7 @@
 		"iosr": "dotenv -e .env.production.local -e .env.local -e .env.production -e .env -- node scripts/check-release-env.cjs && expo run:ios --no-bundler --configuration Release",
 		"lint": "run-p 'lint:*'",
 		"lint-commit": "commitlint --config commitlint.config.js --edit ",
+		"lint:architecture": "node scripts/check-feature-boundaries.cjs",
 		"lint:format": "prettier --cache --check .",
 		"lint:js": "eslint --cache . --max-warnings=0",
 		"lint:ts": "tsc --noEmit",
@@ -60,8 +61,8 @@
 		"rename": "node scripts/rename.cjs",
 		"start": "expo start --dev-client",
 		"switch-env": "./scripts/switch-env.sh",
-		"test": "TZ=UTC jest src",
-		"test:coverage": "TZ=UTC jest src --coverage"
+		"test": "TZ=UTC jest src metro scripts",
+		"test:coverage": "TZ=UTC jest src metro scripts --coverage"
 	},
 	"dependencies": {
 		"@babel/runtime": "^7.25.6",

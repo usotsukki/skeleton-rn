@@ -2,7 +2,7 @@
 module.exports = {
 	preset: 'jest-expo',
 	setupFiles: ['./jest.env.js', './node_modules/react-native-gesture-handler/jestSetup.js'],
-	setupFilesAfterEnv: ['./src/utils/test-utils/setup.ts'],
+	setupFilesAfterEnv: ['./src/test/setup.ts'],
 	testRegex: '(/__tests__/.*|(\\.|/)(test|spec))(?<!\\.disabled)\\.[jt]sx?$',
 	testPathIgnorePatterns: ['/node_modules/', '/.claude/worktrees/'],
 	modulePathIgnorePatterns: ['/.claude/worktrees/'],

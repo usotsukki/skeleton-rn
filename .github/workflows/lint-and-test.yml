@@ -56,6 +56,9 @@ jobs:
       - name: Unused code
         run: yarn lint:unused --reporter github-actions
 
+      - name: Feature boundaries
+        run: yarn lint:architecture
+
       - name: Tests
         run: yarn test:coverage
 

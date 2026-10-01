@@ -17,15 +17,15 @@ The always-on rules live in [CLAUDE.md](CLAUDE.md) ("Working rules") and apply t
 | [debugging](.claude/rules/debugging.md) | Always — emitter gate, reframe after 2 failed fixes |
 | [mcp-routing](.claude/rules/mcp-routing.md) | Always — MCP/CLI/dashboard routing |
 | [core-architecture](.claude/rules/core-architecture.md) | Editing `src/**` |
-| [react-components](.claude/rules/react-components.md) | Editing components/screens |
+| [react-components](.claude/rules/react-components.md) | Editing features, shared UI, app-shell |
 | [testing](.claude/rules/testing.md) | Editing tests / setup |
 | [docs-sync](.claude/rules/docs-sync.md) | Editing docs / rules / skills / agents |
 
 ## Skills and agents
 
-- Skills (`.claude/skills/`): `review-staged` (plan/code/policy review + author triage; Cursor/Grok preflight, Codex Sol for high-risk, Codex Astra when stuck, Sonnet 5.5 `pr-audit` for direct requests), `release-check` (release build, bundle, cold launch), `new-app-setup` (fork checklist, console safety).
+- Skills (`.claude/skills/`): `review-staged` (plan/code/policy review + author triage; reviewer roles for preflight, high-risk second angle and stuck consult, with optional Cursor/Codex adapters), `release-check` (release build, bundle, cold launch), `new-app-setup` (fork checklist, console safety).
 - Agents (`.claude/agents/`): `pr-audit` (read-only plan/change review), `device-check` (sim/emulator verification).
-- Asked to review as Cursor/Codex? Review directly with the `pr-audit` checklist — no subagents, no `cursor-agent` calls. Distinguish self-review from an independent or cross-model review; review alone does not authorize edits.
+- Asked to review as Cursor/Codex? Review directly with the `pr-audit` checklist — no subagents, no other reviewer CLIs. Distinguish self-review from an independent or cross-model review; review alone does not authorize edits.
 
 ## Enforced (not just prose)
 

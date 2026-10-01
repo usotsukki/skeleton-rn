@@ -1,5 +1,5 @@
 import { Redirect, Stack } from 'expo-router'
-import { useAuthStore } from '@app/hooks/useAuth'
+import { useAuthStore } from '@app/features/auth'
 
 /**
  * Authenticated stack. Redirects to /Welcome when no session.

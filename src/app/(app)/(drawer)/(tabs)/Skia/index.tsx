@@ -1,1 +1,1 @@
-export { default } from '@app/screens/Skia'
+export { SkiaScreen as default } from '@app/features/skia'

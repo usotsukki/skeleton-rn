@@ -2,20 +2,20 @@
 paths:
   - '**/__tests__/**/*.{ts,tsx}'
   - '**/*.test.{ts,tsx}'
-  - src/utils/test-utils/**/*
+  - src/test/**/*
 ---
 
 # Testing
 
 - Jest with `jest-expo`, React Native Testing Library
-- Shared setup: `src/utils/test-utils/setup.ts`
-- `yarn test` sets `TZ=UTC`. If running jest directly: `TZ=UTC jest src`.
+- Shared setup: `src/test/setup.ts`
+- `yarn test` sets `TZ=UTC`. If running jest directly: `TZ=UTC jest src metro scripts`.
 
 ## Harness (automatic, `setup.ts`)
 
 - Real network is blocked: any `fetch` rejects with `Unexpected network request in a test: <url>`. Mock what the test needs.
 - After each test: real timers, zustand stores back to their initial (pre-hydration) state (`__mocks__/zustand.ts`), MMKV mock emptied, TanStack online/focus managers reset, test query clients destroyed, spies restored.
-- Render screens with `renderWithAppProviders` (`src/utils/test-utils/render.tsx`); build clients with `createTestQueryClient`.
+- Render screens with `renderWithAppProviders` (`src/test/render.tsx`); build clients with `createTestQueryClient`.
 
 ## Async Rules (RNTL 14)
 
@@ -30,7 +30,7 @@ Mocked hook return values used in dependency arrays must be stable references. U
 
 ## Shared Mock Sources
 
-Before adding a test-local mock, check `src/utils/test-utils/setup.ts`. Add reusable mocks there if multiple tests need them. Do not duplicate global mocks unless the test needs a targeted override.
+Before adding a test-local mock, check `src/test/setup.ts`. Add reusable mocks there if multiple tests need them. Do not duplicate global mocks unless the test needs a targeted override.
 
 ## Parent Tests
 
