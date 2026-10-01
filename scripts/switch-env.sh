@@ -1,17 +1,20 @@
 #!/bin/bash
+# Copies an env profile over .env: yarn switch-env <testing|dev|production>
+# (.env.testing, .env.dev, .env.production). Without an argument it keeps .env.
+set -euo pipefail
 
-ENV_FILE=".env"
+case "${1:-}" in
+  testing) SOURCE=".env.testing" ;;
+  dev) SOURCE=".env.dev" ;;
+  production) SOURCE=".env.production" ;;
+  "") echo "Keeping .env"; exit 0 ;;
+  *) echo "switch-env: unknown profile \"$1\" (use testing, dev or production)" >&2; exit 1 ;;
+esac
 
-if [ "$1" == "testing" ]; then
-  ENV_FILE=".env.testing"
-elif [ "$1" == "dev" ]; then
-  ENV_FILE=".env.dev"
-elif [ "$1" == "production" ]; then
-  ENV_FILE=".env.production"
+if [ ! -f "$SOURCE" ]; then
+  echo "switch-env: $SOURCE not found; .env is unchanged" >&2
+  exit 1
 fi
 
-echo "Using environment file: $ENV_FILE"
-
-cp $ENV_FILE .env
-
-echo "✅ Environment file switched."
+cp "$SOURCE" .env
+echo "✅ .env now matches $SOURCE"
