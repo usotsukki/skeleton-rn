@@ -2,14 +2,14 @@ import { createClient } from '@supabase/supabase-js'
 import { Platform } from 'react-native'
 import 'react-native-url-polyfill/auto'
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from '@app/shared/env'
-import { authStorage } from '@app/shared/storage'
+import { authStorage, SESSION_KEY_PREFIX } from '@app/shared/storage'
 import { logSupabaseHttpRequest } from '@app/shared/utils/apiLog'
 import { logDevInspectorEvent } from '@app/shared/utils/devInspector'
 import type { Database } from './database.types'
 import { createFetchWithTimeout, describeRequest } from './fetchWithTimeout'
 import { reportRequestTimeout } from './requestTimeoutTelemetry'
 
-const SUPABASE_STORAGE_PREFIX = 'supabase:'
+const SUPABASE_STORAGE_PREFIX = SESSION_KEY_PREFIX
 
 /** True when MMKV is backed by native or browser storage (not Expo's Node web export for server manifest). */
 function canPersistSupabaseSessionWithMMKV(): boolean {

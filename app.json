@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "App",
 		"slug": "app",
-		"version": "1.5.0",
+		"version": "1.6.0",
 		"icon": "./assets/png/icon.png",
 		"scheme": "app",
 		"userInterfaceStyle": "automatic",
@@ -32,6 +32,7 @@
 		"plugins": [
 			"@react-native-google-signin/google-signin",
 			"expo-apple-authentication",
+			"expo-secure-store",
 			"expo-router",
 			"expo-localization",
 			"@sentry/react-native",
