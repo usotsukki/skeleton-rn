@@ -61,7 +61,7 @@ The first `yarn dev` downloads the backend's Docker images and compiles the nati
 | A new GitHub repository with one initial commit | `gh repo create my-app --template usotsukki/skeleton-rn --private --clone` |
 | The files only, with no git repository | `npx degit usotsukki/skeleton-rn my-app` |
 
-Run `yarn` in the new folder, then continue with `yarn setup` (with `degit`, run `git init` and make a first commit before it, so its changes can be reviewed and undone). `yarn create expo-app` fails on a GitHub template URL (it resolves an old create-expo-app), so use `npx`.
+Run `yarn` in the new folder, then continue with `yarn setup`. With `degit`, run `git init` before `yarn` (so it can install the git hooks) and make a first commit before `yarn setup` (so its changes can be reviewed and undone). `yarn create expo-app` fails on a GitHub template URL (it resolves an old create-expo-app), so use `npx`.
 
 </details>
 
