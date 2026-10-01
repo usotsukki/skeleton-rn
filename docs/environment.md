@@ -39,6 +39,8 @@ Services:
 | `EXPO_PUBLIC_POSTHOG_PROJECT_TOKEN` | Optional PostHog project token (`phc_…`, public). Unset = analytics and feature flags disabled |
 | `EXPO_PUBLIC_POSTHOG_HOST` | Optional PostHog ingestion host; defaults to `https://eu.i.posthog.com` (use `https://us.i.posthog.com` for US cloud) |
 
+Expo CLI flags in `.env.example`: `EXPO_NO_GIT_STATUS=1` skips the uncommitted-changes prompt before prebuild, `EXPO_NO_REDIRECT_PAGE=1` opens dev builds without the chooser page.
+
 Template hooks the demo doesn't read yet (exported from `src/shared/env`): `EXPO_PUBLIC_BASE_API_URL` (your own API), `EXPO_PUBLIC_LOG_DEBUG` and `EXPO_PUBLIC_LOG_LEVEL` (logging switches). Remove them from `clientEnvSchema.ts`, `env.rules.json` and `eas.json` if you don't need them.
 
 <!-- #region template:map -->
