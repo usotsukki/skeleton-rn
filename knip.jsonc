@@ -20,9 +20,7 @@
 	"ignoreDependencies": [
 		// Starter extras: shipped with the template for new apps, not used by the demo.
 		"@expo/ui",
-		"@rn-primitives/popover",
 		"es-toolkit",
-		"expo-clipboard",
 		"expo-document-picker",
 		"expo-image-manipulator",
 		"expo-image-picker",

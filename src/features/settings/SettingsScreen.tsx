@@ -18,6 +18,7 @@ import {
 	Toggle,
 } from '@app/shared/ui'
 import { HOME_ROUTE } from '@app/shared/utils/navigation'
+import { AppVersionInfo } from './components/AppVersionInfo'
 
 const SCROLL_STYLE = { paddingBottom: 32 } as const
 
@@ -126,6 +127,9 @@ export default function Settings() {
 					<AppButton fullWidth onPress={() => !loading && signOut()} variant="destructive">
 						{t('signOut')}
 					</AppButton>
+				</View>
+				<View className="mt-4">
+					<AppVersionInfo />
 				</View>
 			</ScrollView>
 		</SafeAreaView>
